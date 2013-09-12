@@ -28,6 +28,7 @@ namespace TeleSign.Services
         /// The address to connect to.
         /// </summary>
         public const string DefaultServiceAddress = "https://rest.telesign.com/";
+        public const string DefaultServiceMobileAddress = "https://rest-mobile.telesign.com/";
 
         /// <summary>
         /// Initializes a new instance of the TeleSignServiceConfiguration class
@@ -45,10 +46,12 @@ namespace TeleSign.Services
         /// </param>
         public TeleSignServiceConfiguration(
                     TeleSignCredential credential,
-                    Uri serviceAddress)
+                    Uri serviceAddress,
+            		Uri serviceMobileAddress)
         {
             this.Credential = credential;
             this.ServiceAddress = serviceAddress;
+            this.ServiceMobileAddress = serviceMobileAddress;
         }
 
         /// <summary>
@@ -63,7 +66,8 @@ namespace TeleSign.Services
         public TeleSignServiceConfiguration(TeleSignCredential credential)
             : this(
                     credential,
-                    new Uri(TeleSignServiceConfiguration.DefaultServiceAddress))
+                    new Uri(TeleSignServiceConfiguration.DefaultServiceAddress),
+            		new Uri(TeleSignServiceConfiguration.DefaultServiceMobileAddress))
         {
         }
 
@@ -78,6 +82,7 @@ namespace TeleSign.Services
         /// </summary>
         /// <value>The base URI of the telesign REST services.</value>
         public Uri ServiceAddress { get; set; }
+		public Uri ServiceMobileAddress { get; set; }
 
         /// <summary>
         /// This reads a configuration file called TeleSign.config.xml from
@@ -103,16 +108,23 @@ namespace TeleSign.Services
 
             XElement root = doc.Element("TeleSignConfig");
             string serviceUri = (string)root.Element("ServiceUri");
+            string serviceMobileUri = (string)root.Element("ServiceMobileUri")
 
             foreach (XElement account in root.Element("Accounts").Elements("Account"))
             {
                 if ((string)account.Attribute("name") == accountName)
                 {
                     string overrideServiceUri = (string)account.Element("ServiceUri");
+                    string overrideServiceMobileUri = (string)account.Element("ServiceMobileUri");
 
                     if (overrideServiceUri != null)
                     {
                         serviceUri = overrideServiceUri;
+                    }
+                    
+                    if (overrideServiceMobileUri != null)
+                    {
+                        serviceMobileUri = overrideServiceMobileUri;
                     }
 
                     string customerId = (string)account.Element("CustomerId");
@@ -120,7 +132,8 @@ namespace TeleSign.Services
 
                     return new TeleSignServiceConfiguration(
                                 new TeleSignCredential(Guid.Parse(customerId), secretKey),
-                                new Uri(serviceUri));
+                                new Uri(serviceUri),
+                    			new Uri(serviceMobileUri));
                 }
             }
 
