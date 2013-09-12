@@ -47,7 +47,7 @@ namespace TeleSign.Services
         public TeleSignServiceConfiguration(
                     TeleSignCredential credential,
                     Uri serviceAddress,
-            		Uri serviceMobileAddress)
+                    Uri serviceMobileAddress)
         {
             this.Credential = credential;
             this.ServiceAddress = serviceAddress;
@@ -67,7 +67,7 @@ namespace TeleSign.Services
             : this(
                     credential,
                     new Uri(TeleSignServiceConfiguration.DefaultServiceAddress),
-            		new Uri(TeleSignServiceConfiguration.DefaultServiceMobileAddress))
+                    new Uri(TeleSignServiceConfiguration.DefaultServiceMobileAddress))
         {
         }
 
@@ -82,7 +82,7 @@ namespace TeleSign.Services
         /// </summary>
         /// <value>The base URI of the telesign REST services.</value>
         public Uri ServiceAddress { get; set; }
-		public Uri ServiceMobileAddress { get; set; }
+        public Uri ServiceMobileAddress { get; set; }
 
         /// <summary>
         /// This reads a configuration file called TeleSign.config.xml from
@@ -133,7 +133,7 @@ namespace TeleSign.Services
                     return new TeleSignServiceConfiguration(
                                 new TeleSignCredential(Guid.Parse(customerId), secretKey),
                                 new Uri(serviceUri),
-                    			new Uri(serviceMobileUri));
+                                new Uri(serviceMobileUri));
                 }
             }
 
