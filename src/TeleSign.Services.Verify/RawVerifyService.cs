@@ -216,7 +216,7 @@ namespace TeleSign.Services.Verify
 
             Dictionary<string, string> args = ConstructVerifyArgs(
                         VerificationMethod.SoftToken,
-                        phoneNumber
+                        phoneNumber,
                         softTokenId, 
                         verifyCode);
 
