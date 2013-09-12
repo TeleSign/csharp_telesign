@@ -140,9 +140,9 @@ namespace TeleSign.Services.Verify
         public string PushRaw(
                     string phoneNumber,
                     string notificationType = null,
-                    string notificationValue = null
-            		string template = null
-            		string message = null)
+                    string notificationValue = null,
+                    string template = null,
+                    string message = null)
         {
             phoneNumber = this.CleanupPhoneNumber(phoneNumber);
             
@@ -172,7 +172,7 @@ namespace TeleSign.Services.Verify
                         notificationType, 
                         notificationValue, 
                         template,
-            			message);
+                        message);
 
             string resourceName = string.Format(
                         RawVerifyService.VerifyResourceFormatString, 
@@ -216,7 +216,7 @@ namespace TeleSign.Services.Verify
 
             Dictionary<string, string> args = ConstructVerifyArgs(
                         VerificationMethod.SoftToken,
-                	    phoneNumber
+                        phoneNumber
                         softTokenId, 
                         verifyCode);
 
@@ -249,8 +249,8 @@ namespace TeleSign.Services.Verify
         public string TwoWaySmsRaw(
                     string phoneNumber,
                     string ucid,
-                    string message = null
-            		string validityPeriod = null)
+                    string message = null,
+                    string validityPeriod = null)
         {
             phoneNumber = this.CleanupPhoneNumber(phoneNumber);
             
@@ -266,8 +266,8 @@ namespace TeleSign.Services.Verify
 
             Dictionary<string, string> args = ConstructVerifyArgs(
                         VerificationMethod.TwoWaySms,
-                		phoneNumber
-                		ucid,
+                        phoneNumber,
+                        ucid,
                         message,
                         validityPeriod);
 

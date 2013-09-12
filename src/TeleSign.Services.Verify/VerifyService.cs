@@ -192,11 +192,11 @@ namespace TeleSign.Services.Verify
         /// for the transaction.
         /// </returns>
         public VerifyResponse SendPush(
-        			string phoneNumber,
+                    string phoneNumber,
                     string notificationType = null,
                     string notificationValue = null,
-            		string template = null,
-            		string message = null)
+                    string template = null,
+                    string message = null)
         {
             phoneNumber = this.CleanupPhoneNumber(phoneNumber);
 
@@ -205,7 +205,7 @@ namespace TeleSign.Services.Verify
                         notificationType,
                         notificationValue,
                         template,
-            			message);
+                        message);
 
             try
             {
@@ -232,7 +232,7 @@ namespace TeleSign.Services.Verify
         /// </param>
         /// <returns>The raw JSON response from the REST API.</returns>
         public VerifyResponse SendSoftToken(
-        			string phoneNumber,
+                    string phoneNumber,
                     string softTokenId = null,
                     string verifyCode = null)
         {
@@ -271,10 +271,10 @@ namespace TeleSign.Services.Verify
         /// </param>
         /// <returns>The raw JSON response from the REST API.</returns>
         public VerifyResponse SendTwoWaySms(
-        			string phoneNumber,
+                    string phoneNumber,
                     string ucid,
                     string message = null,
-            		string validityPeriod = null)
+                    string validityPeriod = null)
         {
             phoneNumber = this.CleanupPhoneNumber(phoneNumber);
 
@@ -282,7 +282,7 @@ namespace TeleSign.Services.Verify
                         phoneNumber,
                         ucid,
                         message,
-            			validityPeriod);
+                        validityPeriod);
 
             try
             {
