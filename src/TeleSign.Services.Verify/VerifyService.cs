@@ -211,9 +211,6 @@ namespace TeleSign.Services.Verify
         /// The TeleSign Verify 2-Way SMS web service allows you to authenticate your users and verify user transactions via two-way Short Message Service (SMS) wireless communication. Verification requests are sent to user’s in a text message, and users return their verification responses by replying to the text message.
         /// </summary>
         /// <param name="phoneNumber">The phone number for the Verify Soft Token request, including country code</param>
-        /// <param name="ucid">
-        /// A string specifying one of the Use Case Codes
-        /// </param>
         /// <param name="message">
         /// The text to display in the body of the text message. You must include the $$CODE$$ placeholder for the verification code somewhere in your message text. TeleSign automatically replaces it with a randomly-generated verification code
         /// </param>
@@ -259,6 +256,10 @@ namespace TeleSign.Services.Verify
         /// you supplied a message template.
         /// TODO: Details about language string format.
         /// </param>
+        /// <param name="extensionType">Phone extension type (Live operator or automated attendants)</param>
+        /// <param name="extensionTemplate">A numerical string that specifies the extension used in the call, as described above. If the user must be reached at an extension, then use this parameter to specify the extension number. The extension string is composed of digits.</param>
+        /// <param name="callForwardingAction">Specifies the action you want TeleSign to perform if this phone number is found to have Call Forwarding enabled.</param>
+        /// <param name="redial">A Boolean value that specifies whether the TeleSign system redials when the call fails.</param>
         /// <returns>
         /// A VerifyResponse object with the status and returned information
         /// for the transaction.
@@ -266,7 +267,11 @@ namespace TeleSign.Services.Verify
         public VerifyResponse InitiateCall(
                     string phoneNumber,
                     string verifyCode = null,
-                    string language = "en")
+                    string language = "en",
+                    PhoneExtensionTypes extensionType = PhoneExtensionTypes.Unspecified,
+                    string extensionTemplate = null,
+                    bool redial = true,
+                    CallForwardActions callForwardingAction = CallForwardActions.None)
         {
             string rawResponse = this.CallRaw(
                         phoneNumber,
@@ -293,10 +298,6 @@ namespace TeleSign.Services.Verify
         /// <param name="verifyCode">
         /// The code to send to the user. When null a code will
         /// be generated for you.
-        /// </param>
-        /// <param name="language">
-        /// The language that the message should be in. This parameter is ignored if
-        /// you supplied a message template.
         /// </param>
         /// <returns>
         /// A VerifyResponse object with the status and returned information
