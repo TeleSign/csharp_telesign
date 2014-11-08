@@ -108,6 +108,7 @@ namespace TeleSign.Services.Verify
         /// <param name="extensionTemplate">A numerical string that specifies the extension used in the call, as described above. If the user must be reached at an extension, then use this parameter to specify the extension number. The extension string is composed of digits.</param>
         /// <param name="callForwardingAction">Specifies the action you want TeleSign to perform if this phone number is found to have Call Forwarding enabled.</param>
         /// <param name="redial">A Boolean value that specifies whether the TeleSign system redials when the call fails.</param>
+        /// <param name="requireUserActionBeforeCodeReadout">Requires that the user press X before reading the code when using phone call (used to prevent leaving code in voicemail which is a better security practice) [Warning: May result in higher call charges.]</param>
         /// <returns>The raw JSON response from the REST API.</returns>
         public string CallRaw(
                     string phoneNumber,
@@ -116,7 +117,8 @@ namespace TeleSign.Services.Verify
                     PhoneExtensionTypes extensionType = PhoneExtensionTypes.Unspecified,
                     string extensionTemplate = null,
                     bool redial = true,
-                    CallForwardActions callForwardingAction = CallForwardActions.None)
+                    CallForwardActions callForwardingAction = CallForwardActions.None,
+                    bool requireUserActionBeforeCodeReadout = false)
         {
             phoneNumber = this.CleanupPhoneNumber(phoneNumber);
 
@@ -129,7 +131,8 @@ namespace TeleSign.Services.Verify
                         extensionType: extensionType,
                         extensionTemplate: extensionTemplate,
                         redial: redial,
-                        callForwardingAction: callForwardingAction);
+                        callForwardingAction: callForwardingAction,
+                        requireUserActionBeforeCodeReadout: requireUserActionBeforeCodeReadout);
         }
         
         /////// <summary>
@@ -309,6 +312,7 @@ namespace TeleSign.Services.Verify
         /// <param name="extensionTemplate">A numerical string that specifies the extension used in the call, as described above. If the user must be reached at an extension, then use this parameter to specify the extension number. The extension string is composed of digits.</param>
         /// <param name="callForwardingAction">Specifies the action you want TeleSign to perform if this phone number is found to have Call Forwarding enabled.</param>
         /// <param name="redial">A Boolean value that specifies whether the TeleSign system redials when the call fails.</param>
+        /// <param name="requireUserActionBeforeCodeReadout">Requires that the user press X before reading the code when using phone call (used to prevent leaving code in voicemail which is a better security practice) [Warning: May result in higher call charges.]</param>
         /// <returns>The raw JSON response for a verify REST API call.</returns>
         private string InternalVerify(
                     VerificationMethod verificationMethod,
@@ -321,7 +325,8 @@ namespace TeleSign.Services.Verify
                     PhoneExtensionTypes extensionType = PhoneExtensionTypes.Unspecified,
                     string extensionTemplate = null,
                     bool redial = true,
-                    CallForwardActions callForwardingAction = CallForwardActions.None)
+                    CallForwardActions callForwardingAction = CallForwardActions.None,
+                    bool requireUserActionBeforeCodeReadout = false)
         {
             this.CleanupPhoneNumber(phoneNumber);
 
@@ -346,7 +351,8 @@ namespace TeleSign.Services.Verify
                         extensionType,
                         extensionTemplate,
                         redial,
-                        callForwardingAction
+                        callForwardingAction,
+                        requireUserActionBeforeCodeReadout
                         );
 
             string resourceName = string.Format(
@@ -375,6 +381,7 @@ namespace TeleSign.Services.Verify
         /// <param name="extensionTemplate">A numerical string that specifies the extension used in the call, as described above. If the user must be reached at an extension, then use this parameter to specify the extension number. The extension string is composed of digits.</param>
         /// <param name="callForwardingAction">Specifies the action you want TeleSign to perform if this phone number is found to have Call Forwarding enabled.</param>
         /// <param name="redial">A Boolean value that specifies whether the TeleSign system redials when the call fails.</param>
+        /// <param name="requireUserActionBeforeCodeReadout">Requires that the user press X before reading the code when using phone call (used to prevent leaving code in voicemail which is a better security practice) [Warning: May result in higher call charges.]</param>
         /// <returns>A dictionary of arguments for a Verify transaction.</returns>
         private static Dictionary<string, string> ConstructVerifyArgs(
                     VerificationMethod verificationMethod, 
@@ -387,7 +394,8 @@ namespace TeleSign.Services.Verify
                     PhoneExtensionTypes extensionType = PhoneExtensionTypes.Unspecified,
                     string extensionTemplate = null,
                     bool redial = true,
-                    CallForwardActions callForwardingAction = CallForwardActions.None)
+                    CallForwardActions callForwardingAction = CallForwardActions.None,
+                    bool requireUserActionBeforeCodeReadout = false)
         {
             // TODO: Review code generation rules.
             if (verifyCode == null)
@@ -426,6 +434,11 @@ namespace TeleSign.Services.Verify
                 {
                     args.Add("call_forward_action", callForwardingAction.ToString().ToLower());
                 }
+                if (requireUserActionBeforeCodeReadout)
+                {
+                    args.Add("pressx", "1");
+                }
+
             }
 
             if (verificationMethod == VerificationMethod.Push)

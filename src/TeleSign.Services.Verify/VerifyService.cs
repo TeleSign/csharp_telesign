@@ -260,6 +260,7 @@ namespace TeleSign.Services.Verify
         /// <param name="extensionTemplate">A numerical string that specifies the extension used in the call, as described above. If the user must be reached at an extension, then use this parameter to specify the extension number. The extension string is composed of digits.</param>
         /// <param name="callForwardingAction">Specifies the action you want TeleSign to perform if this phone number is found to have Call Forwarding enabled.</param>
         /// <param name="redial">A Boolean value that specifies whether the TeleSign system redials when the call fails.</param>
+        /// <param name="requireUserActionBeforeCodeReadout">Requires that the user press X before reading the code when using phone call (used to prevent leaving code in voicemail which is a better security practice) [Warning: May result in higher call charges.]</param>
         /// <returns>
         /// A VerifyResponse object with the status and returned information
         /// for the transaction.
@@ -271,12 +272,18 @@ namespace TeleSign.Services.Verify
                     PhoneExtensionTypes extensionType = PhoneExtensionTypes.Unspecified,
                     string extensionTemplate = null,
                     bool redial = true,
-                    CallForwardActions callForwardingAction = CallForwardActions.None)
+                    CallForwardActions callForwardingAction = CallForwardActions.None,
+                    bool requireUserActionBeforeCodeReadout = false)
         {
             string rawResponse = this.CallRaw(
                         phoneNumber,
                         verifyCode,
-                        language);
+                        language,
+                        extensionType: extensionType,
+                        extensionTemplate: extensionTemplate,
+                        redial: redial,
+                        callForwardingAction: callForwardingAction,
+                        requireUserActionBeforeCodeReadout: requireUserActionBeforeCodeReadout);
 
             try
             {
