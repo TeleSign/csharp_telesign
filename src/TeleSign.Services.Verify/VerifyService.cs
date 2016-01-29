@@ -21,14 +21,20 @@ namespace TeleSign.Services.Verify
         private IVerifyResponseParser parser;
 
         /// <summary>
+        /// The alpha
+        /// </summary>
+        private string senderID;
+
+        /// <summary>
         /// Initializes a new instance of the VerifyService class with a supplied credential and URI.
         /// </summary>
         /// <param name="configuration">The configuration information for the service.</param>
-        public VerifyService(TeleSignServiceConfiguration configuration)
+        /// <param name="senderID">The alpha numeric sender ID to be used when sending the verification SMS</param>
+        public VerifyService(TeleSignServiceConfiguration configuration, string senderID = null)
             : this(
                         configuration, 
                         null, 
-                        new JsonDotNetVerifyResponseParser())
+                        new JsonDotNetVerifyResponseParser(), senderID)
         {
         }
 
@@ -43,10 +49,11 @@ namespace TeleSign.Services.Verify
         public VerifyService(
                     TeleSignServiceConfiguration configuration, 
                     IWebRequester webRequester,
-                    IVerifyResponseParser responseParser)
+                    IVerifyResponseParser responseParser, string senderID = null)
             : base(configuration, webRequester)
         {
             this.parser = responseParser;
+            this.senderID = senderID;
         }
 
         /// <summary>
@@ -156,7 +163,7 @@ namespace TeleSign.Services.Verify
                         phoneNumber,
                         verifyCode,
                         messageTemplate,
-                        language);
+                        language, senderID);
 
             try
             {
