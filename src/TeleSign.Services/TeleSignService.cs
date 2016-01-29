@@ -52,6 +52,7 @@ namespace TeleSign.Services
                     IWebRequester webRequester,
                     string accountName = "default")
         {
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             this.configuration = (configuration == null)
                         ? TeleSignServiceConfiguration.ReadConfigurationFile(accountName)
                         : configuration;
@@ -224,7 +225,7 @@ namespace TeleSign.Services
 
             HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(fullUri);
             request.Method = method;
-
+            
             string contentType = string.Empty;
             string encodedBody = string.Empty;
             if (method == "POST")
