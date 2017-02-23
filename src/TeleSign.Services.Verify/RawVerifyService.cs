@@ -165,20 +165,18 @@ namespace TeleSign.Services.Verify
 
         ////    return this.WebRequester.ReadResponseAsString(request);
         ////}
-        
+
         /// <summary>
         /// The TeleSign Verify 2-Way SMS web service allows you to authenticate your users and verify user transactions via two-way Short Message Service (SMS) wireless communication. Verification requests are sent to user’s in a text message, and users return their verification responses by replying to the text message.
         /// </summary>
         /// <param name="phoneNumber">The phone number for the Verify Soft Token request, including country code</param>
-        /// <param name="ucid">
-        /// A string specifying one of the Use Case Codes
-        /// </param>
         /// <param name="message">
         /// The text to display in the body of the text message. You must include the $$CODE$$ placeholder for the verification code somewhere in your message text. TeleSign automatically replaces it with a randomly-generated verification code
         /// </param>
         /// <param name="validityPeriod">
         /// This parameter allows you to place a time-limit on the verification. This provides an extra level of security by restricting the amount of time your end user has to respond (after which, TeleSign automatically rejects their response). Values are expressed as a natural number followed by a lower-case letter that represents the unit of measure. You can use 's' for seconds, 'm' for minutes, 'h' for hours, and 'd' for days
         /// </param>
+        /// <param name="useCaseId"></param>
         /// <returns>The raw JSON response from the REST API.</returns>
         public string TwoWaySmsRaw(
                     string phoneNumber,
@@ -342,6 +340,8 @@ namespace TeleSign.Services.Verify
         /// <param name="verifyCode">The code to be sent to the user. If null - a code will be generated.</param>
         /// <param name="messageTemplate">An optional template for the message. Ignored if not SMS.</param>
         /// <param name="language">The language for the message. Ignored for SMS when a template is provided.</param>
+        /// <param name="validityPeriod"></param>
+        /// <param name="useCaseId"></param>
         /// <returns>A dictionary of arguments for a Verify transaction.</returns>
         private static Dictionary<string, string> ConstructVerifyArgs(
                     VerificationMethod verificationMethod, 
@@ -353,12 +353,7 @@ namespace TeleSign.Services.Verify
                     string useCaseId = RawVerifyService.DefaultUseCaseId)
         {
             // TODO: Review code generation rules.
-            if (verifyCode == null)
-            {
-                Random r = new Random();
-                verifyCode = r.Next(100, 99999).ToString();
-            }
-            else
+            if (!string.IsNullOrEmpty(verifyCode))
             {
                 if (verificationMethod == VerificationMethod.TwoWaySms)
                 {
@@ -368,23 +363,25 @@ namespace TeleSign.Services.Verify
 
             // TODO: Check code validity here?
 
-            Dictionary<string, string> args = new Dictionary<string, string>();
-            args.Add("phone_number", phoneNumber);
+           var args = new Dictionary<string, string>
+           {
+               {"phone_number", phoneNumber}
+           };
 
             if (verificationMethod == VerificationMethod.Push)
             {
                 if (!string.IsNullOrEmpty(verifyCode))
                 {
-                    args.Add("notification_value", verifyCode.ToString());
+                    args.Add("notification_value", verifyCode);
                 }
             }
             else if (verificationMethod == VerificationMethod.TwoWaySms)
             {
                 // Two way sms doesn't take a verify code. So nothing here.
             }
-            else
+            else if(!string.IsNullOrEmpty(verifyCode))
             {
-                args.Add("verify_code", verifyCode.ToString());
+                args.Add("verify_code", verifyCode);
             }
 
             if (!string.IsNullOrEmpty(language))
