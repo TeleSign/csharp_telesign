@@ -52,7 +52,7 @@ namespace TeleSign.Services.Verify
         /// <param name="configuration">The configuration information for the service.</param>
         /// <param name="webRequester">The web requester to use.</param>
         public RawVerifyService(
-                    TeleSignServiceConfiguration configuration, 
+                    TeleSignServiceConfiguration configuration,
                     IWebRequester webRequester)
             : base(configuration, webRequester)
         {
@@ -79,7 +79,7 @@ namespace TeleSign.Services.Verify
                     string phoneNumber,
                     string verifyCode = null,
                     string messageTemplate = null,
-                    string language = null)
+                    string language = null, string senderID = null)
         {
             phoneNumber = this.CleanupPhoneNumber(phoneNumber);
 
@@ -88,7 +88,7 @@ namespace TeleSign.Services.Verify
                         phoneNumber,
                         verifyCode,
                         messageTemplate,
-                        language);
+                        language, senderID);
         }
 
         /// <summary>
@@ -119,7 +119,7 @@ namespace TeleSign.Services.Verify
                         null,
                         language);
         }
-        
+
         /////// <summary>
         /////// The TeleSign Verify Soft Token web service is a server-side component of the TeleSign AuthID application, and it allows you to authenticate your end users when they use the TeleSign AuthID application on their mobile device to generate a Time-based One-time Password (TOTP) verification code
         /////// </summary>
@@ -137,12 +137,12 @@ namespace TeleSign.Services.Verify
         ////            string verifyCode = null)
         ////{
         ////    phoneNumber = this.CleanupPhoneNumber(phoneNumber);
-            
+
         ////    if (softTokenId == null)
         ////    {
         ////        softTokenId = string.Empty;
         ////    }
-            
+
         ////    if (verifyCode == null)
         ////    {
         ////        verifyCode = string.Empty;
@@ -165,7 +165,7 @@ namespace TeleSign.Services.Verify
 
         ////    return this.WebRequester.ReadResponseAsString(request);
         ////}
-        
+
         /// <summary>
         /// The TeleSign Verify 2-Way SMS web service allows you to authenticate your users and verify user transactions via two-way Short Message Service (SMS) wireless communication. Verification requests are sent to user’s in a text message, and users return their verification responses by replying to the text message.
         /// </summary>
@@ -183,7 +183,7 @@ namespace TeleSign.Services.Verify
         public string TwoWaySmsRaw(
                     string phoneNumber,
                     string message,
-            		string validityPeriod = "5m",
+                    string validityPeriod = "5m",
                     string useCaseId = RawVerifyService.DefaultUseCaseId)
         {
             CheckArgument.NotEmpty(message, "message");
@@ -193,15 +193,15 @@ namespace TeleSign.Services.Verify
 
             Dictionary<string, string> args = ConstructVerifyArgs(
                         VerificationMethod.TwoWaySms,
-                		phoneNumber,
-                		null,
+                        phoneNumber,
+                        null,
                         message,
                         null,
                         validityPeriod,
                         useCaseId);
 
             string resourceName = string.Format(
-                        RawVerifyService.VerifyResourceFormatString, 
+                        RawVerifyService.VerifyResourceFormatString,
                         "two_way_sms");
 
             WebRequest request = this.ConstructWebRequest(
@@ -268,7 +268,7 @@ namespace TeleSign.Services.Verify
             }
 
             string resourceName = string.Format(
-                        RawVerifyService.VerifyResourceFormatString, 
+                        RawVerifyService.VerifyResourceFormatString,
                         referenceId);
 
             WebRequest request = this.ConstructWebRequest(
@@ -301,7 +301,7 @@ namespace TeleSign.Services.Verify
                     string phoneNumber,
                     string verifyCode = null,
                     string messageTemplate = null,
-                    string language = null)
+                    string language = null, string senderID = null)
         {
             this.CleanupPhoneNumber(phoneNumber);
 
@@ -316,14 +316,14 @@ namespace TeleSign.Services.Verify
             }
 
             Dictionary<string, string> args = ConstructVerifyArgs(
-                        verificationMethod, 
-                        phoneNumber, 
-                        verifyCode, 
-                        messageTemplate, 
-                        language);
+                        verificationMethod,
+                        phoneNumber,
+                        verifyCode,
+                        messageTemplate,
+                        language, senderID: senderID);
 
             string resourceName = string.Format(
-                        RawVerifyService.VerifyResourceFormatString, 
+                        RawVerifyService.VerifyResourceFormatString,
                         verificationMethod.ToString().ToLowerInvariant());
 
             WebRequest request = this.ConstructWebRequest(
@@ -344,13 +344,14 @@ namespace TeleSign.Services.Verify
         /// <param name="language">The language for the message. Ignored for SMS when a template is provided.</param>
         /// <returns>A dictionary of arguments for a Verify transaction.</returns>
         private static Dictionary<string, string> ConstructVerifyArgs(
-                    VerificationMethod verificationMethod, 
-                    string phoneNumber, 
-                    string verifyCode, 
-                    string messageTemplate, 
+                    VerificationMethod verificationMethod,
+                    string phoneNumber,
+                    string verifyCode,
+                    string messageTemplate,
                     string language,
                     string validityPeriod = null,
-                    string useCaseId = RawVerifyService.DefaultUseCaseId)
+                    string useCaseId = RawVerifyService.DefaultUseCaseId,
+                    string senderID = null)
         {
             // TODO: Review code generation rules.
             if (verifyCode == null)
@@ -390,6 +391,11 @@ namespace TeleSign.Services.Verify
             if (!string.IsNullOrEmpty(language))
             {
                 args.Add("language", language);
+            }
+
+            if (!string.IsNullOrEmpty(senderID))
+            {
+                args.Add("sender_id", senderID);
             }
 
             if (verificationMethod == VerificationMethod.Sms || verificationMethod == VerificationMethod.Push)
