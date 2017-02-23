@@ -23,5 +23,6 @@ namespace TeleSign.Services
         /// <param name="request">A .NET WebRequest object.</param>
         /// <returns>The response as a string.</returns>
         string ReadResponseAsString(WebRequest request);
+        TSResponse ReadTeleSignResponse(WebRequest request);
     }
 }

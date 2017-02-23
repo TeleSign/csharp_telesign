@@ -10,6 +10,7 @@ namespace TeleSign.Services
 {
     using System.IO;
     using System.Net;
+    using Newtonsoft.Json.Linq;
 
     /// <summary>
     /// Default implementation of IWebRequester using the built in .NET
@@ -45,6 +46,51 @@ namespace TeleSign.Services
                     {
                         string error = reader.ReadToEnd();
                         return error;
+                    }
+                }
+
+                throw;
+            }
+        }
+
+        public TSResponse ReadTeleSignResponse(WebRequest request)
+        {
+            TSResponse tsResponse = new TSResponse();
+            try
+           {
+                request.Timeout = 30000;
+                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                using (StreamReader reader = new StreamReader(response.GetResponseStream()))
+                {
+                    tsResponse.StatusCode = (int)response.StatusCode;                    
+                    // Get the headers associated with Response
+                    WebHeaderCollection headers = response.Headers;
+                    for (int i = 0; i < headers.Count; ++i) {
+                        tsResponse.addHeader(headers.GetKey(i), headers.GetValues(i));                       
+                    }
+                    tsResponse.JsonBody = JObject.Parse(reader.ReadToEnd());
+                    return tsResponse;                    
+                }
+
+            }
+            catch (WebException x)
+            {
+                // This error still has content in the body and was not really
+                // a connection failure, but is a failure in what we sent to the
+                // service.
+                if (x.Status == WebExceptionStatus.ProtocolError)
+                {
+                    using (StreamReader reader = new StreamReader(x.Response.GetResponseStream()))
+                    {
+                        tsResponse.JsonBody = JObject.Parse(reader.ReadToEnd());
+                        tsResponse.StatusCode = (int)((HttpWebResponse)x.Response).StatusCode;
+                        // Get the headers associated with Response
+                        WebHeaderCollection headers = x.Response.Headers;
+                        for (int i = 0; i < headers.Count; ++i)
+                        {
+                            tsResponse.addHeader(headers.GetKey(i), headers.GetValues(i));
+                        }
+                        return tsResponse;                        
                     }
                 }
 

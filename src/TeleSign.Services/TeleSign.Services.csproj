@@ -33,6 +33,9 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\TeleSign.Services.xml</DocumentationFile>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\..\lib\json.net\Net40\Newtonsoft.Json.dll</HintPath>
@@ -58,6 +61,7 @@
     <Compile Include="TeleSignServiceConfiguration.cs" />
     <Compile Include="TransactionRecommendation.cs" />
     <Compile Include="TransactionStatusCode.cs" />
+    <Compile Include="TSResponse.cs" />
     <Compile Include="VerificationMethod.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TransactionStatus.cs" />
