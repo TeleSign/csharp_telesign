@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeleSign.Services.Score", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeleSign.Services.AutoVerify", "TeleSign.Services.AutoVerify\TeleSign.Services.AutoVerify.csproj", "{57A229EA-68E7-4A18-AE1F-E10343219B8D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeleSign.Services.Voice", "TeleSign.Services.Voice\TeleSign.Services.Voice.csproj", "{BA63A2A9-47DB-4ADE-9F6A-F3F2CE3B5F65}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -119,6 +121,18 @@ Global
 		{57A229EA-68E7-4A18-AE1F-E10343219B8D}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{57A229EA-68E7-4A18-AE1F-E10343219B8D}.Release|x86.ActiveCfg = Release|Any CPU
 		{57A229EA-68E7-4A18-AE1F-E10343219B8D}.Release|x86.Build.0 = Release|Any CPU
+		{BA63A2A9-47DB-4ADE-9F6A-F3F2CE3B5F65}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA63A2A9-47DB-4ADE-9F6A-F3F2CE3B5F65}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA63A2A9-47DB-4ADE-9F6A-F3F2CE3B5F65}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{BA63A2A9-47DB-4ADE-9F6A-F3F2CE3B5F65}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{BA63A2A9-47DB-4ADE-9F6A-F3F2CE3B5F65}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{BA63A2A9-47DB-4ADE-9F6A-F3F2CE3B5F65}.Debug|x86.Build.0 = Debug|Any CPU
+		{BA63A2A9-47DB-4ADE-9F6A-F3F2CE3B5F65}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA63A2A9-47DB-4ADE-9F6A-F3F2CE3B5F65}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA63A2A9-47DB-4ADE-9F6A-F3F2CE3B5F65}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{BA63A2A9-47DB-4ADE-9F6A-F3F2CE3B5F65}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{BA63A2A9-47DB-4ADE-9F6A-F3F2CE3B5F65}.Release|x86.ActiveCfg = Release|Any CPU
+		{BA63A2A9-47DB-4ADE-9F6A-F3F2CE3B5F65}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
