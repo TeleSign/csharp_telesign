@@ -43,5 +43,9 @@ namespace TeleSign.Services
         /// Verify by TwoWaySms.
         /// </summary>
         TwoWaySms,
+        /// <summary>
+        /// Smart verify
+        /// </summary>
+        Smart,
     }
 }

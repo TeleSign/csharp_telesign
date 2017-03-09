@@ -50,6 +50,8 @@ namespace TeleSign.Services.PhoneId
         /// filled into the format field.
         /// </summary>
         private const string LiveResourceFormatString = "/v1/phoneid/live/{0}";
+        private const string V1_PHONEID_NUMBER_DEACTIVATION = "/v1/phoneid/number_deactivation/{0}";
+        private const string PHONEID_RESOURCE = "/v1/phoneid/";
 
         /// <summary>
         /// Initializes a new instance of the RawPhoneIdService class with a supplied credential and uri.
@@ -98,11 +100,11 @@ namespace TeleSign.Services.PhoneId
         /// VOIP, etc).
         /// </summary>
         /// <param name="phoneNumber">The phone number to lookup.</param>
-        /// <param name="useCaseId">The use case for the lookup. (Restricted set of values).</param>
+        /// <param name="standardParams">The phone number to lookup.</param>
         /// <returns>The raw JSON string response.</returns>
-        public string StandardLookupRaw(
+        public TSResponse StandardLookupRaw(
                     string phoneNumber,
-                    string useCaseId = RawPhoneIdService.DefaultUseCaseId)
+                    Dictionary<String, String> standardParams = null)
         {
             phoneNumber = this.CleanupPhoneNumber(phoneNumber);
 
@@ -110,22 +112,13 @@ namespace TeleSign.Services.PhoneId
                         CultureInfo.InvariantCulture,
                         RawPhoneIdService.StandardResourceFormatString, 
                         phoneNumber);
-
-            // Use Case Id (ucid) is not current required in calls to standard but may be
-            // in future.
-            Dictionary<string, string> additionalFields = new Dictionary<string, string>() 
-            { 
-                { "ucid", useCaseId },
-            };
-
-            this.CustomizeParameters(additionalFields);
-
+            
             WebRequest request = this.ConstructWebRequest(
                         resourceName,
                         "GET",
-                        additionalFields);
+                        standardParams);
 
-            return this.WebRequester.ReadResponseAsString(request);
+            return this.WebRequester.ReadTeleSignResponse(request);
         }
 
         /// <summary>
@@ -135,10 +128,11 @@ namespace TeleSign.Services.PhoneId
         /// </summary>
         /// <param name="phoneNumber">The phone number to lookup.</param>
         /// <param name="useCaseId">The use case for the lookup. (Restricted set of values).</param>
+        /// <param name="contactParams"></param>
         /// <returns>The raw JSON string response.</returns>
-        public string ContactLookupRaw(
+        public TSResponse ContactLookupRaw(
                     string phoneNumber, 
-                    string useCaseId = RawPhoneIdService.DefaultUseCaseId)
+                    string useCaseId = RawPhoneIdService.DefaultUseCaseId, Dictionary<String, String> contactParams = null)
         {
             phoneNumber = this.CleanupPhoneNumber(phoneNumber);
 
@@ -146,21 +140,17 @@ namespace TeleSign.Services.PhoneId
                         CultureInfo.InvariantCulture,
                         RawPhoneIdService.ContactResourceFormatString, 
                         phoneNumber);
+            if (null == contactParams)
+                contactParams = new Dictionary<string, string>();
 
-            // Use Case Id (ucid) is required in calls to contact.
-            Dictionary<string, string> additionalFields = new Dictionary<string, string>() 
-            { 
-                { "ucid", useCaseId } 
-            };
-
-            this.CustomizeParameters(additionalFields);
+            contactParams.Add("ucid", useCaseId);
 
             WebRequest request = this.ConstructWebRequest(
                         resourceName,
                         "GET",
-                        additionalFields);
+                        contactParams);
 
-            return this.WebRequester.ReadResponseAsString(request);
+            return this.WebRequester.ReadTeleSignResponse(request);
         }
 
         /// <summary>
@@ -170,10 +160,12 @@ namespace TeleSign.Services.PhoneId
         /// </summary>
         /// <param name="phoneNumber">The phone number to lookup.</param>
         /// <param name="useCaseId">The use case for the lookup. (Restricted set of values).</param>
+        /// <param name="scoreParams"></param>
         /// <returns>The raw JSON string response.</returns>
-        public string ScoreLookupRaw(
+        public TSResponse ScoreLookupRaw(
                     string phoneNumber,
-                    string useCaseId = RawPhoneIdService.DefaultUseCaseId)
+                    string useCaseId = RawPhoneIdService.DefaultUseCaseId,
+                     Dictionary<String, String> scoreParams = null)
         {
             phoneNumber = this.CleanupPhoneNumber(phoneNumber);
 
@@ -181,21 +173,17 @@ namespace TeleSign.Services.PhoneId
                         CultureInfo.InvariantCulture,
                         RawPhoneIdService.ScoreResourceFormatString,
                         phoneNumber);
+            if (null == scoreParams)
+                scoreParams = new Dictionary<string, string>();
 
-            // Use Case Id (ucid) is required in calls to score.
-            Dictionary<string, string> additionalFields = new Dictionary<string, string>() 
-            { 
-                { "ucid", useCaseId } 
-            };
-
-            this.CustomizeParameters(additionalFields);
+            scoreParams.Add("ucid", useCaseId);
 
             WebRequest request = this.ConstructWebRequest(
                         resourceName,
                         "GET",
-                        additionalFields);
+                        scoreParams);
 
-            return this.WebRequester.ReadResponseAsString(request);
+            return this.WebRequester.ReadTeleSignResponse(request);
         }
 
         /// <summary>
@@ -205,10 +193,12 @@ namespace TeleSign.Services.PhoneId
         /// </summary>
         /// <param name="phoneNumber">The phone number to lookup.</param>
         /// <param name="useCaseId">The use case for the lookup. (Restricted set of values).</param>
+        /// <param name="liveParams"></param>
         /// <returns>The raw JSON string response.</returns>
-        public string LiveLookupRaw(
+        public TSResponse LiveLookupRaw(
                     string phoneNumber,
-                    string useCaseId = RawPhoneIdService.DefaultUseCaseId)
+                    string useCaseId = RawPhoneIdService.DefaultUseCaseId,
+                    Dictionary<String, String> liveParams = null)
         {
             phoneNumber = this.CleanupPhoneNumber(phoneNumber);
 
@@ -217,28 +207,69 @@ namespace TeleSign.Services.PhoneId
                         RawPhoneIdService.LiveResourceFormatString,
                         phoneNumber);
 
-            // Use Case Id (ucid) is required in calls to live.
-            Dictionary<string, string> additionalFields = new Dictionary<string, string>() 
-            { 
-                { "ucid", useCaseId } 
-            };
+            if (null == liveParams)
+                liveParams = new Dictionary<string, string>();
 
-            this.CustomizeParameters(additionalFields);
+            liveParams.Add("ucid", useCaseId);
 
             WebRequest request = this.ConstructWebRequest(
                         resourceName,
                         "GET",
-                        additionalFields);
+                        liveParams);
 
-            return this.WebRequester.ReadResponseAsString(request);
+            return this.WebRequester.ReadTeleSignResponse(request);
+        }
+        
+        /// <summary>
+        /// The PhoneID Number Deactivation API determines whether a phone number has been deactivated and when, 
+        /// based on carriers' phone number data and TeleSign's proprietary analysis. See 
+        /// https://developer.telesign.com/docs/rest_api-phoneid-number-deactivation for detailed API documentation.
+        /// </summary>
+        /// <param name="phoneNumber"></param>
+        /// <param name="useCaseId"></param>
+        /// <param name="deactivationParams"></param>
+        /// <returns></returns>
+        public TSResponse NumberDeactivationRaw(string phoneNumber,
+            string useCaseId = RawPhoneIdService.DefaultUseCaseId,
+                Dictionary<String, String> deactivationParams = null)
+        {
+            phoneNumber = this.CleanupPhoneNumber(phoneNumber);
+
+            string resourceName = string.Format(
+                        CultureInfo.InvariantCulture,
+                        RawPhoneIdService.V1_PHONEID_NUMBER_DEACTIVATION,
+                        phoneNumber);
+
+            if (null == deactivationParams)
+                deactivationParams = new Dictionary<string, string>();
+
+            deactivationParams.Add("ucid", useCaseId);
+
+            WebRequest request = this.ConstructWebRequest(
+                        resourceName,
+                        "GET",
+                        deactivationParams);
+
+            return this.WebRequester.ReadTeleSignResponse(request);
         }
 
         /// <summary>
-        /// Allows you to override and add custom fields.
+        /// The PhoneID API provides a cleansed phone number, phone type, and telecom carrier information to determine the best communication method - SMS or voice. See https://developer.telesign.com/docs/phoneid-api for detailed API documentation.
         /// </summary>
-        /// <param name="additionalFields">A dictionary of additional parameters.</param>
-        public virtual void CustomizeParameters(Dictionary<string, string> additionalFields)
-        {
+        /// <param name="phoneNumber"></param>
+        /// <param name="phoneidParams"></param>
+        /// <returns></returns>
+        public TSResponse PhoneIdRaw(string phoneNumber, Dictionary<String, String> phoneidParams = null) {
+            phoneNumber = this.CleanupPhoneNumber(phoneNumber);
+
+            string resourceName = string.Format(
+                        CultureInfo.InvariantCulture,
+                        RawPhoneIdService.PHONEID_RESOURCE,
+                        phoneNumber);
+
+            WebRequest request = this.ConstructWebRequest(resourceName, "POST", phoneidParams, AuthenticationMethod.HmacSha256);
+
+            return this.WebRequester.ReadTeleSignResponse(request);
         }
     }
 }

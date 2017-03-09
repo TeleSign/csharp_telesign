@@ -205,7 +205,7 @@ namespace TeleSign.Services
                     string resourceName,
                     string method,
                     Dictionary<string, string> fields = null,
-                    AuthenticationMethod authMethod = AuthenticationMethod.HmacSha1)
+                    AuthenticationMethod authMethod = AuthenticationMethod.HmacSha256)
         {
             CheckArgument.NotNullOrEmpty(resourceName, "resourceName");
             CheckArgument.NotNullOrEmpty(method, "method");

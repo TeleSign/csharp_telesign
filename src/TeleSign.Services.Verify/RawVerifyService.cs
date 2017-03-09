@@ -10,14 +10,12 @@ namespace TeleSign.Services.Verify
 {
     using System;
     using System.Collections.Generic;
-    using System.IO;
     using System.Net;
-    using System.Text;
 
     /// <summary>
     /// <para>
     /// The raw TeleSign Verify service. This class builds and makes requests
-    /// to the TeleSign service and returns the raw JSON responses that the
+    /// to the TeleSign service and returns the JSON responses that the
     /// REST service returns.
     /// </para>
     /// <para>
@@ -57,115 +55,70 @@ namespace TeleSign.Services.Verify
             : base(configuration, webRequester)
         {
         }
-
+        
         /// <summary>
-        /// Initiates a PhoneId SMS transaction returning the raw JSON response from
-        /// the REST API.
+        /// The SMS Verify API delivers phone-based verification and two-factor authentication using a time-based,
+        /// one-time passcode sent over SMS.
+        /// See https://developer.telesign.com/docs/rest_api-verify-sms for detailed API documentation.
         /// </summary>
-        /// <param name="phoneNumber">The phone number to send the sms to.</param>
-        /// <param name="verifyCode">
-        /// The code to send to the user. When null a code will
-        /// be generated for you.
-        /// </param>
-        /// <param name="messageTemplate">
-        /// A template for the message to be sent to the user.
-        /// </param>
-        /// <param name="language">
-        /// The language that the message should be in. This parameter is ignored if
-        /// you supplied a message template.
-        /// </param>
-        /// <returns>The raw JSON response from the REST API.</returns>
-        public string SmsRaw(
+        /// <param name="phoneNumber"></param>
+        /// <param name="smsParams"></param>
+        /// <returns></returns>
+        public TSResponse SmsRaw(
                     string phoneNumber,
-                    string verifyCode = null,
-                    string messageTemplate = null,
-                    string language = null)
+                    Dictionary<string, string> smsParams = null)
         {
             phoneNumber = this.CleanupPhoneNumber(phoneNumber);
 
             return this.InternalVerify(
                         VerificationMethod.Sms,
                         phoneNumber,
-                        verifyCode,
-                        messageTemplate,
-                        language);
+                        smsParams);
         }
 
+
         /// <summary>
-        /// Initiates a PhoneId Voice Call transaction returning the raw JSON response from
-        /// the REST API.
+        /// The Voice Verify API delivers patented phone-based verification and two-factor authentication using a one-time
+        /// passcode sent over voice message.
+        ///  See https://developer.telesign.com/docs/rest_api-verify-call for detailed API documentation.
         /// </summary>
         /// <param name="phoneNumber">The phone number to call.</param>
-        /// <param name="verifyCode">
-        /// The code to send to the user. When null a code will
-        /// be generated for you.
-        /// </param>
-        /// <param name="language">
-        /// The language that the message should be in. This parameter is ignored if
-        /// you supplied a message template.
-        /// </param>
-        /// <returns>The raw JSON response from the REST API.</returns>
-        public string CallRaw(
+        /// <param name="callParams"></param>
+        /// <returns>The TeleSign JSON response from the REST API.</returns>
+        public TSResponse CallRaw(
                     string phoneNumber,
-                    string verifyCode = null,
-                    string language = null)
+                    Dictionary<string, string> callParams = null)
         {
             phoneNumber = this.CleanupPhoneNumber(phoneNumber);
 
             return this.InternalVerify(
                         VerificationMethod.Call,
                         phoneNumber,
-                        verifyCode,
-                        null,
-                        language);
+                        callParams);
         }
-        
-        /////// <summary>
-        /////// The TeleSign Verify Soft Token web service is a server-side component of the TeleSign AuthID application, and it allows you to authenticate your end users when they use the TeleSign AuthID application on their mobile device to generate a Time-based One-time Password (TOTP) verification code
-        /////// </summary>
-        /////// <param name="phoneNumber">The phone number for the Verify Soft Token request, including country code</param>
-        /////// <param name="softTokenId">
-        /////// The alphanumeric string that uniquely identifies your TeleSign soft token subscription
-        /////// </param>
-        /////// <param name="verifyCode">
-        /////// The verification code received from the end user
-        /////// </param>
-        /////// <returns>The raw JSON response from the REST API.</returns>
-        ////public string SoftTokenRaw(
-        ////            string phoneNumber,
-        ////            string softTokenId = null,
-        ////            string verifyCode = null)
-        ////{
-        ////    phoneNumber = this.CleanupPhoneNumber(phoneNumber);
-            
-        ////    if (softTokenId == null)
-        ////    {
-        ////        softTokenId = string.Empty;
-        ////    }
-            
-        ////    if (verifyCode == null)
-        ////    {
-        ////        verifyCode = string.Empty;
-        ////    }
 
-        ////    Dictionary<string, string> args = ConstructVerifyArgs(
-        ////                VerificationMethod.SoftToken,
-        ////                phoneNumber,
-        ////                softTokenId, 
-        ////                verifyCode);
+        /// <summary>
+        /// The Smart Verify web service simplifies the process of verifying user identity by integrating several TeleSign
+        /// web services into a single API call. This eliminates the need for you to make multiple calls to the TeleSign
+        /// Verify resource.
+        /// </summary>
+        /// <param name="phoneNumber"></param>
+        /// <param name="ucid"></param>
+        /// <param name="smartParams"></param>
+        /// <returns>The TeleSign JSON response from the REST API.</returns>
+        public TSResponse SmartRaw(
+                    string phoneNumber,
+                    string ucid,
+                    Dictionary<string, string> smartParams = null)
+        {
+            phoneNumber = this.CleanupPhoneNumber(phoneNumber);
 
-        ////    string resourceName = string.Format(
-        ////                RawVerifyService.VerifyResourceFormatString, 
-        ////                VerificationMethod.SoftToken.ToString().ToLowerInvariant());
+            return this.InternalVerify(
+                        VerificationMethod.Smart,
+                        phoneNumber,
+                        smartParams);
+        }        
 
-        ////    WebRequest request = this.ConstructWebMobileRequest(
-        ////                resourceName,
-        ////                "POST",
-        ////                args);
-
-        ////    return this.WebRequester.ReadResponseAsString(request);
-        ////}
-        
         /// <summary>
         /// The TeleSign Verify 2-Way SMS web service allows you to authenticate your users and verify user transactions via two-way Short Message Service (SMS) wireless communication. Verification requests are sent to user’s in a text message, and users return their verification responses by replying to the text message.
         /// </summary>
@@ -212,60 +165,43 @@ namespace TeleSign.Services.Verify
             return this.WebRequester.ReadResponseAsString(request);
         }
 
+
         /// <summary>
-        /// Initiates a PhoneId Push Mobile transaction returning the raw JSON response from
-        /// the REST API.
+        /// The Push Verify web service allows you to provide on-device transaction authorization for your end users. It
+        /// works by delivering authorization requests to your end users via push notification, and then by receiving their
+        /// permission responses via their mobile device's wireless Internet connection.
+        /// See https://developer.telesign.com/docs/rest_api-verify-push for detailed API documentation.
         /// </summary>
-        /// <param name="phoneNumber">The phone number to call.</param>
-        /// <param name="verifyCode">
-        /// The code to send to the user. When null a code will
-        /// be generated for you.
-        /// </param>
-        /// <param name="language">
-        /// The language that the message should be in. This parameter is ignored if
-        /// you supplied a message template.
-        /// </param>
-        /// <returns>The raw JSON response from the REST API.</returns>
-        public string PushRaw(
+        /// <param name="phoneNumber"></param>
+        /// <param name="pushParams"></param>
+        /// <returns>The TeleSign JSON response from the REST API.</returns>
+        public TSResponse PushRaw(
                     string phoneNumber,
-                    string verifyCode = null)
+                    Dictionary<string, string> pushParams = null)
         {
             phoneNumber = this.CleanupPhoneNumber(phoneNumber);
 
             return this.InternalVerify(
                         VerificationMethod.Push,
                         phoneNumber,
-                        verifyCode,
-                        "TS2FA");
+                        pushParams);
         }
 
         /// <summary>
-        /// Checks the status of a Verify transaction. When the code is
-        /// supplied it verifies this code. The response also contains 
-        /// status information about the progress of the call or sms.
+        /// Retrieves the verification result for any verify resource.
+        /// See https://developer.telesign.com/docs/rest_api-verify-transaction-callback for detailed API documentation.
         /// </summary>
-        /// <param name="referenceId">
-        /// The reference id return in the VerifyResponse from
-        /// a call to Sms or Call.
-        /// </param>
-        /// <param name="verifyCode">The code the user provided you to be verified.</param>
-        /// <returns>
-        /// A VerifyResponse object containing information about the status
-        /// of the transactation and validity of the code.
-        /// </returns>
-        public string StatusRaw(
+        /// <param name="referenceId"></param>
+        /// <param name="statusParams"></param>
+        /// <returns></returns>
+        public TSResponse StatusRaw(
                     string referenceId,
-                    string verifyCode = null)
+                    Dictionary<string, string> statusParams = null)
         {
             CheckArgument.NotNullOrEmpty(referenceId, "referenceId");
-
-            Dictionary<string, string> args = new Dictionary<string, string>();
-            args.Add("referenceId", referenceId);
-
-            if (!string.IsNullOrEmpty(verifyCode))
-            {
-                args.Add("verify_code", verifyCode.ToString());
-            }
+            if(null == statusParams)
+                statusParams = new Dictionary<string, string>();
+            statusParams.Add("referenceId", referenceId);            
 
             string resourceName = string.Format(
                         RawVerifyService.VerifyResourceFormatString, 
@@ -274,9 +210,9 @@ namespace TeleSign.Services.Verify
             WebRequest request = this.ConstructWebRequest(
                         resourceName,
                         "GET",
-                        args);
+                        statusParams);
 
-            return this.WebRequester.ReadResponseAsString(request);
+            return this.WebRequester.ReadTeleSignResponse(request);
         }
 
         /// <summary>
@@ -284,54 +220,27 @@ namespace TeleSign.Services.Verify
         /// </summary>
         /// <param name="verificationMethod">The verification method (call or sms).</param>
         /// <param name="phoneNumber">The phone number to send verification to.</param>
-        /// <param name="verifyCode">
-        /// The code to send to the user. When null a code will
-        /// be generated for you.
-        /// </param>
-        /// <param name="messageTemplate">
-        /// A template for the message to be sent to the user. This is ignored for voice calls.
-        /// </param>
-        /// <param name="language">
-        /// The language that the message should be in. This parameter is ignored for
-        /// SMS if you supplied a message template.
-        /// </param>
-        /// <returns>The raw JSON response for a verify REST API call.</returns>
-        private string InternalVerify(
-                    VerificationMethod verificationMethod,
-                    string phoneNumber,
-                    string verifyCode = null,
-                    string messageTemplate = null,
-                    string language = null)
+        /// <param name="verifyParams"></param>
+        /// <returns>TeleSign response as a Object composed of JSON.</returns>
+        private TSResponse InternalVerify(VerificationMethod verificationMethod, string phoneNumber, Dictionary<string, string> verifyParams)
         {
             this.CleanupPhoneNumber(phoneNumber);
 
-            if (messageTemplate == null)
-            {
-                messageTemplate = string.Empty;
-            }
+            if (null == verifyParams)
+                verifyParams = new Dictionary<string, string>();
 
-            if (string.IsNullOrEmpty(language))
-            {
-                language = "en";
-            }
-
-            Dictionary<string, string> args = ConstructVerifyArgs(
-                        verificationMethod, 
-                        phoneNumber, 
-                        verifyCode, 
-                        messageTemplate, 
-                        language);
+            verifyParams.Add("phone_number", phoneNumber);
 
             string resourceName = string.Format(
-                        RawVerifyService.VerifyResourceFormatString, 
+                        RawVerifyService.VerifyResourceFormatString,
                         verificationMethod.ToString().ToLowerInvariant());
 
             WebRequest request = this.ConstructWebRequest(
                         resourceName,
                         "POST",
-                        args);
+                        verifyParams);
 
-            return this.WebRequester.ReadResponseAsString(request);
+            return this.WebRequester.ReadTeleSignResponse(request);
         }
 
         /// <summary>
