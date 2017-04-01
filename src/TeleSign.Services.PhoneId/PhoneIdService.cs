@@ -41,7 +41,7 @@ namespace TeleSign.Services.PhoneId
         /// <param name="webRequester">The web requester to use.</param>
         /// <param name="responseParser">The response parser to use.</param>
         public PhoneIdService(
-                    TeleSignServiceConfiguration configuration, 
+                    TeleSignServiceConfiguration configuration,
                     IWebRequester webRequester,
                     IPhoneIdResponseParser responseParser)
             : base(configuration, webRequester)
@@ -64,7 +64,7 @@ namespace TeleSign.Services.PhoneId
         {
             CheckArgument.NotNullOrEmpty(phoneNumber, "phoneNumber");
 
-            TSResponse response = new TSResponse();            
+            TSResponse response = new TSResponse();
 
             try
             {
@@ -96,7 +96,7 @@ namespace TeleSign.Services.PhoneId
             CheckArgument.NotNullOrEmpty(phoneNumber, "phoneNumber");
 
             TSResponse response = new TSResponse();
-            
+
             try
             {
                 response = this.ContactLookupRaw(phoneNumber, ucid, contactParams);
@@ -125,7 +125,7 @@ namespace TeleSign.Services.PhoneId
             Dictionary<String, String> scoreParams = null)
         {
             CheckArgument.NotNullOrEmpty(phoneNumber, "phoneNumber");
-            TSResponse response = new TSResponse();           
+            TSResponse response = new TSResponse();
 
             try
             {
@@ -155,7 +155,7 @@ namespace TeleSign.Services.PhoneId
             Dictionary<String, String> liveParams = null)
         {
             CheckArgument.NotNullOrEmpty(phoneNumber, "phoneNumber");
-            TSResponse response = new TSResponse();           
+            TSResponse response = new TSResponse();
 
             try
             {
@@ -225,4 +225,5 @@ namespace TeleSign.Services.PhoneId
                             x);
             }
         }
+    }
 }

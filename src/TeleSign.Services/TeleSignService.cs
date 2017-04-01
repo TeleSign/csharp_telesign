@@ -42,6 +42,12 @@ namespace TeleSign.Services
         protected IWebRequester WebRequester { get; private set; }
 
         /// <summary>
+        /// Flags for Proxy connection
+        /// </summary>
+        private Boolean proxyAuthentication = false;
+        private Boolean proxy = false;
+
+        /// <summary>
         /// Initializes a new instance of the TeleSignService class with the supplied
         /// configuration and webrequester.
         /// </summary>
@@ -173,19 +179,26 @@ namespace TeleSign.Services
                             "The Credential member of the configuration was null");
             }
 
-            if (this.configuration.ServiceAddress == null)
+            if (null == this.configuration.TeleSignServiceParams)
             {
                 throw new ArgumentNullException(
-                            "configuration.ServiceAddress", 
+                            "configuration",
+                            "The TeleSignService member of the configuration was null");
+            } else if (!this.configuration.TeleSignServiceParams.ContainsKey("ServiceAddress")) {
+                throw new ArgumentNullException(
+                            "configuration.ServiceAddress",
                             "The ServiceAddress member of the configuration was null");
-            }
-            
-            if (this.configuration.ServiceMobileAddress == null)
+            } else if (!this.configuration.TeleSignServiceParams.ContainsKey("ServiceMobileAddress"))
             {
                 throw new ArgumentNullException(
-                            "configuration.ServiceMobileAddress", 
+                            "configuration.ServiceMobileAddress",
                             "The ServiceAddress member of the configuration was null");
-            }
+            } else if ((this.configuration.TeleSignServiceParams.ContainsKey("HttpProxyIPAddress")) && (this.configuration.TeleSignServiceParams.ContainsKey("HttpProxyPort")))
+            {
+                proxy = true;
+                if ((this.configuration.TeleSignServiceParams.ContainsKey("HttpProxyUsername")) && (this.configuration.TeleSignServiceParams.ContainsKey("HttpProxyPassword")))
+                    proxyAuthentication = true;
+            }           
 
             if (string.IsNullOrEmpty(this.configuration.Credential.SecretKey))
             {
@@ -221,9 +234,25 @@ namespace TeleSign.Services
                         resourceName, 
                         method, 
                         fields);
-
+            // Creating Proxy object            
+            WebProxy tsProxy = null;
+            if (proxy) {
+                string httpProxyIPAddress = this.configuration.TeleSignServiceParams["HttpProxyIPAddress"];
+                int httpProxyPort = Int32.Parse(this.configuration.TeleSignServiceParams["HttpProxyPort"]);
+                tsProxy = new WebProxy(httpProxyIPAddress, httpProxyPort);
+                if (proxyAuthentication) {
+                    string httpProxyUsername = this.configuration.TeleSignServiceParams["HttpProxyUsername"];
+                    string httpProxyPassword = this.configuration.TeleSignServiceParams["HttpProxyPassword"];
+                    tsProxy.Credentials = new NetworkCredential(httpProxyUsername, httpProxyPassword);
+                }
+            }
+            
             HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(fullUri);
             request.Method = method;
+            if(null != tsProxy)
+                request.Proxy = tsProxy;
+            
+            request.UserAgent = "TeleSignCSharpSdk/v2.0.0";
 
             string contentType = string.Empty;
             string encodedBody = string.Empty;
@@ -261,77 +290,7 @@ namespace TeleSign.Services
             }
 
             return request;
-        }
-        
-        /////// <summary>
-        /////// Constructs a .NET WebRequest object for the request (using for Mobile).
-        /////// </summary>
-        /////// <param name="resourceName">The name of the resource - ie. the relative part of the URL.</param>
-        /////// <param name="method">The http method - POST, DELETE, GET, PUT.</param>
-        /////// <param name="fields">The fields that are the arguments to the request.</param>
-        /////// <param name="authMethod">The method of authentication to use.</param>
-        /////// <returns>A WebRequest object.</returns>
-        ////protected WebRequest ConstructWebMobileRequest(
-        ////            string resourceName,
-        ////            string method,
-        ////            Dictionary<string, string> fields = null,
-        ////            AuthenticationMethod authMethod = AuthenticationMethod.HmacSha1)
-        ////{
-        ////    CheckArgument.NotNullOrEmpty(resourceName, "resourceName");
-        ////    CheckArgument.NotNullOrEmpty(method, "method");
-
-        ////    DateTime timeStamp = DateTime.UtcNow;
-        ////    string nonce = Guid.NewGuid().ToString();
-
-        ////    // When the Uri is constructed. If it is a GET request the fields
-        ////    // are put into the Uri's query string eg ?foo=bar. When the 
-        ////    // method is POST the fields are not used in constructing the Uri,
-        ////    // but below they are placed in the encoded body.
-        ////    Uri fullUri = this.ConstructResourceMobileUri(
-        ////                resourceName, 
-        ////                method, 
-        ////                fields);
-
-        ////    HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(fullUri);
-        ////    request.Method = method;
-
-        ////    string contentType = string.Empty;
-        ////    string encodedBody = string.Empty;
-        ////    if (method == "POST")
-        ////    {
-        ////        contentType = "application/x-www-form-urlencoded";
-        ////        encodedBody = TeleSignService.ConstructQueryString(fields);
-        ////    }
-
-        ////    string authorizationString = this.authentication.ConstructAuthorizationString(
-        ////                resourceName,
-        ////                method,
-        ////                timeStamp,
-        ////                nonce,
-        ////                contentType, 
-        ////                encodedBody,
-        ////                authMethod);
-
-        ////    request.Headers.Add("Authorization", authorizationString);
-        ////    request.Headers.Add("x-ts-auth-method", this.authentication.MapAuthenticationMethodToHeaderString(authMethod));
-        ////    request.Headers.Add("x-ts-date", timeStamp.ToString("r"));
-        ////    request.Headers.Add("x-ts-nonce", nonce);
-
-        ////    if (method == "POST")
-        ////    {
-        ////        byte[] body = Encoding.UTF8.GetBytes(encodedBody);
-
-        ////        request.Accept = "application/json";
-        ////        request.ContentType = contentType;
-        ////        request.ContentLength = body.Length;
-        ////        using (Stream stream = request.GetRequestStream())
-        ////        {
-        ////            stream.Write(body, 0, body.Length);
-        ////        }
-        ////    }
-
-        ////    return request;
-        ////}
+        }       
 
         /// <summary>
         /// Constructs the resource URI to the REST API. For GET
@@ -360,39 +319,8 @@ namespace TeleSign.Services
             }
 
             return new Uri(
-                        this.configuration.ServiceAddress, 
+                        new Uri(this.configuration.TeleSignServiceParams["ServiceAddress"]), 
                         relativePath);
-        }
-        
-        /////// <summary>
-        /////// Constructs the resource URI to the MOBILE REST API. For GET
-        /////// requests the query string is concatenated into the Uri. For
-        /////// POST requests the fields are ignored here but are later passed
-        /////// encoded in the request body.
-        /////// </summary>
-        /////// <param name="resourceName">The name of the resource (relative part of the URI).</param>
-        /////// <param name="method">The HTTP method (get or post).</param>
-        /////// <param name="fields">The additional fields.</param>
-        /////// <returns>The fully qualified URI to the resource.</returns>
-        ////private Uri ConstructResourceMobileUri(
-        ////            string resourceName, 
-        ////            string method, 
-        ////            Dictionary<string, string> fields)
-        ////{
-        ////    string relativePath = resourceName;
-
-        ////    if (method == "GET" && (fields != null && fields.Count != 0))
-        ////    {
-        ////        relativePath = string.Format(
-        ////                    CultureInfo.InvariantCulture,
-        ////                    "{0}?{1}",
-        ////                    relativePath,
-        ////                    TeleSignService.ConstructQueryString(fields));
-        ////    }
-
-        ////    return new Uri(
-        ////                this.configuration.ServiceMobileAddress, 
-        ////                relativePath);
-        ////}
+        }       
     }
 }

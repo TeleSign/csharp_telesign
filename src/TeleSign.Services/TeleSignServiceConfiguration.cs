@@ -29,6 +29,10 @@ namespace TeleSign.Services
         /// </summary>
         public const string DefaultServiceAddress = "https://rest.telesign.com/";
         public const string DefaultServiceMobileAddress = "https://rest-mobile.telesign.com/";
+        /// <summary>
+        /// TeleSign Proxy Parameters
+        /// </summary>
+        public Dictionary<String, String> TeleSignServiceParams { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the TeleSignServiceConfiguration class
@@ -51,7 +55,24 @@ namespace TeleSign.Services
         {
             this.Credential = credential;
             this.ServiceAddress = serviceAddress;
-            this.ServiceMobileAddress = serviceMobileAddress;
+            this.ServiceMobileAddress = serviceMobileAddress;            
+        }
+        /// <summary>
+        /// Initializes a new instance of the TeleSignServiceConfiguration class
+        /// with a supplied credential and service address URI. Most of the time
+        /// you should use the other constructor which doesn't take the URI
+        /// parameter.
+        /// </summary>
+        /// <param name="credential"></param>
+        /// <param name="TeleSignServiceParams"></param>
+        public TeleSignServiceConfiguration(
+                    TeleSignCredential credential,
+                    Dictionary<string, string> TeleSignServiceParams)
+        {
+            this.Credential = credential;
+            //this.ServiceAddress = serviceAddress;
+            //this.ServiceMobileAddress = serviceMobileAddress;
+            this.TeleSignServiceParams = TeleSignServiceParams;
         }
 
         /// <summary>
@@ -127,11 +148,28 @@ namespace TeleSign.Services
         /// <returns>An instantiated TeleSignServiceConfiguration object containing configuration.</returns>
         public static TeleSignServiceConfiguration ReadConfigurationFile(string configFilePath, string accountName = "default")
         {
+            Dictionary<string, string> teleSignConfig = new Dictionary<string, string>();
             XDocument doc = XDocument.Load(configFilePath);
 
             XElement root = doc.Element("TeleSignConfig");
             string serviceUri = (string)root.Element("ServiceUri");
             string serviceMobileUri = (string)root.Element("ServiceMobileUri");
+
+            // Reading Proxy Settings
+            XElement proxy = root.Element("Proxy");
+            // if proxy enabled
+            if ((Boolean)proxy.Attribute("enabled")) {
+                //Dictionary<String, String> teleSignParams = new Dictionary<string, string>();
+                teleSignConfig.Add("HttpProxyIPAddress", (string)proxy.Element("HttpProxyIPAddress"));
+                teleSignConfig.Add("HttpProxyPort", (string)proxy.Element("HttpProxyPort"));                
+                // and if proxy authentication enabled
+                if ((Boolean)proxy.Element("HttpProxyAuthentication").Attribute("enabled")) {
+                    XElement httpProxyAuthentication = proxy.Element("HttpProxyAuthentication");
+                    teleSignConfig.Add("HttpProxyUsername", (string)httpProxyAuthentication.Element("HttpProxyUsername"));
+                    teleSignConfig.Add("HttpProxyPassword", (string)httpProxyAuthentication.Element("HttpProxyPassword"));                    
+                    //Console.WriteLine("Proxy url {0}:{1}/{2}:{3}", httpProxyIPAddress, httpProxyPort, httpProxyUsername, HttpProxyPassword);
+                }
+            }
 
             foreach (XElement account in root.Element("Accounts").Elements("Account"))
             {
@@ -142,21 +180,25 @@ namespace TeleSign.Services
 
                     if (overrideServiceUri != null)
                     {
-                        serviceUri = overrideServiceUri;
+                        serviceUri = overrideServiceUri;                        
                     }
                     
                     if (overrideServiceMobileUri != null)
                     {
-                        serviceMobileUri = overrideServiceMobileUri;
+                        serviceMobileUri = overrideServiceMobileUri;                        
                     }
 
                     string customerId = (string)account.Element("CustomerId");
                     string secretKey = (string)account.Element("SecretKey");
-
+                    teleSignConfig.Add("ServiceAddress", serviceUri);
+                    teleSignConfig.Add("ServiceMobileAddress", serviceMobileUri);
+                    //return new TeleSignServiceConfiguration(
+                    //            new TeleSignCredential(Guid.Parse(customerId), secretKey),
+                    //            new Uri(serviceUri),
+                    //			new Uri(serviceMobileUri));
                     return new TeleSignServiceConfiguration(
                                 new TeleSignCredential(Guid.Parse(customerId), secretKey),
-                                new Uri(serviceUri),
-                    			new Uri(serviceMobileUri));
+                                teleSignConfig);
                 }
             }
 
