@@ -53,6 +53,12 @@ namespace TeleSign.Services
             }
         }
 
+        /// <summary>
+        /// Given a web request - reads the response and returns it all
+        /// as a TeleSignResponse Object having JObject.
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public TSResponse ReadTeleSignResponse(WebRequest request)
         {
             TSResponse tsResponse = new TSResponse();
@@ -62,16 +68,17 @@ namespace TeleSign.Services
                 using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
                 using (StreamReader reader = new StreamReader(response.GetResponseStream()))
                 {
-                    tsResponse.StatusCode = (int)response.StatusCode;                    
+                    tsResponse.StatusCode = (int)response.StatusCode;
+                    tsResponse.BodyinString = response.ToString();
                     // Get the headers associated with Response
                     WebHeaderCollection headers = response.Headers;
                     for (int i = 0; i < headers.Count; ++i) {
                         tsResponse.addHeader(headers.GetKey(i), headers.GetValues(i));                       
                     }
                     tsResponse.JsonBody = JObject.Parse(reader.ReadToEnd());
-                    return tsResponse;                    
+                    response.Close();
+                    return tsResponse;
                 }
-
             }
             catch (WebException x)
             {
@@ -82,7 +89,8 @@ namespace TeleSign.Services
                 {
                     using (StreamReader reader = new StreamReader(x.Response.GetResponseStream()))
                     {
-                        tsResponse.JsonBody = JObject.Parse(reader.ReadToEnd());
+                        tsResponse.BodyinString = reader.ReadToEnd();
+                        tsResponse.JsonBody = JObject.Parse(tsResponse.BodyinString);
                         tsResponse.StatusCode = (int)((HttpWebResponse)x.Response).StatusCode;
                         // Get the headers associated with Response
                         WebHeaderCollection headers = x.Response.Headers;
@@ -92,8 +100,7 @@ namespace TeleSign.Services
                         }
                         return tsResponse;                        
                     }
-                }
-
+                }                
                 throw;
             }
         }

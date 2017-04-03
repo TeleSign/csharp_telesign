@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <TeleSignConfig>
-  <ServiceUri>https://rest.telesign.com</ServiceUri>
+  <ServiceUri>https://rest-ww.telesign.com</ServiceUri>
   <ServiceMobileUri>https://rest-mobile.telesign.com</ServiceMobileUri>
   <Accounts>
     <Account name="default">
@@ -9,4 +9,13 @@
       <SecretKey>abababababababababababababababababa+Jkababababababababababababab+3ababababababababaP1w==</SecretKey>
     </Account>
   </Accounts>
+  <!-- Proxy settings for setting connecting to ServiceUri, change to enabled = false if proxy not used -->
+  <Proxy enabled="true">
+    <HttpProxyIPAddress>httpProxyIPAddress</HttpProxyIPAddress>
+    <HttpProxyPort>port</HttpProxyPort>
+    <HttpProxyAuthentication enabled="true">
+      <HttpProxyUsername>username</HttpProxyUsername>
+      <HttpProxyPassword>password</HttpProxyPassword>
+    </HttpProxyAuthentication>
+  </Proxy>
 </TeleSignConfig>
