@@ -207,14 +207,14 @@ namespace TeleSign.Services.PhoneId
         /// <param name="ucid"></param>
         /// <param name="phoneidParams"></param>
         /// <returns></returns>
-        public TSResponse PhoneId(string phoneNumber, String ucid, Dictionary<String, String> phoneidParams = null)
+        public TSResponse PhoneId(string phoneNumber, Dictionary<String, String> phoneidParams = null)
         {
             CheckArgument.NotNullOrEmpty(phoneNumber, "phoneNumber");
             TSResponse response = new TSResponse();
 
             try
             {
-                response = this.PhoneId(phoneNumber, ucid, phoneidParams);
+                response = this.PhoneIdRaw(phoneNumber, phoneidParams);
                 return response;
             }
             catch (Exception x)
