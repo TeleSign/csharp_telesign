@@ -68,6 +68,7 @@ namespace TeleSign.Services
                 using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
                 using (StreamReader reader = new StreamReader(response.GetResponseStream()))
                 {
+                    tsResponse.StatusLine = response.StatusDescription;
                     tsResponse.StatusCode = (int)response.StatusCode;
                     tsResponse.BodyinString = response.ToString();
                     // Get the headers associated with Response
