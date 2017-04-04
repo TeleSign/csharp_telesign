@@ -137,7 +137,7 @@ namespace TeleSign.Services.Verify
         /// A VerifyResponse object with the status and returned information
         /// for the transaction.
         /// </returns>
-        public TSResponse InitiateCall(
+        public TSResponse Voice(
                     string phoneNumber,
                     Dictionary<string, string> callParams = null)
         {
