@@ -77,6 +77,10 @@
       <Project>{808AE334-F601-4EA1-9676-CEDD8AA8FDFD}</Project>
       <Name>TeleSign.Services.Verify</Name>
     </ProjectReference>
+    <ProjectReference Include="..\TeleSign.Services.Voice\TeleSign.Services.Voice.csproj">
+      <Project>{ba63a2a9-47db-4ade-9f6a-f3f2ce3b5f65}</Project>
+      <Name>TeleSign.Services.Voice</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TeleSign.Services\TeleSign.Services.csproj">
       <Project>{E4693BDE-4F71-4A89-870D-3117B820F531}</Project>
       <Name>TeleSign.Services</Name>

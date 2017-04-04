@@ -21,6 +21,7 @@ namespace TeleSign.TeleSignCmd
     using Newtonsoft.Json.Linq;
     using Services.AutoVerify;
     using Services.Score;
+    using Services.Voice;
 
     public class Commands
     {
@@ -156,9 +157,9 @@ namespace TeleSign.TeleSignCmd
         [CliCommand(HelpString = "Help me")]
         public static void CheckPhoneNoRiskLevel(string[] args)
         {
-            CheckArgument.ArrayLengthIs(args, 1, "args");           
+            CheckArgument.ArrayLengthIs(args, 1, "args");
 
-            // 1. Initialize PhoneIdService
+            // 1. Initialize ScoreClient
             ScoreClient scoreClient = new ScoreClient(GetConfiguration());
             // 2. Score Api parameters
             string phone_number = args[0];
@@ -379,29 +380,259 @@ namespace TeleSign.TeleSignCmd
         //    Process.Start(url);
         //}
 
-        //[CliCommand(HelpString = "Help me")]
-        //public static void VerifySms(string[] args)
-        //{
-        //    PerformVerify(args, VerificationMethod.Sms);
-        //}
+        [CliCommand(HelpString = "Help me")]
+        public static void SendCustomSms(string[] args)
+        {
+            CheckArgument.ArrayLengthIs(args, 1, "args");
+            // 1. Initialize VerifyService
+            VerifyService ver = new VerifyService(GetConfiguration());
+            // 2. Verify SMS Api parameters
+            string phone_number = args[0];
+            string template = "Your Widgets 'n' More verification code is $$CODE$$.";
 
-        //[CliCommand(HelpString = "Help me")]
-        //public static void VerifyTwoWaySms(string[] args)
-        //{
-        //    PerformVerify(args, VerificationMethod.TwoWaySms);
-        //}
+            Dictionary<string, string> smsParams = new Dictionary<String, String>();
+            smsParams.Add("template", template);
 
-        //[CliCommand(HelpString = "Help me")]
-        //public static void VerifyCall(string[] args)
-        //{
-        //    PerformVerify(args, VerificationMethod.Call);
-        //}
+            // 3. Fetch the response
+            TSResponse response = ver.SendSms(phone_number, smsParams);
+            if (response.StatusLine.Equals("ok", StringComparison.InvariantCultureIgnoreCase))
+            {
+                Console.WriteLine("Custom Sms with code sent");
+            }
+        }
 
-        //[CliCommand(HelpString = "Help me")]
-        //public static void VerifyPush(string[] args)
-        //{
-        //    PerformVerify(args, VerificationMethod.Push);
-        //}
+        [CliCommand(HelpString = "Help me")]
+        public static void SendCustomSmsInDifferentLanguage(string[] args)
+        {
+            CheckArgument.ArrayLengthIs(args, 1, "args");
+            // 1. Initialize VerifyService
+            VerifyService ver = new VerifyService(GetConfiguration());
+            // 2. Verify SMS Api parameters
+            string phone_number = args[0];
+            string template = "Votre code de vérification Widgets 'n' More est $$CODE$$.";
+
+            Dictionary<string, string> smsParams = new Dictionary<String, String>();
+            smsParams.Add("template", template);
+
+            // 3. Fetch the response
+            TSResponse response = ver.SendSms(phone_number, smsParams);
+            if (response.StatusLine.Equals("ok", StringComparison.InvariantCultureIgnoreCase))
+            {
+                Console.WriteLine("Custom Sms with code sent");
+            }
+        }
+
+        [CliCommand(HelpString = "Help me")]
+        public static void SendCustomSmsWithCustomSenderId(string[] args)
+        {
+            CheckArgument.ArrayLengthIs(args, 1, "args");
+            // 1. Initialize VerifyService
+            VerifyService ver = new VerifyService(GetConfiguration());
+            // 2. Verify SMS Api parameters
+            string phone_number = args[0];
+            // Client Services must white list any custom sender_id for it to take effect
+            string my_sender_id = "my_sender_id";
+
+            Dictionary<string, string> smsParams = new Dictionary<String, String>();
+            smsParams.Add("my_sender_id", my_sender_id);
+
+            // 3. Fetch the response
+            TSResponse response = ver.SendSms(phone_number, smsParams);
+            if (response.StatusLine.Equals("ok", StringComparison.InvariantCultureIgnoreCase))
+            {
+                Console.WriteLine("Custom Sms with sender id sent");
+            }
+        }
+
+        [CliCommand(HelpString = "Help me")]
+        public static void SendSmsWithVerificationCode(string[] args)
+        {
+            CheckArgument.ArrayLengthIs(args, 1, "args");
+            // 1. Initialize VerifyService
+            VerifyService ver = new VerifyService(GetConfiguration());
+            // 2. VerifyService Api parameters
+            string phone_number = args[0];
+            Dictionary<string, string> smsParams = new Dictionary<String, String>();
+            // 2.1 Generating 5 digit random no to send
+            Random r = new Random();
+            string verifyCode = r.Next(10000, 99999).ToString();
+            smsParams.Add("verify_code", verifyCode);
+            // 3. Make Messaging API call get TeleSign Response
+            TSResponse response = ver.SendSms(phone_number, smsParams);
+            // 4. Read TeleSign Response body.
+            if (200 == response.StatusCode)
+            {
+                Console.WriteLine("Please enter the verification code you were sent: ");
+                string user_entered_verify_code = Console.ReadLine();
+                if (user_entered_verify_code.Equals(verifyCode))
+                    Console.WriteLine("Your code is correct.");
+                else
+                    Console.WriteLine("Your code is not correct.");
+            }
+        }
+
+        [CliCommand(HelpString = "Help me")]
+        public static void SendVoiceCallWithVerificationCode(string[] args)
+        {
+            CheckArgument.ArrayLengthIs(args, 1, "args");
+            // 1. Initialize VerifyService
+            VerifyService ver = new VerifyService(GetConfiguration());
+            // 2. VerifyService Api parameters
+            string phone_number = args[0];
+            Dictionary<string, string> callParams = new Dictionary<String, String>();
+            // 2.1 Generating 5 digit random no to send
+            Random r = new Random();
+            string verifyCode = r.Next(10000, 99999).ToString();
+            callParams.Add("verify_code", verifyCode);
+            // 3. Make Voice call and get TeleSign Response
+            TSResponse response = ver.Voice(phone_number, callParams);
+            // 4. Read TeleSign Response body.
+            if (response.StatusLine.Equals("ok", StringComparison.InvariantCultureIgnoreCase))
+            {
+                Console.WriteLine("Please enter the verification code you were sent: ");
+                string user_entered_verify_code = Console.ReadLine();
+                if (user_entered_verify_code.Equals(verifyCode))
+                    Console.WriteLine("Your code is correct.");
+                else
+                    Console.WriteLine("Your code is not correct.");
+            }
+        }
+
+        [CliCommand(HelpString = "Help me")]
+        public static void SendCustomVoiceCallWithTextToSpeech(string[] args)
+        {
+            CheckArgument.ArrayLengthIs(args, 1, "args");
+            // 1. Initialize VerifyService
+            VerifyService ver = new VerifyService(GetConfiguration());
+            // 2. VerifyService Api parameters
+            string phone_number = args[0];
+            Dictionary<string, string> callParams = new Dictionary<String, String>();
+            // 2.1 Generating 5 digit random no to send
+            Random r = new Random();
+            string verifyCode = r.Next(10000, 99999).ToString();
+            string tts_message = "Hello, your code is " + verifyCode + ". Once again, your code is "
+                + verifyCode + ". Goodbye.";
+            // formatting code to include commas
+            //string formattedcode = string.Join(",", verifyCode.ToCharArray());            
+
+            callParams.Add("tts_message", tts_message);
+
+            // 3. Make Voice call and get TeleSign Response
+            TSResponse response = ver.Voice(phone_number, callParams);            
+            // 4. Read TeleSign Response body.
+            if (response.StatusLine.Equals("ok", StringComparison.InvariantCultureIgnoreCase))
+            {
+                Console.WriteLine("Call sent with message");
+                Console.WriteLine("Please enter the verification code you were sent: ");
+                string user_entered_verify_code = Console.ReadLine();
+                if (user_entered_verify_code.Equals(verifyCode))
+                    Console.WriteLine("Your code is correct.");
+                else
+                    Console.WriteLine("Your code is not correct.");
+            }
+        }
+
+        [CliCommand(HelpString = "Help me")]
+        public static void SendCustomVoiceCallInDifferentLanguage(string[] args)
+        {
+            CheckArgument.ArrayLengthIs(args, 1, "args");
+            // 1. Initialize VerifyService
+            VerifyService ver = new VerifyService(GetConfiguration());
+            // 2. VerifyService Api parameters
+            string phone_number = args[0];
+            Dictionary<string, string> callParams = new Dictionary<String, String>();
+            // 2.1 Specifying a language parameter
+            string language = "fr-FR";
+            string tts_message = "Votre code de vérification Widgets 'n' More est $$CODE$$.";
+
+            callParams.Add("tts_message", tts_message);
+            callParams.Add("language", language);
+
+            // 3. Make Voice call and get TeleSign Response
+            TSResponse response = ver.Voice(phone_number, callParams);
+
+            // 4. Read TeleSign Response body.
+            if (response.StatusLine.Equals("ok", StringComparison.InvariantCultureIgnoreCase))
+            {
+                Console.WriteLine("Call sent with message");
+            }
+        }
+
+        [CliCommand(HelpString = "Help me")]
+        public static void SendCallWithVerificationCode(string[] args)
+        {
+            CheckArgument.ArrayLengthIs(args, 1, "args");
+            // 1. Initialize VoiceClient
+            VoiceClient voiceClient = new VoiceClient(GetConfiguration());
+            // 2. VerifyService Api parameters
+            string phone_number = args[0];
+
+            // 2.1 Generating 5 digit random no to send
+            Random r = new Random();
+            string verifyCode = r.Next(10000, 99999).ToString();
+            // formatting code to include commas
+            string formattedcode = string.Join(",", verifyCode.ToCharArray());
+            string message = "Hello, your code is " + formattedcode + ". Once again, your code is "
+                + formattedcode + ". Goodbye.";
+            string message_type = "OTP";
+
+            // 3. Make Voice call and get TeleSign Response
+            TSResponse response = voiceClient.Call(phone_number, message, message_type);
+            // 4. Read TeleSign Response body.
+            if (response.StatusLine.Equals("created", StringComparison.InvariantCultureIgnoreCase))
+            {
+                Console.WriteLine("Call sent with message");
+                Console.WriteLine("Please enter the verification code you were sent: ");
+                string user_entered_verify_code = Console.ReadLine();
+                if (user_entered_verify_code.Equals(verifyCode))
+                    Console.WriteLine("Your code is correct.");
+                else
+                    Console.WriteLine("Your code is not correct.");
+            }
+        }
+
+        [CliCommand(HelpString = "Help me")]
+        public static void SendVoiceCall(string[] args)
+        {
+            CheckArgument.ArrayLengthIs(args, 1, "args");
+            // 1. Initialize VoiceClient
+            VoiceClient voiceClient = new VoiceClient(GetConfiguration());
+            // 2. VerifyService Api parameters
+            string phone_number = args[0];
+
+            string message = "You're scheduled for a dentist appointment at 2:30PM.";
+            string message_type = "ARN";
+
+            // 3. Make Voice call and get TeleSign Response
+            TSResponse response = voiceClient.Call(phone_number, message, message_type);
+            // 4. Read TeleSign Response body.
+            if (response.StatusLine.Equals("created", StringComparison.InvariantCultureIgnoreCase))
+            {
+                Console.WriteLine("Call sent with message");
+            }
+        }
+
+        [CliCommand(HelpString = "Help me")]
+        public static void SendVoiceCallFrench(string[] args)
+        {
+            CheckArgument.ArrayLengthIs(args, 1, "args");
+            // 1. Initialize VoiceClient
+            VoiceClient voiceClient = new VoiceClient(GetConfiguration());
+            // 2. VerifyService Api parameters
+            string phone_number = args[0];
+
+            string message = "N'oubliez pas d'appeler votre mère pour son anniversaire demain.";
+            string message_type = "ARN";
+            Dictionary<string, string> voiceParams = new Dictionary<String, String>();
+            voiceParams.Add("voice", "f-FR-fr");
+            // 3. Make Voice call and get TeleSign Response
+            TSResponse response = voiceClient.Call(phone_number, message, message_type, voiceParams);
+            // 4. Read TeleSign Response body.
+            if (response.StatusLine.Equals("created", StringComparison.InvariantCultureIgnoreCase))
+            {
+                Console.WriteLine("Call sent with message");
+            }
+        }
 
         //[CliCommand(HelpString = "Help me")]
         //public static void SendSms(string[] args)
