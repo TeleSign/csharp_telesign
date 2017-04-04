@@ -12,6 +12,7 @@ namespace TeleSign.Services
             Headers = new Dictionary<string, string[]>();
         }
         public int StatusCode { get; set; }
+        public string StatusLine { get; set; }
         public Dictionary<String, String[]> Headers { get; set; }
         public string BodyinString { get; set; }
         public JObject JsonBody { get; set; }
