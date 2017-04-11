@@ -133,7 +133,7 @@ namespace TeleSign.Services.Verify
         /// This parameter allows you to place a time-limit on the verification. This provides an extra level of security by restricting the amount of time your end user has to respond (after which, TeleSign automatically rejects their response). Values are expressed as a natural number followed by a lower-case letter that represents the unit of measure. You can use 's' for seconds, 'm' for minutes, 'h' for hours, and 'd' for days
         /// </param>
         /// <returns>The raw JSON response from the REST API.</returns>
-        public string TwoWaySmsRaw(
+        public TSResponse TwoWaySmsRaw(
                     string phoneNumber,
                     string message,
             		string validityPeriod = "5m",
@@ -162,7 +162,7 @@ namespace TeleSign.Services.Verify
                         "POST",
                         args);
 
-            return this.WebRequester.ReadResponseAsString(request);
+            return this.WebRequester.ReadTeleSignResponse(request);
         }
 
 

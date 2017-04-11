@@ -19,8 +19,9 @@ namespace TeleSign.Services.PhoneId
     {
         /// <summary>
         /// The parser that transforms the raw JSON responses
+        /// No Longer Needed
         /// </summary>
-        private IPhoneIdResponseParser responseParser;
+        //private IPhoneIdResponseParser responseParser;
 
         /// <summary>
         /// Initializes a new instance of the PhoneIdService class with
@@ -28,7 +29,7 @@ namespace TeleSign.Services.PhoneId
         /// </summary>
         /// <param name="configuration">The configuration information for the service.</param>
         public PhoneIdService(TeleSignServiceConfiguration configuration)
-            : this(configuration, null, new JsonDotNetPhoneIdResponseParser())
+            : this(configuration, null)
         {
         }
 
@@ -38,16 +39,14 @@ namespace TeleSign.Services.PhoneId
         /// You generally don't need to use this constructor.
         /// </summary>
         /// <param name="configuration">The configuration information for the service.</param>
-        /// <param name="webRequester">The web requester to use.</param>
-        /// <param name="responseParser">The response parser to use.</param>
+        /// <param name="webRequester">The web requester to use.</param>        
         public PhoneIdService(
                     TeleSignServiceConfiguration configuration,
-                    IWebRequester webRequester,
-                    IPhoneIdResponseParser responseParser)
+                    IWebRequester webRequester)
             : base(configuration, webRequester)
         {
             // TODO: null check and possible ifdef for JSON.Net
-            this.responseParser = responseParser;
+            //this.responseParser = responseParser; No Longer Needed
         }
 
         /// <summary>

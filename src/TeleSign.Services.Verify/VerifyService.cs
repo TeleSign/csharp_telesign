@@ -18,8 +18,9 @@ namespace TeleSign.Services.Verify
     {
         /// <summary>
         /// The parser used to transform the raw JSON string responses to rich .NET objects.
+        /// No Longer Needed
         /// </summary>
-        private IVerifyResponseParser parser;
+        //private IVerifyResponseParser parser;
 
         /// <summary>
         /// Initializes a new instance of the VerifyService class with a supplied credential and URI.
@@ -28,8 +29,7 @@ namespace TeleSign.Services.Verify
         public VerifyService(TeleSignServiceConfiguration configuration)
             : this(
                         configuration, 
-                        null, 
-                        new JsonDotNetVerifyResponseParser())
+                        null)                        
         {
         }
 
@@ -39,15 +39,13 @@ namespace TeleSign.Services.Verify
         /// the web requests for logging/debugging/testing purposes.
         /// </summary>
         /// <param name="configuration">The configuration information for the service.</param>
-        /// <param name="webRequester">The web requester to use.</param>
-        /// <param name="responseParser">The parse to use for parsing JSON responses.</param>
+        /// <param name="webRequester">The web requester to use.</param>        
         public VerifyService(
                     TeleSignServiceConfiguration configuration, 
-                    IWebRequester webRequester,
-                    IVerifyResponseParser responseParser)
+                    IWebRequester webRequester)                    
             : base(configuration, webRequester)
         {
-            this.parser = responseParser;
+            //this.parser = responseParser;
         }
 
 
@@ -95,27 +93,28 @@ namespace TeleSign.Services.Verify
         /// This parameter allows you to place a time-limit on the verification. This provides an extra level of security by restricting the amount of time your end user has to respond (after which, TeleSign automatically rejects their response). Values are expressed as a natural number followed by a lower-case letter that represents the unit of measure. You can use 's' for seconds, 'm' for minutes, 'h' for hours, and 'd' for days
         /// </param>
         /// <returns>The raw JSON response from the REST API.</returns>
-        public VerifyResponse SendTwoWaySms(
+        public TSResponse SendTwoWaySms(
         			string phoneNumber,
                     string message = null,
             		string validityPeriod = "5m")
         {
+            TSResponse response = new TSResponse();
             phoneNumber = this.CleanupPhoneNumber(phoneNumber);
 
-            string rawResponse = this.TwoWaySmsRaw(
-                        phoneNumber,
-                        message,
-            			validityPeriod);
 
             try
             {
-                return this.parser.ParseVerifyResponse(rawResponse);
+            response = this.TwoWaySmsRaw(
+                        phoneNumber,
+                        message,
+            			validityPeriod);
+                return response;
             }
             catch (Exception x)
             {
                 throw new ResponseParseException(
                             "Error parsing Verify TwoWaySms response",
-                            rawResponse,
+                            response.ToString(),
                             x);
             }
         }
