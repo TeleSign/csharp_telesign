@@ -77,6 +77,7 @@ namespace TeleSign.Services
                         tsResponse.addHeader(headers.GetKey(i), headers.GetValues(i));                       
                     }
                     tsResponse.JsonBody = JObject.Parse(reader.ReadToEnd());
+                    reader.Close();
                     response.Close();
                     return tsResponse;
                 }
@@ -99,6 +100,7 @@ namespace TeleSign.Services
                         {
                             tsResponse.addHeader(headers.GetKey(i), headers.GetValues(i));
                         }
+                        reader.Close();
                         return tsResponse;                        
                     }
                 }                
