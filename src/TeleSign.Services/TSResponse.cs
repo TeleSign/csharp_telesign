@@ -14,8 +14,8 @@ namespace TeleSign.Services
         public int StatusCode { get; set; }
         public string StatusLine { get; set; }
         public Dictionary<String, String[]> Headers { get; set; }
-        public string BodyinString { get; set; }
-        public JObject JsonBody { get; set; }
+        public string Body { get; set; }
+        public JObject Json { get; set; }
         public void addHeader(string headerName, string[] headerValue) {
             Headers.Add(headerName, headerValue);
         }

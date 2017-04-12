@@ -17,12 +17,6 @@ namespace TeleSign.Services.Verify
     public class VerifyService : RawVerifyService
     {
         /// <summary>
-        /// The parser used to transform the raw JSON string responses to rich .NET objects.
-        /// No Longer Needed
-        /// </summary>
-        //private IVerifyResponseParser parser;
-
-        /// <summary>
         /// Initializes a new instance of the VerifyService class with a supplied credential and URI.
         /// </summary>
         /// <param name="configuration">The configuration information for the service.</param>
@@ -133,7 +127,7 @@ namespace TeleSign.Services.Verify
         /// TODO: Details about language string format.
         /// </param>
         /// <returns>
-        /// A VerifyResponse object with the status and returned information
+        /// A Response object with the status and returned information
         /// for the transaction.
         /// </returns>
         public TSResponse Voice(
@@ -170,7 +164,7 @@ namespace TeleSign.Services.Verify
         /// you supplied a message template.
         /// </param>
         /// <returns>
-        /// A VerifyResponse object with the status and returned information
+        /// A TeleSignResponse object with the status and returned information
         /// for the transaction.
         /// </returns>
         public TSResponse InitiatePush(

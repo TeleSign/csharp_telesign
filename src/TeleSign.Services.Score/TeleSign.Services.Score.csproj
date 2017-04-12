@@ -46,9 +46,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <WCFMetadata Include="Service References\" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\TeleSign.Services\TeleSign.Services.csproj">
       <Project>{e4693bde-4f71-4a89-870d-3117b820f531}</Project>
       <Name>TeleSign.Services</Name>

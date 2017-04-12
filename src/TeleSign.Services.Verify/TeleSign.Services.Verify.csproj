@@ -44,13 +44,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CodeState.cs" />
-    <Compile Include="IVerifyResponseParser.cs" />
-    <Compile Include="JsonDotNetVerifyResponseParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RawVerifyService.cs" />
-    <Compile Include="VerifyInfo.cs" />
-    <Compile Include="VerifyResponse.cs" />
     <Compile Include="VerifyService.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -10,18 +10,14 @@ namespace TeleSign.TeleSignCmd
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.IO;
-    using System.Linq;
-    using System.Text;
     using TeleSign.Services;
     using TeleSign.Services.PhoneId;
     using TeleSign.Services.Verify;
-    using Services.Messaging;
     using Newtonsoft.Json.Linq;
-    using Services.AutoVerify;
-    using Services.Score;
     using Services.Voice;
+    using TeleSign.Services.AutoVerify;
+    using TeleSign.Services.Score;
+    using TeleSign.Services.Messaging;
 
     public class Commands
     {
@@ -59,7 +55,7 @@ namespace TeleSign.TeleSignCmd
             TSResponse response = phoneId.StandardLookup(phone_number);
             if (200 == response.StatusCode)
             {
-                JObject jsonObject = response.JsonBody;
+                JObject jsonObject = response.Json;
                 JToken phone_type = jsonObject["phone_type"];
                 if (phone_type["code"].ToString().Equals(phone_type_voip))
                     Console.WriteLine("Phone number {0} is a VOIP phone.", phone_number);
@@ -68,6 +64,7 @@ namespace TeleSign.TeleSignCmd
             }
         }
 
+        [CliCommand(HelpString = "Help me")]
         public static void Cleansing(string[] args)
         {
             CheckArgument.ArrayLengthIs(args, 1, "args");
@@ -84,7 +81,7 @@ namespace TeleSign.TeleSignCmd
             TSResponse response = phoneId.PhoneId(incorrect_phone_number, phoneIdParams);
             if (200 == response.StatusCode)
             {
-                JObject jsonObject = response.JsonBody;
+                JObject jsonObject = response.Json;
 
                 JToken numbering = jsonObject["numbering"];
                 JToken cleansing = numbering["cleansing"];
@@ -112,7 +109,7 @@ namespace TeleSign.TeleSignCmd
             TSResponse response = phoneId.NumberDeactivation(phone_number, ucid);
             if (200 == response.StatusCode)
             {
-                JObject jsonObject = response.JsonBody;
+                JObject jsonObject = response.Json;
 
                 JToken number_deactivation = jsonObject["number_deactivation"];
                 if (null != number_deactivation["last_deactivated"] && String.Empty != number_deactivation["last_deactivated"].ToString() && (Boolean)number_deactivation["last_deactivated"])
@@ -143,7 +140,7 @@ namespace TeleSign.TeleSignCmd
             TSResponse response = phoneId.ScoreLookup(phone_number, ucid);
             if (200 == response.StatusCode)
             {
-                JObject jsonObject = response.JsonBody;
+                JObject jsonObject = response.Json;
 
                 JToken riskJsonObject = jsonObject["risk"];
 
@@ -170,7 +167,7 @@ namespace TeleSign.TeleSignCmd
 
             if (200 == response.StatusCode)
             {
-                JObject jsonObject = response.JsonBody;
+                JObject jsonObject = response.Json;
                 String riskLevel = jsonObject["risk"]["level"].ToString();
                 String recommendation = jsonObject["risk"]["recommendation"].ToString();
                 Console.WriteLine("Phone number {0} has a '{1}' risk level and the recommendation is to '{2}' the transaction.", phone_number, riskLevel, recommendation);
@@ -213,15 +210,15 @@ namespace TeleSign.TeleSignCmd
         //    Console.WriteLine(jsonResponse);
         //}
 
-        //[CliCommand(HelpString = "Help me")]
-        //public static void PhoneIdStandard(string[] args)
-        //{
-        //    CheckArgument.ArrayLengthIs(args, 1, "args");
-        //    string phoneNumber = args[0];
+        [CliCommand(HelpString = "Help me")]
+        public static void PhoneIdStandard(string[] args)
+        {
+            CheckArgument.ArrayLengthIs(args, 1, "args");
+            string phoneNumber = args[0];
 
-        //    PhoneIdService service = new PhoneIdService(GetConfiguration());
-        //    TSResponse response = service.StandardLookup(phoneNumber);
-        //}
+            PhoneIdService service = new PhoneIdService(GetConfiguration());
+            TSResponse response = service.StandardLookup(phoneNumber);
+        }
 
         // Started from Here
 
@@ -238,7 +235,7 @@ namespace TeleSign.TeleSignCmd
             // 4. Read TeleSign Response body.
             if (200 == response.StatusCode)
             {
-                JObject teleSignJsonObject = response.JsonBody;
+                JObject teleSignJsonObject = response.Json;
                 JToken statusObject = teleSignJsonObject["status"];
                 Console.WriteLine("AutoVerify transaction with external_id as {0} has status code  as {1} and status description as {2}.", external_id, statusObject["code"].ToString(), statusObject["description"].ToString());
             }
@@ -259,7 +256,7 @@ namespace TeleSign.TeleSignCmd
             // 4. Read TeleSign Response body.
             if (200 == response.StatusCode)
             {
-                JObject teleSignJsonObject = response.JsonBody;
+                JObject teleSignJsonObject = response.Json;
                 string reference_id = teleSignJsonObject["reference_id"].ToString();
                 // 1.1 Get the reference ID/
                 Console.WriteLine(reference_id);
