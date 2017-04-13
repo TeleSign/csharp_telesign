@@ -217,15 +217,14 @@ namespace TeleSign.Services
         protected WebRequest ConstructWebRequest(
                     string resourceName,
                     string method,
-                    Dictionary<string, string> fields = null,
-                    AuthenticationMethod authMethod = AuthenticationMethod.HmacSha256)
+                    Dictionary<string, string> fields = null)
         {
             CheckArgument.NotNullOrEmpty(resourceName, "resourceName");
             CheckArgument.NotNullOrEmpty(method, "method");
 
             DateTime timeStamp = DateTime.UtcNow;
             string nonce = Guid.NewGuid().ToString();
-
+            AuthenticationMethod authMethod = AuthenticationMethod.HmacSha256;
             // When the Uri is constructed. If it is a GET request the fields
             // are put into the Uri's query string eg ?foo=bar. When the 
             // method is POST the fields are not used in constructing the Uri,

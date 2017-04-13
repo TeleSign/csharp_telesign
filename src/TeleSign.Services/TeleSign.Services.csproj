@@ -49,7 +49,6 @@
     <Compile Include="AuthenticationMethod.cs" />
     <Compile Include="CheckArgument.cs" />
     <Compile Include="IWebRequester.cs" />
-    <Compile Include="ResponseParseException.cs" />
     <Compile Include="TeleSignAuthentication.cs" />
     <Compile Include="TeleSignServiceConfiguration.cs" />
     <Compile Include="TeleSignResponse.cs" />

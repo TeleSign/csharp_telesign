@@ -53,7 +53,7 @@ namespace TeleSign.TeleSignCmd
             string phone_type_voip = "5";
             // 3. Fetch the response
             TeleSignResponse response = phoneId.StandardLookup(phone_number);
-            if (200 == response.StatusCode)
+            if ((response.StatusCode >= 200) && (response.StatusCode < 300))
             {
                 JObject jsonObject = response.Json;
                 JToken phone_type = jsonObject["phone_type"];
@@ -70,7 +70,7 @@ namespace TeleSign.TeleSignCmd
             CheckArgument.ArrayLengthIs(args, 1, "args");
 
             // 1. Initialize PhoneIdService
-            PhoneIdService phoneId = new PhoneIdService(GetConfiguration());
+            PhoneIdClient phoneId = new PhoneIdClient(GetConfiguration());
             // 2. PhoneID Api parameters
             string phone_number = args[0];
             string extra_digit = "0";
@@ -79,7 +79,7 @@ namespace TeleSign.TeleSignCmd
             phoneIdParams.Add("account_lifecycle_event", "create");
             // 3. Fetch the response
             TeleSignResponse response = phoneId.PhoneId(incorrect_phone_number, phoneIdParams);
-            if (200 == response.StatusCode)
+            if ((response.StatusCode >= 200) && (response.StatusCode < 300))
             {
                 JObject jsonObject = response.Json;
 
@@ -107,7 +107,7 @@ namespace TeleSign.TeleSignCmd
             string ucid = "ATCK";
             // 3. Fetch the response
             TeleSignResponse response = phoneId.NumberDeactivation(phone_number, ucid);
-            if (200 == response.StatusCode)
+            if ((response.StatusCode >= 200) && (response.StatusCode < 300))
             {
                 JObject jsonObject = response.Json;
 
@@ -138,7 +138,7 @@ namespace TeleSign.TeleSignCmd
             string ucid = "BACF";
             // 3. Fetch the response
             TeleSignResponse response = phoneId.ScoreLookup(phone_number, ucid);
-            if (200 == response.StatusCode)
+            if ((response.StatusCode >= 200) && (response.StatusCode < 300))
             {
                 JObject jsonObject = response.Json;
 
@@ -165,7 +165,7 @@ namespace TeleSign.TeleSignCmd
             // 3. Fetch the response
             TeleSignResponse response = scoreClient.Score(phone_number, account_lifecycle_event);
 
-            if (200 == response.StatusCode)
+            if ((response.StatusCode >= 200) && (response.StatusCode < 300))
             {
                 JObject jsonObject = response.Json;
                 String riskLevel = jsonObject["risk"]["level"].ToString();
@@ -180,7 +180,7 @@ namespace TeleSign.TeleSignCmd
         //    CheckArgument.ArrayLengthIs(args, 1, "args");
         //    string phoneNumber = args[0];
 
-        //    RawPhoneIdService service = new RawPhoneIdService(GetConfiguration());
+        //    PhoneIdService service = new PhoneIdService(GetConfiguration());
         //    TeleSignResponse jsonResponse = service.ContactLookupRaw(phoneNumber);
 
         //    Console.WriteLine(jsonResponse);
@@ -192,7 +192,7 @@ namespace TeleSign.TeleSignCmd
         //    CheckArgument.ArrayLengthIs(args, 1, "args");
         //    string phoneNumber = args[0];
 
-        //    RawPhoneIdService service = new RawPhoneIdService(GetConfiguration());
+        //    PhoneIdService service = new PhoneIdService(GetConfiguration());
         //    TeleSignResponse jsonResponse = service.ScoreLookupRaw(phoneNumber);
 
         //    Console.WriteLine(jsonResponse);
@@ -204,7 +204,7 @@ namespace TeleSign.TeleSignCmd
         //    CheckArgument.ArrayLengthIs(args, 1, "args");
         //    string phoneNumber = args[0];
 
-        //    RawPhoneIdService service = new RawPhoneIdService(GetConfiguration());
+        //    PhoneIdService service = new PhoneIdService(GetConfiguration());
         //    TeleSignResponse jsonResponse = service.LiveLookupRaw(phoneNumber);
 
         //    Console.WriteLine(jsonResponse);
@@ -218,9 +218,7 @@ namespace TeleSign.TeleSignCmd
 
             PhoneIdService service = new PhoneIdService(GetConfiguration());
             TeleSignResponse response = service.StandardLookup(phoneNumber);
-        }
-
-        // Started from Here
+        }        
 
         [CliCommand(HelpString = "Help me")]
         public static void GetStatusByExternalId(string[] args)
@@ -230,10 +228,10 @@ namespace TeleSign.TeleSignCmd
             AutoVerifyClient autoVerifyClient = new AutoVerifyClient(GetConfiguration());
             // 2. AutoVerify Api parameters            
             string external_id = "external_id";
-            // 3. Make Messaging API call get TeleSign Response
+            // 3. Make AutoVerify API call get TeleSign Response
             TeleSignResponse response = autoVerifyClient.Status(external_id);
             // 4. Read TeleSign Response body.
-            if (200 == response.StatusCode)
+            if ((response.StatusCode >= 200) && (response.StatusCode < 300))
             {
                 JObject teleSignJsonObject = response.Json;
                 JToken statusObject = teleSignJsonObject["status"];
@@ -252,9 +250,9 @@ namespace TeleSign.TeleSignCmd
             string message = "You're scheduled for a dentist appointment at 2:30PM.";
             string messageType = "ARN";
             // 3. Make Messaging API call get TeleSign Response
-            TeleSignResponse response = messagingClient.MessageRaw(phone_number, message, messageType);
+            TeleSignResponse response = messagingClient.Message(phone_number, message, messageType);
             // 4. Read TeleSign Response body.
-            if (200 == response.StatusCode)
+            if ((response.StatusCode >= 200) && (response.StatusCode < 300))
             {
                 JObject teleSignJsonObject = response.Json;
                 string reference_id = teleSignJsonObject["reference_id"].ToString();
@@ -277,9 +275,9 @@ namespace TeleSign.TeleSignCmd
             Random r = new Random();
             string verifyCode = r.Next(10000, 99999).ToString();
             // 3. Make Messaging API call get TeleSign Response
-            TeleSignResponse response = messagingClient.MessageRaw(phone_number, message + verifyCode, messageType);
+            TeleSignResponse response = messagingClient.Message(phone_number, message + verifyCode, messageType);
             // 4. Read TeleSign Response body.
-            if (200 == response.StatusCode)
+            if ((response.StatusCode >= 200) && (response.StatusCode < 300))
             {   
                 Console.WriteLine("Please enter the verification code you were sent: ");
                 string user_entered_verify_code = Console.ReadLine();
@@ -508,9 +506,7 @@ namespace TeleSign.TeleSignCmd
             Random r = new Random();
             string verifyCode = r.Next(10000, 99999).ToString();
             string tts_message = "Hello, your code is " + verifyCode + ". Once again, your code is "
-                + verifyCode + ". Goodbye.";
-            // formatting code to include commas
-            //string formattedcode = string.Join(",", verifyCode.ToCharArray());            
+                + verifyCode + ". Goodbye.";                     
 
             callParams.Add("tts_message", tts_message);
 

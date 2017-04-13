@@ -10,22 +10,68 @@ namespace TeleSign.Services.PhoneId
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
+    using System.IO;
+    using System.Net;
 
     /// <summary>
-    /// The TeleSign PhoneID service. This provides 3 services. PhoneID Contact, 
-    /// PhoneID Standard and PhoneID Score. TODO: Link to other documentation or more detail here?
+    /// <para>
+    /// The raw TeleSign PhoneID service. This class builds and makes requests to the
+    /// TeleSign service and returns the raw JSON responses that the REST service
+    /// returns. 
+    /// </para>
+    /// <para>
+    /// In most cases you should use PhoneIdService class instead which will parse the
+    /// JSON responses into .NET objects that you can use. 
+    /// </para>
     /// </summary>
-    public class PhoneIdService : RawPhoneIdService
+    public class PhoneIdService : TeleSignService
     {
         /// <summary>
-        /// The parser that transforms the raw JSON responses
-        /// No Longer Needed
+        /// Format string for PhoneId Standard request uri. The phone number is
+        /// filled into the format field.
         /// </summary>
-        //private IPhoneIdResponseParser responseParser;
+        private const string StandardResourceFormatString = "/v1/phoneid/standard/{0}";
 
         /// <summary>
-        /// Initializes a new instance of the PhoneIdService class with
-        /// configuration.
+        /// Format string for PhoneId Contact request uri. The phone number is
+        /// filled into the format field.
+        /// </summary>
+        private const string ContactResourceFormatString = "/v1/phoneid/contact/{0}";
+
+        /// <summary>
+        /// Format string for PhoneId Score request uri. The phone number is
+        /// filled into the format field.
+        /// </summary>
+        private const string ScoreResourceFormatString = "/v1/phoneid/score/{0}";
+
+        /// <summary>
+        /// Format string for PhoneId Live request uri. The phone number is
+        /// filled into the format field.
+        /// </summary>
+        private const string LiveResourceFormatString = "/v1/phoneid/live/{0}";
+        private const string V1_PHONEID_NUMBER_DEACTIVATION = "/v1/phoneid/number_deactivation/{0}";
+
+
+        /// <summary>
+        /// Initializes a new instance of the PhoneIdService class with a supplied credential and uri.
+        /// </summary>        
+        public PhoneIdService()
+            : this("default")
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the PhoneIdService class with a supplied credential and uri.
+        /// </summary>
+        /// <param name="accountName">The accountname information for the service.</param>
+        public PhoneIdService(string accountName)
+            : base(null, null, accountName)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the PhoneIdService class with a supplied credential and uri.
         /// </summary>
         /// <param name="configuration">The configuration information for the service.</param>
         public PhoneIdService(TeleSignServiceConfiguration configuration)
@@ -34,195 +80,176 @@ namespace TeleSign.Services.PhoneId
         }
 
         /// <summary>
-        /// Initializes a new instance of the PhoneIdService class with
-        /// a configuration and a custom web requester and response parser. 
-        /// You generally don't need to use this constructor.
+        /// Initializes a new instance of the PhoneIdService class with a supplied credential and uri and
+        /// a web requester. In general you do not need to use this constructor unless you want to intercept
+        /// the web requests for logging/debugging/testing purposes.
         /// </summary>
         /// <param name="configuration">The configuration information for the service.</param>
-        /// <param name="webRequester">The web requester to use.</param>        
+        /// <param name="webRequester">The web requester to use.</param>
         public PhoneIdService(
-                    TeleSignServiceConfiguration configuration,
+                    TeleSignServiceConfiguration configuration, 
                     IWebRequester webRequester)
             : base(configuration, webRequester)
         {
-            // TODO: null check and possible ifdef for JSON.Net
-            //this.responseParser = responseParser; No Longer Needed
         }
 
         /// <summary>
-        /// Performs a PhoneId Standard lookup on a phone number.
+        /// Performs a TeleSign PhoneID Standard lookup. This product provides information
+        /// about the location the phone was registered, the type of phone (mobile, fixed,
+        /// VOIP, etc).
         /// </summary>
         /// <param name="phoneNumber">The phone number to lookup.</param>
-        /// <param name="standardParams"></param>
-        /// <returns>
-        /// A StandardPhoneIdResponse object containing both status of the transaction
-        /// and the resulting data (if successful).
-        /// </returns>
-        public TeleSignResponse StandardLookup(string phoneNumber,
-            Dictionary<String, String> standardParams = null)
+        /// <param name="standardParams">The phone number to lookup.</param>
+        /// <returns>The raw JSON string response.</returns>
+        public TeleSignResponse StandardLookup(
+                    string phoneNumber,
+                    Dictionary<String, String> standardParams = null)
         {
-            CheckArgument.NotNullOrEmpty(phoneNumber, "phoneNumber");
+            phoneNumber = this.CleanupPhoneNumber(phoneNumber);
 
-            TeleSignResponse response = new TeleSignResponse();
+            string resourceName = string.Format(
+                        CultureInfo.InvariantCulture,
+                        PhoneIdService.StandardResourceFormatString, 
+                        phoneNumber);
+            
+            WebRequest request = this.ConstructWebRequest(
+                        resourceName,
+                        "GET",
+                        standardParams);
 
-            try
-            {
-                response = this.StandardLookupRaw(phoneNumber, standardParams);
-                return response;
-            }
-            catch (Exception x)
-            {
-                throw new ResponseParseException(
-                            "Error parsing PhoneID Standard response",
-                            response.ToString(),
-                            x);
-            }
+            return this.WebRequester.ReadTeleSignResponse(request);
         }
 
         /// <summary>
-        /// Performs a PhoneID Contact lookup on a phone number.
+        /// Performs a TeleSign PhoneID Contact lookup. This product provides all the
+        /// information that is provided by PhoneID Standard as well as additional
+        /// information about the owner of the phone such as name and address.
         /// </summary>
         /// <param name="phoneNumber">The phone number to lookup.</param>
-        /// <param name="ucid"></param>
+        /// <param name="useCaseId">The use case for the lookup. (Restricted set of values).</param>
         /// <param name="contactParams"></param>
-        /// <returns>
-        /// A ContactPhoneIdResponse object containing both status of the transaction
-        /// and the resulting data (if successful).
-        /// </returns>
-        public TeleSignResponse ContactLookup(string phoneNumber, string ucid,
-            Dictionary<String, String> contactParams = null)
+        /// <returns>The raw JSON string response.</returns>
+        public TeleSignResponse ContactLookup(
+                    string phoneNumber, 
+                    string useCaseId = PhoneIdService.DefaultUseCaseId, Dictionary<String, String> contactParams = null)
         {
-            CheckArgument.NotNullOrEmpty(phoneNumber, "phoneNumber");
+            phoneNumber = this.CleanupPhoneNumber(phoneNumber);
 
-            TeleSignResponse response = new TeleSignResponse();
+            string resourceName = string.Format(
+                        CultureInfo.InvariantCulture,
+                        PhoneIdService.ContactResourceFormatString, 
+                        phoneNumber);
+            if (null == contactParams)
+                contactParams = new Dictionary<string, string>();
 
-            try
-            {
-                response = this.ContactLookupRaw(phoneNumber, ucid, contactParams);
-                return response;
-            }
-            catch (Exception x)
-            {
-                throw new ResponseParseException(
-                            "Error parsing PhoneID Contact response",
-                            response.ToString(),
-                            x);
-            }
+            contactParams.Add("ucid", useCaseId);
+
+            WebRequest request = this.ConstructWebRequest(
+                        resourceName,
+                        "GET",
+                        contactParams);
+
+            return this.WebRequester.ReadTeleSignResponse(request);
         }
 
         /// <summary>
-        /// Performs a PhoneID Score lookup on a phone number.
+        /// Performs a TeleSign PhoneID Score lookup. This product provides all the
+        /// information that is provided by PhoneID standard as well as a risk
+        /// value.
         /// </summary>
         /// <param name="phoneNumber">The phone number to lookup.</param>
-        /// <param name="ucid"></param>
+        /// <param name="useCaseId">The use case for the lookup. (Restricted set of values).</param>
         /// <param name="scoreParams"></param>
-        /// <returns>
-        /// A ScorePhoneIdResponse object containing both status of the transaction
-        /// and the resulting data (if successful).
-        /// </returns>
-        public TeleSignResponse ScoreLookup(string phoneNumber, string ucid,
-            Dictionary<String, String> scoreParams = null)
+        /// <returns>The raw JSON string response.</returns>
+        public TeleSignResponse ScoreLookup(
+                    string phoneNumber,
+                    string useCaseId = PhoneIdService.DefaultUseCaseId,
+                     Dictionary<String, String> scoreParams = null)
         {
-            CheckArgument.NotNullOrEmpty(phoneNumber, "phoneNumber");
-            TeleSignResponse response = new TeleSignResponse();
+            phoneNumber = this.CleanupPhoneNumber(phoneNumber);
 
-            try
-            {
-                response = this.ScoreLookupRaw(phoneNumber, ucid, scoreParams);
-                return response;
-            }
-            catch (Exception x)
-            {
-                throw new ResponseParseException(
-                            "Error parsing Phone Id Score",
-                            response.ToString(),
-                            x);
-            }
+            string resourceName = string.Format(
+                        CultureInfo.InvariantCulture,
+                        PhoneIdService.ScoreResourceFormatString,
+                        phoneNumber);
+            if (null == scoreParams)
+                scoreParams = new Dictionary<string, string>();
+
+            scoreParams.Add("ucid", useCaseId);
+
+            WebRequest request = this.ConstructWebRequest(
+                        resourceName,
+                        "GET",
+                        scoreParams);
+
+            return this.WebRequester.ReadTeleSignResponse(request);
         }
 
         /// <summary>
-        /// Performs a PhoneID Live lookup on a phone number.
+        /// Performs a TeleSign PhoneID Live lookup. This product provides all the
+        /// information that is provided by PhoneID standard as well as additional
+        /// roaming and phone status information.
         /// </summary>
         /// <param name="phoneNumber">The phone number to lookup.</param>
-        /// <param name="ucid"></param>
+        /// <param name="useCaseId">The use case for the lookup. (Restricted set of values).</param>
         /// <param name="liveParams"></param>
-        /// <returns>
-        /// A PhoneIdLiveResponse object containing both status of the transaction
-        /// and the resulting data (if successful).
-        /// </returns>
-        public TeleSignResponse LiveLookup(string phoneNumber, string ucid,
-            Dictionary<String, String> liveParams = null)
+        /// <returns>The raw JSON string response.</returns>
+        public TeleSignResponse LiveLookup(
+                    string phoneNumber,
+                    string useCaseId = PhoneIdService.DefaultUseCaseId,
+                    Dictionary<String, String> liveParams = null)
         {
-            CheckArgument.NotNullOrEmpty(phoneNumber, "phoneNumber");
-            TeleSignResponse response = new TeleSignResponse();
+            phoneNumber = this.CleanupPhoneNumber(phoneNumber);
 
-            try
-            {
-                response = this.LiveLookupRaw(phoneNumber, ucid, liveParams);
-                return response;
-            }
-            catch (Exception x)
-            {
-                throw new ResponseParseException(
-                            "Error parsing Phone Id Live",
-                            response.ToString(),
-                            x);
-            }
+            string resourceName = string.Format(
+                        CultureInfo.InvariantCulture,
+                        PhoneIdService.LiveResourceFormatString,
+                        phoneNumber);
+
+            if (null == liveParams)
+                liveParams = new Dictionary<string, string>();
+
+            liveParams.Add("ucid", useCaseId);
+
+            WebRequest request = this.ConstructWebRequest(
+                        resourceName,
+                        "GET",
+                        liveParams);
+
+            return this.WebRequester.ReadTeleSignResponse(request);
         }
-
+        
         /// <summary>
         /// The PhoneID Number Deactivation API determines whether a phone number has been deactivated and when, 
         /// based on carriers' phone number data and TeleSign's proprietary analysis. See 
         /// https://developer.telesign.com/docs/rest_api-phoneid-number-deactivation for detailed API documentation.
         /// </summary>
         /// <param name="phoneNumber"></param>
-        /// <param name="ucid"></param>
+        /// <param name="useCaseId"></param>
         /// <param name="deactivationParams"></param>
         /// <returns></returns>
-        public TeleSignResponse NumberDeactivation(string phoneNumber, string ucid,
+        public TeleSignResponse NumberDeactivation(string phoneNumber,
+            string useCaseId = PhoneIdService.DefaultUseCaseId,
                 Dictionary<String, String> deactivationParams = null)
         {
-            CheckArgument.NotNullOrEmpty(phoneNumber, "phoneNumber");
-            TeleSignResponse response = new TeleSignResponse();
+            phoneNumber = this.CleanupPhoneNumber(phoneNumber);
 
-            try
-            {
-                response = this.NumberDeactivationRaw(phoneNumber, ucid, deactivationParams);
-                return response;
-            }
-            catch (Exception x)
-            {
-                throw new ResponseParseException(
-                            "Error parsing Phone Id Number Deactivation",
-                            response.ToString(),
-                            x);
-            }
-        }
+            string resourceName = string.Format(
+                        CultureInfo.InvariantCulture,
+                        PhoneIdService.V1_PHONEID_NUMBER_DEACTIVATION,
+                        phoneNumber);
 
-        /// <summary>
-        /// The PhoneID API provides a cleansed phone number, phone type, and telecom carrier information to determine the best communication method - SMS or voice. See https://developer.telesign.com/docs/phoneid-api for detailed API documentation.
-        /// </summary>
-        /// <param name="phoneNumber"></param>
-        /// <param name="ucid"></param>
-        /// <param name="phoneidParams"></param>
-        /// <returns></returns>
-        public TeleSignResponse PhoneId(string phoneNumber, Dictionary<String, String> phoneidParams = null)
-        {
-            CheckArgument.NotNullOrEmpty(phoneNumber, "phoneNumber");
-            TeleSignResponse response = new TeleSignResponse();
+            if (null == deactivationParams)
+                deactivationParams = new Dictionary<string, string>();
 
-            try
-            {
-                response = this.PhoneIdRaw(phoneNumber, phoneidParams);
-                return response;
-            }
-            catch (Exception x)
-            {
-                throw new ResponseParseException(
-                            "Error parsing PhoneId",
-                            response.ToString(),
-                            x);
-            }
-        }
+            deactivationParams.Add("ucid", useCaseId);
+
+            WebRequest request = this.ConstructWebRequest(
+                        resourceName,
+                        "GET",
+                        deactivationParams);
+
+            return this.WebRequester.ReadTeleSignResponse(request);
+        }        
     }
 }

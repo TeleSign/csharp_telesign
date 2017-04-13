@@ -40,7 +40,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="RawTelebureauService.cs" />
     <Compile Include="TelebureauClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

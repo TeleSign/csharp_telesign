@@ -32,6 +32,12 @@ namespace TeleSign.Services.Voice
             return this.WebRequester.ReadTeleSignResponse(request);
         }
 
+        /// <summary>
+        /// Retrieves the current status of the voice call. See https://developer.telesign.com/docs/voice-api for detailed API documentation.
+        /// </summary>
+        /// <param name="referenceId"></param>
+        /// <param name="statusParams"></param>
+        /// <returns></returns>
         public TeleSignResponse Status(string referenceId, Dictionary<String, String> statusParams = null)
         {            
             if (null == statusParams)
