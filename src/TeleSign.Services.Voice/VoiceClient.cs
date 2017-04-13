@@ -9,6 +9,19 @@ namespace TeleSign.Services.Voice
         private const string VOICE_STATUS_RESOURCE = "/v1/voice/{0}";
 
         public VoiceClient(TeleSignServiceConfiguration configuration) :base(configuration, null) { }
+        /// <summary>
+        /// Initializes a new instance of the VoiceClient class with a supplied credential and uri and
+        /// a web requester. In general you do not need to use this constructor unless you want to intercept
+        /// the web requests for logging/debugging/testing purposes.
+        /// </summary>
+        /// <param name="configuration">The configuration information for the service.</param>
+        /// <param name="webRequester">The web requester to use.</param>
+        public VoiceClient(
+                    TeleSignServiceConfiguration configuration,
+                    IWebRequester webRequester)
+            : base(configuration, webRequester)
+        {
+        }
 
         /// <summary>
         /// Send a voice call to the target phone_number. See https://developer.telesign.com/docs/voice-api for detailed API documentation.

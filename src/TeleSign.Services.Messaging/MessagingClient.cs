@@ -13,6 +13,19 @@ namespace TeleSign.Services.Messaging
         private const String MESSAGING_STATUS_RESOURCE = "/v1/messaging/{0}";
 
         public MessagingClient(TeleSignServiceConfiguration configuration) :base(configuration, null) { }
+        /// <summary>
+        /// Initializes a new instance of the MessagingClient class with a supplied credential and uri and
+        /// a web requester. In general you do not need to use this constructor unless you want to intercept
+        /// the web requests for logging/debugging/testing purposes.
+        /// </summary>
+        /// <param name="configuration">The configuration information for the service.</param>
+        /// <param name="webRequester">The web requester to use.</param>
+        public MessagingClient(
+                    TeleSignServiceConfiguration configuration,
+                    IWebRequester webRequester)
+            : base(configuration, webRequester)
+        {
+        }
 
         /// <summary>
         /// Send a message to the target phone_number.See <a href ="https://developer.telesign.com/v2.0/docs/messaging-api">for detailed API documentation</a>.         

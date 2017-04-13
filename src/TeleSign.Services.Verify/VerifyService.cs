@@ -109,13 +109,12 @@ namespace TeleSign.Services.Verify
                         VerificationMethod.Smart,
                         phoneNumber,
                         smartParams);
-        }        
+        }
 
         /// <summary>
         /// The TeleSign Verify 2-Way SMS web service allows you to authenticate your users and verify user transactions via two-way Short Message Service (SMS) wireless communication. Verification requests are sent to user’s in a text message, and users return their verification responses by replying to the text message.
         /// </summary>
-        /// <param name="phoneNumber">The phone number for the Verify Soft Token request, including country code</param>
-        /// <param name="ucid">
+        /// <param name="phoneNumber">The phone number for the Verify Soft Token request, including country code</param>        
         /// A string specifying one of the Use Case Codes
         /// </param>
         /// <param name="message">
@@ -124,6 +123,7 @@ namespace TeleSign.Services.Verify
         /// <param name="validityPeriod">
         /// This parameter allows you to place a time-limit on the verification. This provides an extra level of security by restricting the amount of time your end user has to respond (after which, TeleSign automatically rejects their response). Values are expressed as a natural number followed by a lower-case letter that represents the unit of measure. You can use 's' for seconds, 'm' for minutes, 'h' for hours, and 'd' for days
         /// </param>
+        /// <param name="useCaseId">
         /// <returns>The raw JSON response from the REST API.</returns>
         public TeleSignResponse TwoWaySms(
                     string phoneNumber,
@@ -243,6 +243,13 @@ namespace TeleSign.Services.Verify
         /// <param name="verifyCode">The code to be sent to the user. If null - a code will be generated.</param>
         /// <param name="messageTemplate">An optional template for the message. Ignored if not SMS.</param>
         /// <param name="language">The language for the message. Ignored for SMS when a template is provided.</param>
+        /// <param name="validityPeriod">
+        /// This parameter allows you to place a time-limit on the verification. 
+        /// This provides an extra level of security by restricting the amount of time your end user has to respond (after which, TeleSign automatically rejects their response). 
+        /// Values are expressed as a natural number followed by a lower-case letter that represents the unit of measure. 
+        /// You can use 's' for seconds, 'm' for minutes, 'h' for hours, and 'd' for days
+        /// </param>
+        /// <param name="useCaseId">
         /// <returns>A dictionary of arguments for a Verify transaction.</returns>
         private static Dictionary<string, string> ConstructVerifyArgs(
                     VerificationMethod verificationMethod, 

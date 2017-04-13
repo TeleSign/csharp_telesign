@@ -12,6 +12,19 @@ namespace TeleSign.Services.AutoVerify
         private const string AUTOVERIFY_STATUS_RESOURCE = "/v1/mobile/verification/status/{0}";
 
         public AutoVerifyClient(TeleSignServiceConfiguration configuration) :base(configuration, null) { }
+        /// <summary>
+        /// Initializes a new instance of the AutoVerifyClient class with a supplied credential and uri and
+        /// a web requester. In general you do not need to use this constructor unless you want to intercept
+        /// the web requests for logging/debugging/testing purposes.
+        /// </summary>
+        /// <param name="configuration">The configuration information for the service.</param>
+        /// <param name="webRequester">The web requester to use.</param>
+        public AutoVerifyClient(
+                    TeleSignServiceConfiguration configuration,
+                    IWebRequester webRequester)
+            : base(configuration, webRequester)
+        {
+        }
 
         /// <summary>
         /// Retrieves the verification result for an AutoVerify transaction by external_id.To ensure a secure verification flow you must check the status using TeleSign's servers on your backend. Do not rely on the SDK alone to indicate a successful verification.See<a href="https://developer.telesign.com/docs/auto-verify-sdk#section-obtaining-verification-status"> for detailed API documentation</a>.

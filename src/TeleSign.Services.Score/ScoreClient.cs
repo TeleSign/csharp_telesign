@@ -11,6 +11,19 @@ namespace TeleSign.Services.Score
     {
         private const String SCORE_RESOURCE = "/v1/score/{0}";	
         public ScoreClient(TeleSignServiceConfiguration configuration) : base(configuration, null) { }
+        /// <summary>
+        /// Initializes a new instance of the ScoreClient class with a supplied credential and uri and
+        /// a web requester. In general you do not need to use this constructor unless you want to intercept
+        /// the web requests for logging/debugging/testing purposes.
+        /// </summary>
+        /// <param name="configuration">The configuration information for the service.</param>
+        /// <param name="webRequester">The web requester to use.</param>
+        public ScoreClient(
+                    TeleSignServiceConfiguration configuration,
+                    IWebRequester webRequester)
+            : base(configuration, webRequester)
+        {
+        }
 
         /// <summary>
         /// Score is an API that delivers reputation scoring based on phone number intelligence, 

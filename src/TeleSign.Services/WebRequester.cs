@@ -24,7 +24,7 @@ namespace TeleSign.Services
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        public TeleSignResponse ReadTeleSignResponse(WebRequest request)
+        public TeleSignResponse ReadTeleSignResponse(WebRequest request) 
         {
             TeleSignResponse tsResponse = new TeleSignResponse();
             try

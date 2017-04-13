@@ -9,6 +9,19 @@ namespace TeleSign.Services.Telebureau
         private const string TELEBUREAU_DELETE_RESOURCE = "/v1/telebureau/event/{0}";
 
         public TelebureauClient(TeleSignServiceConfiguration configuration) :base(configuration, null) { }
+        /// <summary>
+        /// Initializes a new instance of the TelebureauClient class with a supplied credential and uri and
+        /// a web requester. In general you do not need to use this constructor unless you want to intercept
+        /// the web requests for logging/debugging/testing purposes.
+        /// </summary>
+        /// <param name="configuration">The configuration information for the service.</param>
+        /// <param name="webRequester">The web requester to use.</param>
+        public TelebureauClient(
+                    TeleSignServiceConfiguration configuration,
+                    IWebRequester webRequester)
+            : base(configuration, webRequester)
+        {
+        }
 
         /// <summary>
         /// Creates a telebureau event corresponding to supplied data.
