@@ -24,9 +24,9 @@ namespace TeleSign.Services
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        public TSResponse ReadTeleSignResponse(WebRequest request)
+        public TeleSignResponse ReadTeleSignResponse(WebRequest request)
         {
-            TSResponse tsResponse = new TSResponse();
+            TeleSignResponse tsResponse = new TeleSignResponse();
             try
            {
                 request.Timeout = 30000;

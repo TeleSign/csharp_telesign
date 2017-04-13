@@ -102,7 +102,7 @@ namespace TeleSign.Services.PhoneId
         /// <param name="phoneNumber">The phone number to lookup.</param>
         /// <param name="standardParams">The phone number to lookup.</param>
         /// <returns>The raw JSON string response.</returns>
-        public TSResponse StandardLookupRaw(
+        public TeleSignResponse StandardLookupRaw(
                     string phoneNumber,
                     Dictionary<String, String> standardParams = null)
         {
@@ -130,7 +130,7 @@ namespace TeleSign.Services.PhoneId
         /// <param name="useCaseId">The use case for the lookup. (Restricted set of values).</param>
         /// <param name="contactParams"></param>
         /// <returns>The raw JSON string response.</returns>
-        public TSResponse ContactLookupRaw(
+        public TeleSignResponse ContactLookupRaw(
                     string phoneNumber, 
                     string useCaseId = RawPhoneIdService.DefaultUseCaseId, Dictionary<String, String> contactParams = null)
         {
@@ -162,7 +162,7 @@ namespace TeleSign.Services.PhoneId
         /// <param name="useCaseId">The use case for the lookup. (Restricted set of values).</param>
         /// <param name="scoreParams"></param>
         /// <returns>The raw JSON string response.</returns>
-        public TSResponse ScoreLookupRaw(
+        public TeleSignResponse ScoreLookupRaw(
                     string phoneNumber,
                     string useCaseId = RawPhoneIdService.DefaultUseCaseId,
                      Dictionary<String, String> scoreParams = null)
@@ -195,7 +195,7 @@ namespace TeleSign.Services.PhoneId
         /// <param name="useCaseId">The use case for the lookup. (Restricted set of values).</param>
         /// <param name="liveParams"></param>
         /// <returns>The raw JSON string response.</returns>
-        public TSResponse LiveLookupRaw(
+        public TeleSignResponse LiveLookupRaw(
                     string phoneNumber,
                     string useCaseId = RawPhoneIdService.DefaultUseCaseId,
                     Dictionary<String, String> liveParams = null)
@@ -229,7 +229,7 @@ namespace TeleSign.Services.PhoneId
         /// <param name="useCaseId"></param>
         /// <param name="deactivationParams"></param>
         /// <returns></returns>
-        public TSResponse NumberDeactivationRaw(string phoneNumber,
+        public TeleSignResponse NumberDeactivationRaw(string phoneNumber,
             string useCaseId = RawPhoneIdService.DefaultUseCaseId,
                 Dictionary<String, String> deactivationParams = null)
         {
@@ -259,7 +259,7 @@ namespace TeleSign.Services.PhoneId
         /// <param name="phoneNumber"></param>
         /// <param name="phoneidParams"></param>
         /// <returns></returns>
-        public TSResponse PhoneIdRaw(string phoneNumber, Dictionary<String, String> phoneidParams = null) {
+        public TeleSignResponse PhoneIdRaw(string phoneNumber, Dictionary<String, String> phoneidParams = null) {
             phoneNumber = this.CleanupPhoneNumber(phoneNumber);
 
             string resourceName = string.Format(

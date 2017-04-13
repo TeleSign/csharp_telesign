@@ -10,7 +10,7 @@ namespace TeleSign.Services.Telebureau
 
         public RawTelebureauService(TeleSignServiceConfiguration configuration) :base(configuration, null) { }
 
-        public TSResponse CreateRaw(string phoneNumber, string fraud_type, string occurred_at, Dictionary<string, string> createEventParams = null)
+        public TeleSignResponse CreateRaw(string phoneNumber, string fraud_type, string occurred_at, Dictionary<string, string> createEventParams = null)
         {
             phoneNumber = this.CleanupPhoneNumber(phoneNumber);
 
@@ -26,7 +26,7 @@ namespace TeleSign.Services.Telebureau
             return this.WebRequester.ReadTeleSignResponse(request);
         }
 
-        public TSResponse RetrieveRaw(string referenceId, Dictionary<string, string> retrieveParams = null)
+        public TeleSignResponse RetrieveRaw(string referenceId, Dictionary<string, string> retrieveParams = null)
         {
             CheckArgument.NotNullOrEmpty(referenceId, "reference_id");
             if (null == retrieveParams)
@@ -41,7 +41,7 @@ namespace TeleSign.Services.Telebureau
             return this.WebRequester.ReadTeleSignResponse(request);
         }
 
-        public TSResponse DeleteRaw(string referenceId, Dictionary<string, string> deleteParams = null)
+        public TeleSignResponse DeleteRaw(string referenceId, Dictionary<string, string> deleteParams = null)
         {
             CheckArgument.NotNullOrEmpty(referenceId, "reference_id");
             if (null == deleteParams)

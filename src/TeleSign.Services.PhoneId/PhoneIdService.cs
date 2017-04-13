@@ -58,12 +58,12 @@ namespace TeleSign.Services.PhoneId
         /// A StandardPhoneIdResponse object containing both status of the transaction
         /// and the resulting data (if successful).
         /// </returns>
-        public TSResponse StandardLookup(string phoneNumber,
+        public TeleSignResponse StandardLookup(string phoneNumber,
             Dictionary<String, String> standardParams = null)
         {
             CheckArgument.NotNullOrEmpty(phoneNumber, "phoneNumber");
 
-            TSResponse response = new TSResponse();
+            TeleSignResponse response = new TeleSignResponse();
 
             try
             {
@@ -89,12 +89,12 @@ namespace TeleSign.Services.PhoneId
         /// A ContactPhoneIdResponse object containing both status of the transaction
         /// and the resulting data (if successful).
         /// </returns>
-        public TSResponse ContactLookup(string phoneNumber, string ucid,
+        public TeleSignResponse ContactLookup(string phoneNumber, string ucid,
             Dictionary<String, String> contactParams = null)
         {
             CheckArgument.NotNullOrEmpty(phoneNumber, "phoneNumber");
 
-            TSResponse response = new TSResponse();
+            TeleSignResponse response = new TeleSignResponse();
 
             try
             {
@@ -120,11 +120,11 @@ namespace TeleSign.Services.PhoneId
         /// A ScorePhoneIdResponse object containing both status of the transaction
         /// and the resulting data (if successful).
         /// </returns>
-        public TSResponse ScoreLookup(string phoneNumber, string ucid,
+        public TeleSignResponse ScoreLookup(string phoneNumber, string ucid,
             Dictionary<String, String> scoreParams = null)
         {
             CheckArgument.NotNullOrEmpty(phoneNumber, "phoneNumber");
-            TSResponse response = new TSResponse();
+            TeleSignResponse response = new TeleSignResponse();
 
             try
             {
@@ -150,11 +150,11 @@ namespace TeleSign.Services.PhoneId
         /// A PhoneIdLiveResponse object containing both status of the transaction
         /// and the resulting data (if successful).
         /// </returns>
-        public TSResponse LiveLookup(string phoneNumber, string ucid,
+        public TeleSignResponse LiveLookup(string phoneNumber, string ucid,
             Dictionary<String, String> liveParams = null)
         {
             CheckArgument.NotNullOrEmpty(phoneNumber, "phoneNumber");
-            TSResponse response = new TSResponse();
+            TeleSignResponse response = new TeleSignResponse();
 
             try
             {
@@ -179,11 +179,11 @@ namespace TeleSign.Services.PhoneId
         /// <param name="ucid"></param>
         /// <param name="deactivationParams"></param>
         /// <returns></returns>
-        public TSResponse NumberDeactivation(string phoneNumber, string ucid,
+        public TeleSignResponse NumberDeactivation(string phoneNumber, string ucid,
                 Dictionary<String, String> deactivationParams = null)
         {
             CheckArgument.NotNullOrEmpty(phoneNumber, "phoneNumber");
-            TSResponse response = new TSResponse();
+            TeleSignResponse response = new TeleSignResponse();
 
             try
             {
@@ -206,10 +206,10 @@ namespace TeleSign.Services.PhoneId
         /// <param name="ucid"></param>
         /// <param name="phoneidParams"></param>
         /// <returns></returns>
-        public TSResponse PhoneId(string phoneNumber, Dictionary<String, String> phoneidParams = null)
+        public TeleSignResponse PhoneId(string phoneNumber, Dictionary<String, String> phoneidParams = null)
         {
             CheckArgument.NotNullOrEmpty(phoneNumber, "phoneNumber");
-            TSResponse response = new TSResponse();
+            TeleSignResponse response = new TeleSignResponse();
 
             try
             {

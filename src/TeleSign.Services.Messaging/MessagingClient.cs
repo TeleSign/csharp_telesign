@@ -15,11 +15,11 @@ namespace TeleSign.Services.Messaging
         /// <param name="messageType"></param>
         /// <param name="messageParams"></param>
         /// <returns></returns>
-        public TSResponse Message(String phoneNumber, String message,
+        public TeleSignResponse Message(String phoneNumber, String message,
                 String messageType, Dictionary<String, String> messageParams = null)
         {
             phoneNumber = this.CleanupPhoneNumber(phoneNumber);
-            TSResponse response = new TSResponse();
+            TeleSignResponse response = new TeleSignResponse();
             try
             {
                 response = this.MessageRaw(phoneNumber, message, messageType, messageParams);
@@ -41,11 +41,11 @@ namespace TeleSign.Services.Messaging
         /// <param name="referenceId"></param>
         /// <param name="statusParams"></param>
         /// <returns></returns>
-        public TSResponse Status(String referenceId,
+        public TeleSignResponse Status(String referenceId,
                 Dictionary<String, String> statusParams=null)
         {
 
-            TSResponse response = new TSResponse();
+            TeleSignResponse response = new TeleSignResponse();
             try
             {
                 response = this.StatusRaw(referenceId, statusParams);

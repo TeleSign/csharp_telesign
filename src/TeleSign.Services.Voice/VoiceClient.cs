@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using System.Net;
 namespace TeleSign.Services.Voice
 {
-    public class VoiceClient:RawVoiceService
+    public class VoiceClient : TeleSignService
     {
-        public VoiceClient(TeleSignServiceConfiguration configuration) : base(configuration) { }
+        private const string VOICE_RESOURCE = "/v1/voice";
+        private const string VOICE_STATUS_RESOURCE = "/v1/voice/{0}";
+
+        public VoiceClient(TeleSignServiceConfiguration configuration) :base(configuration, null) { }
 
         /// <summary>
         /// Send a voice call to the target phone_number. See https://developer.telesign.com/docs/voice-api for detailed API documentation.
@@ -15,46 +18,32 @@ namespace TeleSign.Services.Voice
         /// <param name="messageType"></param>
         /// <param name="callParams"></param>
         /// <returns></returns>
-        public TSResponse Call(string phoneNumber, string message, string messageType, Dictionary<string, string> callParams = null)
+        public TeleSignResponse Call(string phoneNumber, string message, string messageType, Dictionary<string, string> callParams = null)
         {
-            phoneNumber = this.CleanupPhoneNumber(phoneNumber);
-            TSResponse response = new TSResponse();
-            try
-            {
-                response = this.CallRaw(phoneNumber, message, messageType, callParams);
-            }
-            catch (Exception e)
-            {
-                throw new ResponseParseException(
-                            "Error parsing Call response",
-                            response.ToString(),
-                            e);
-            }
+            if (null == callParams)
+                callParams = new Dictionary<string, string>();
 
-            return response;
+            callParams.Add("phone_number", phoneNumber);
+            callParams.Add("message", message);
+            callParams.Add("message_type", messageType);
+
+            WebRequest request = this.ConstructWebRequest(VOICE_RESOURCE, "POST", callParams);
+
+            return this.WebRequester.ReadTeleSignResponse(request);
         }
 
-        /// <summary>
-        /// Retrieves the current status of the voice call. See https://developer.telesign.com/docs/voice-api for detailed API documentation.
-        /// </summary>
-        /// <param name="referenceId"></param>
-        /// <param name="statusParams"></param>
-        /// <returns></returns>
-        public TSResponse Status(string referenceId, Dictionary<String, String> statusParams = null) {
-            TSResponse response = new TSResponse();
-            try
-            {
-                response = this.StatusRaw(referenceId, statusParams);
-                return response;
-            }
-            catch (Exception e)
-            {
+        public TeleSignResponse Status(string referenceId, Dictionary<String, String> statusParams = null)
+        {            
+            if (null == statusParams)
+                statusParams = new Dictionary<string, string>();
+            statusParams.Add("reference_id", referenceId);
 
-                throw new ResponseParseException(
-                            "Error parsing Status response",
-                            response.ToString(),
-                            e);
-            }
+            string resourceName = string.Format(VOICE_STATUS_RESOURCE, referenceId);
+
+            WebRequest request = this.ConstructWebRequest(resourceName, "GET", statusParams);
+
+            return this.WebRequester.ReadTeleSignResponse(request);
+
         }
     }
 }

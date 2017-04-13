@@ -19,7 +19,7 @@ namespace TeleSign.Services.AutoVerify
         /// <param name="externalId"></param>
         /// <param name="statusParams"></param>
         /// <returns></returns>
-        public TSResponse StatusRaw(string externalId, Dictionary<String, String> statusParams = null) {
+        public TeleSignResponse StatusRaw(string externalId, Dictionary<String, String> statusParams = null) {
             if (null == statusParams)
                 statusParams = new Dictionary<string, string>();
 

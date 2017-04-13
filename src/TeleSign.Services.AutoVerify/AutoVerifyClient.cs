@@ -12,11 +12,11 @@ namespace TeleSign.Services.AutoVerify
         {
         }
 
-        public TSResponse Status(string externalId, Dictionary<String, String> statusParams = null)
+        public TeleSignResponse Status(string externalId, Dictionary<String, String> statusParams = null)
         {
             CheckArgument.NotNullOrEmpty(externalId, "external_id");
 
-            TSResponse response = new TSResponse();
+            TeleSignResponse response = new TeleSignResponse();
             try
             {
                 response = this.StatusRaw(externalId, statusParams);

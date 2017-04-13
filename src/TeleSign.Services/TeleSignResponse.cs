@@ -6,9 +6,9 @@ using System.Text;
 
 namespace TeleSign.Services
 {
-    public class TSResponse
+    public class TeleSignResponse
     {
-        public TSResponse() {
+        public TeleSignResponse() {
             Headers = new Dictionary<string, string[]>();
         }
         public int StatusCode { get; set; }

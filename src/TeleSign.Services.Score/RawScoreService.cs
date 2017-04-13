@@ -9,7 +9,7 @@ namespace TeleSign.Services.Score
         private const String SCORE_RESOURCE = "/v1/score/{0}";	
         public RawScoreService(TeleSignServiceConfiguration configuration) : base(configuration, null) { }
 
-        public TSResponse ScoreRaw(String phoneNumber, String accountLifecycleEvent, Dictionary<String, String> scoreParams = null) {
+        public TeleSignResponse ScoreRaw(String phoneNumber, String accountLifecycleEvent, Dictionary<String, String> scoreParams = null) {
             phoneNumber = this.CleanupPhoneNumber(phoneNumber);
 
             if (null == scoreParams)

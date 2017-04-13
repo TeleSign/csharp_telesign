@@ -17,12 +17,12 @@ namespace TeleSign.Services.Score
         /// <param name="accountLifecycleEvent"></param>        
         /// <param name="scoreParams"></param>
         /// <returns></returns>
-        public TSResponse Score(String phoneNumber, String accountLifecycleEvent, Dictionary<String, String> scoreParams = null)
+        public TeleSignResponse Score(String phoneNumber, String accountLifecycleEvent, Dictionary<String, String> scoreParams = null)
         {
             phoneNumber = this.CleanupPhoneNumber(phoneNumber);
             CheckArgument.NotNullOrEmpty(accountLifecycleEvent, "account_lifecycle_event");
 
-            TSResponse response = new TSResponse();
+            TeleSignResponse response = new TeleSignResponse();
             try
             {
                 response = this.ScoreRaw(phoneNumber, accountLifecycleEvent, scoreParams);

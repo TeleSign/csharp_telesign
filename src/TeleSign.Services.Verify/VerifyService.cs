@@ -49,11 +49,11 @@ namespace TeleSign.Services.Verify
         /// <param name="phoneNumber"></param>
         /// <param name="smsParams"></param>
         /// <returns></returns>
-        public TSResponse SendSms(
+        public TeleSignResponse SendSms(
                     string phoneNumber,
                     Dictionary<string, string> smsParams = null)
         {
-            TSResponse response = new TSResponse();
+            TeleSignResponse response = new TeleSignResponse();
             phoneNumber = this.CleanupPhoneNumber(phoneNumber);
             //this.ValidateCodeFormat(verifyCode);
 
@@ -87,12 +87,12 @@ namespace TeleSign.Services.Verify
         /// This parameter allows you to place a time-limit on the verification. This provides an extra level of security by restricting the amount of time your end user has to respond (after which, TeleSign automatically rejects their response). Values are expressed as a natural number followed by a lower-case letter that represents the unit of measure. You can use 's' for seconds, 'm' for minutes, 'h' for hours, and 'd' for days
         /// </param>
         /// <returns>The raw JSON response from the REST API.</returns>
-        public TSResponse SendTwoWaySms(
+        public TeleSignResponse SendTwoWaySms(
         			string phoneNumber,
                     string message = null,
             		string validityPeriod = "5m")
         {
-            TSResponse response = new TSResponse();
+            TeleSignResponse response = new TeleSignResponse();
             phoneNumber = this.CleanupPhoneNumber(phoneNumber);
 
 
@@ -130,11 +130,11 @@ namespace TeleSign.Services.Verify
         /// A Response object with the status and returned information
         /// for the transaction.
         /// </returns>
-        public TSResponse Voice(
+        public TeleSignResponse Voice(
                     string phoneNumber,
                     Dictionary<string, string> callParams = null)
         {
-            TSResponse response = new TSResponse();
+            TeleSignResponse response = new TeleSignResponse();
             try
             {
                 response = this.CallRaw(
@@ -167,11 +167,11 @@ namespace TeleSign.Services.Verify
         /// A TeleSignResponse object with the status and returned information
         /// for the transaction.
         /// </returns>
-        public TSResponse InitiatePush(
+        public TeleSignResponse InitiatePush(
                     string phoneNumber,
                     Dictionary<string, string> pushParams = null)
         {
-            TSResponse response = new TSResponse();
+            TeleSignResponse response = new TeleSignResponse();
 
             try
             {
@@ -196,11 +196,11 @@ namespace TeleSign.Services.Verify
         /// <param name="referenceId"></param>
         /// <param name="statusParams"></param>
         /// <returns></returns>
-        public TSResponse CheckStatus(string referenceId, Dictionary<string, string> statusParams = null)
+        public TeleSignResponse CheckStatus(string referenceId, Dictionary<string, string> statusParams = null)
         {
             CheckArgument.NotNullOrEmpty(referenceId, "referenceId");
 
-            TSResponse response = new TSResponse();           
+            TeleSignResponse response = new TeleSignResponse();           
 
             try
             {
@@ -226,14 +226,14 @@ namespace TeleSign.Services.Verify
         /// <param name="ucid"></param>
         /// <param name="smartParams"></param>
         /// <returns>The TeleSign JSON response from the REST API.</returns>
-        public TSResponse Smart(
+        public TeleSignResponse Smart(
                     string phoneNumber,
                     string ucid,
                     Dictionary<string, string> smartParams = null)
         {
             phoneNumber = this.CleanupPhoneNumber(phoneNumber);
 
-            TSResponse response = new TSResponse();
+            TeleSignResponse response = new TeleSignResponse();
 
             try
             {

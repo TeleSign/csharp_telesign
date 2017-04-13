@@ -10,7 +10,7 @@ namespace TeleSign.Services.Messaging
 
         public RawMessagingService(TeleSignServiceConfiguration configuration) :base(configuration, null) { }
 
-        public TSResponse MessageRaw(string phoneNumber, string message, string messageType, Dictionary<string, string> messageParams = null) {
+        public TeleSignResponse MessageRaw(string phoneNumber, string message, string messageType, Dictionary<string, string> messageParams = null) {
             phoneNumber = this.CleanupPhoneNumber(phoneNumber);
 
             if (null == messageParams)
@@ -25,7 +25,7 @@ namespace TeleSign.Services.Messaging
             return this.WebRequester.ReadTeleSignResponse(request);
         }
 
-        public TSResponse StatusRaw(string referenceId, Dictionary<String, String> statusParams = null) {
+        public TeleSignResponse StatusRaw(string referenceId, Dictionary<String, String> statusParams = null) {
             CheckArgument.NotNullOrEmpty(referenceId, "reference_id");
             if (null == statusParams)
                 statusParams = new Dictionary<string, string>();

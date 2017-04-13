@@ -15,8 +15,8 @@ namespace TeleSign.Services.Telebureau
         /// <param name="occurred_at"></param>
         /// <param name="createEventParams"></param>
         /// <returns></returns>
-        public TSResponse Create(string phoneNumber, string fraud_type, string occurred_at, Dictionary<string, string> createEventParams = null) {
-            TSResponse response = new TSResponse();
+        public TeleSignResponse Create(string phoneNumber, string fraud_type, string occurred_at, Dictionary<string, string> createEventParams = null) {
+            TeleSignResponse response = new TeleSignResponse();
             try
             {
                 response = this.CreateRaw(phoneNumber, fraud_type, occurred_at, createEventParams);
@@ -39,8 +39,8 @@ namespace TeleSign.Services.Telebureau
         /// <param name="referenceId"></param>
         /// <param name="retrieveParams"></param>
         /// <returns></returns>
-        public TSResponse Retrieve(string referenceId, Dictionary<string, string> retrieveParams = null) {
-            TSResponse response = new TSResponse();
+        public TeleSignResponse Retrieve(string referenceId, Dictionary<string, string> retrieveParams = null) {
+            TeleSignResponse response = new TeleSignResponse();
             try
             {
                 response = this.RetrieveRaw(referenceId, retrieveParams);
@@ -63,9 +63,9 @@ namespace TeleSign.Services.Telebureau
         /// <param name="referenceId"></param>
         /// <param name="deleteParams"></param>
         /// <returns></returns>
-        public TSResponse Delete(string referenceId, Dictionary<string, string> deleteParams = null)
+        public TeleSignResponse Delete(string referenceId, Dictionary<string, string> deleteParams = null)
         {
-            TSResponse response = new TSResponse();
+            TeleSignResponse response = new TeleSignResponse();
             try
             {
                 response = this.DeleteRaw(referenceId, deleteParams);

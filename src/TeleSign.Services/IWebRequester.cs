@@ -22,6 +22,6 @@ namespace TeleSign.Services
         /// </summary>
         /// <param name="request">A .NET WebRequest object.</param>
         /// <returns>Returns response object.</returns>        
-        TSResponse ReadTeleSignResponse(WebRequest request);
+        TeleSignResponse ReadTeleSignResponse(WebRequest request);
     }
 }
