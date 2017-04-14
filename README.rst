@@ -2,7 +2,8 @@
 TeleSign
 ========
 
-**Information**: For more information, visit the `TeleSign website <http://www.TeleSign.com>`_ or the `TeleSign Developer Portal <https://developer.telesign.com/>`_.
+TeleSign provides the world’s most comprehensive approach to account security for Web and mobile applications.
+For more information about TeleSign, visit the `TeleSign website <http://www.TeleSign.com>`_.
 
 **Author**: Telesign Corp.
 
@@ -14,6 +15,11 @@ TeleSign Web Services: .NET SDK
 The **TeleSign .NET SDK** is a Microsoft .NET component that provides an interface to `TeleSign web services <https://developer.telesign.com/docs/getting-started-with-the-rest-api>`_. 
 
 It contains a .NET Framework class library that presents our web services in an intuitive, hierarchical object model, so you can create and manipulate them in the way you're accustomed to. You can use this SDK to build TeleSign‑based .NET applications.
+
+Documentation
+-------------
+
+Detailed documentation for TeleSign REST APIs is available in the `Developer Portal <https://developer.telesign.com/>`_.
 
 Authentication
 --------------
@@ -53,126 +59,32 @@ SecretKey values or you can create the credentials in code. Passing null to the 
   // For PhoneId products
   PhoneIdServer phoneId = PhoneIdService(config);
 
-Operating Modes
----------------
 
-You can use the TeleSign .NET SDK in either of two modes. The rich mode is recommended and handles all aspects of authentication and response parsing, providing a high level object model.
-
-+----------------------+--------------------------------------------------------------------------+ 
-| Mode                 | Description                                                              | 
-+======================+==========================================================================+ 
-| Rich                 | Provides an object-oriented framework that models web services as        |
-|                      | high-level actors, and low-level processes as mediator objects.          |
-|                      | Automatically parses the JSON data from server responses and creates     |
-|                      | Response objects from it.                                                | 
-|                      |                                                                          | 
-+----------------------+--------------------------------------------------------------------------+ 
-| Raw                  | Abstracts the interaction with only the web services. Method calls       |
-|                      | return the web service's JSON response bodies verbatim. This gives you   |
-|                      | the flexibility of handling the response processing any way you want.    | 
-|                      |                                                                          | 
-+----------------------+--------------------------------------------------------------------------+ 
-
-Documentation
--------------
-
-All classes and functions are documented with XML comments. Installing `Sandcastle Help File Builder 
-<http://shfb.codeplex.com/>`_ will allow you to build the HTML version of the documentation locally.
-
-Rich Mode Classes
------------------
-
-+----------------------+--------------------------------------------------------------------------+ 
-| Mode                 | Description                                                              | 
-+======================+==========================================================================+ 
-| PhoneIdService.cs    | The **PhoneIdService** class exposes four services that each provide     | 
-|                      | information about a specified phone number.                              | 
-|                      |                                                                          | 
-|                      | ``public PhoneIdStandardResponse StandardLookup(string phoneNumber)``    | 
-|                      |     Retrieves the standard set of details about the specified phone      | 
-|                      |     number. This includes the type of phone (for example, land line or   | 
-|                      |     mobile), and its approximate geographic location.                    | 
-|                      | ``public PhoneIdScoreResponse ScoreLookup(string phoneNumber)``          | 
-|                      |     Retrieves a score for the specified phone number. This ranks the     | 
-|                      |     phone number's "risk level" on a scale from 0 to 1000, so you can    | 
-|                      |     code your web application to handle particular use cases (for        | 
-|                      |     example, to stop things like chargebacks, identity theft, fraud,     |
-|                      |     and spam).                                                           |
-|                      | ``public PhoneIdContactResponse ContactLookup(string phoneNumber)``      | 
-|                      |     In addition to the information retrieved by *standard*, this service | 
-|                      |     provides the name and address associated with the specified phone    | 
-|                      |     number.                                                              |
-|                      |                                                                          | 
-|                      | ``public PhoneIdLiveResponse LiveLookup(string phoneNumber)``            | 
-|                      |     In addition to the information retrieved by *standard*, this service | 
-|                      |     provides information about the subscriber status, device status,     | 
-|                      |     roaming status, and roaming country.                                 | 
-|                      |                                                                          | 
-|                      |                                                                          | 
-+----------------------+--------------------------------------------------------------------------+ 
-| VerifyService.cs     | The **VerifyService** class exposes four services for sending users a    | 
-|                      | verification token (a three to five-digit number). You can use this      | 
-|                      | mechanism to test whether you can reach users at the phone number        | 
-|                      | they supplied, or you can have them use the token to authenticate        | 
-|                      | themselves with your web application. In addition, this class also       | 
-|                      | exposes a service that allows you to confirm the result of the           | 
-|                      | authentication.                                                          | 
-|                      |                                                                          | 
-|                      | You can use this verification factor in combination with *username*      | 
-|                      | and *password* to provide *two-factor* authentication for higher         | 
-|                      | security.                                                                | 
-|                      |                                                                          | 
-|                      | ``public VerifyResponse SendSms(string phoneNumber)``                    | 
-|                      |     Sends a text message containing the verification code to the         | 
-|                      |     specified phone number (supported for mobile phones only).           | 
-|                      |                                                                          | 
-|                      | ``public VerifyResponse InitiateCall(string phoneNumber)``               | 
-|                      |     Calls the specified phone number and uses a recorded message to      | 
-|                      |     speak the verification code to the user.                             | 
-|                      |                                                                          | 
-|                      | ``public VerifyResponse ValidateCode(``                                  |
-|                      |               ``string referenceId,``                                    |
-|                      |               ``string verifyCode)``                                     |
-|                      |                                                                          | 
-|                      |     Checks that the code supplied is correct. You make this call in      |
-|                      |     your application after users complete the authentication             |
-|                      |     transaction.                                                         |
-|                      |                                                                          | 
-|                      | ``public VerifyResponse CheckStatus(string referenceId)``                |
-|                      |                                                                          | 
-|                      |                                                                          | 
-+----------------------+--------------------------------------------------------------------------+ 
-
-Code Example: PhoneId Contact Lookup
+Code Example: Messaging Example
 ------------------------------------
 These examples assume you are using the file for authentication/configuration described above.
 
 >>>
 string phoneNumber = "+1 555-555-5555";
-PhoneIdService service = new PhoneIdService();
-PhoneIdContactResponse response = service.ContactLookup(phoneNumber);
-Console.WriteLine("Phone Number: {0}", phoneNumber);
-Console.WriteLine("Name        : {0}", response.Contact.FullName);
-Console.WriteLine("Address     :\r\n{0}", response.Contact.GetFullAddress());
+string message = "You're scheduled for a dentist appointment at 2:30PM.";
+string messageType = "ARN";
+MessagingClient messagingClient = new MessagingClient();
+TeleSignResponse response = messagingClient.Message(phone_number, message, messageType);
+if (((int)response.StatusCode) >= 200 && ((int)response.StatusCode) < 300)
+            {
+                JObject teleSignJsonObject = response.Json;
+                string reference_id = teleSignJsonObject["reference_id"].ToString();                
+                Console.WriteLine(reference_id);
+            }
 
-Code Example: Initiate Sms Verify
----------------------------------
->>>
-string code = "1234";
-string phoneNumber = "+1 555-555-5555";
-string language = "en";
-VerifyService verify = new VerifyService();
-VerifyResponse verifyResponse = verify.SendSms(phoneNumber, code, string.Empty, language);
-
-
-For more examples, see the documentation or browse the example command line app source code in 
-**Commands.cs** in the **TeleSign.TeleSignCmd** project.
+For more examples, see the documentation or browse the examples source code in 
+**Example.cs** in the **TeleSign.Example.ConsoleApplication** project.
 
 
 Support and Feedback
 --------------------
 
-For more information about the Phone Verify and PhoneID Standard services, please contact your TeleSign representative:
+For more information, please contact your TeleSign representative:
 
 Email: `support@telesign.com <mailto:support@telesign.com>`_
 
