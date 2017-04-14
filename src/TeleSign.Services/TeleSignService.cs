@@ -250,7 +250,7 @@ namespace TeleSign.Services
             if(null != tsProxy)
                 request.Proxy = tsProxy;
             
-            request.UserAgent = "TeleSignCSharpSdk/v2.0.0";
+            request.UserAgent = string.Format("TeleSignSdk/CSharp-v{0} .Net{1}", typeof(TeleSignService).Assembly.GetName().Version, Environment.Version.ToString());
 
             string contentType = string.Empty;
             string encodedBody = string.Empty;
