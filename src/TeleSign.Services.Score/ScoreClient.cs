@@ -10,7 +10,7 @@ namespace TeleSign.Services.Score
     public class ScoreClient : TeleSignService
     {
         private const String SCORE_RESOURCE = "/v1/score/{0}";	
-        public ScoreClient(TeleSignServiceConfiguration configuration) : base(configuration, null) { }
+        public ScoreClient(TeleSignServiceConfiguration configuration = null) : base(configuration, null) { }
         /// <summary>
         /// Initializes a new instance of the ScoreClient class with a supplied credential and uri and
         /// a web requester. In general you do not need to use this constructor unless you want to intercept

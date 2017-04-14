@@ -69,9 +69,7 @@ namespace TeleSign.Services
                     TeleSignCredential credential,
                     Dictionary<string, string> TeleSignServiceParams)
         {
-            this.Credential = credential;
-            //this.ServiceAddress = serviceAddress;
-            //this.ServiceMobileAddress = serviceMobileAddress;
+            this.Credential = credential;            
             this.TeleSignServiceParams = TeleSignServiceParams;
         }
 

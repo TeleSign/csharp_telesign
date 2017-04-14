@@ -211,8 +211,7 @@ namespace TeleSign.Services
         /// </summary>
         /// <param name="resourceName">The name of the resource - ie. the relative part of the URL.</param>
         /// <param name="method">The http method - POST, DELETE, GET, PUT.</param>
-        /// <param name="fields">The fields that are the arguments to the request.</param>
-        /// <param name="authMethod">The method of authentication to use.</param>
+        /// <param name="fields">The fields that are the arguments to the request.</param>        
         /// <returns>A WebRequest object.</returns>
         protected WebRequest ConstructWebRequest(
                     string resourceName,

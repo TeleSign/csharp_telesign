@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{1162D3F3-2E76-40FE-AFCA-589F6AC8FB43}</ProjectGuid>
+    <ProjectGuid>{0850325F-8F48-40FE-84B7-03C213C33012}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ConsoleApplication</RootNamespace>
@@ -50,7 +50,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TeleSign.Services.AutoVerify\TeleSign.Services.AutoVerify.csproj">
@@ -78,7 +80,7 @@
       <Name>TeleSign.Services.Verify</Name>
     </ProjectReference>
     <ProjectReference Include="..\TeleSign.Services.Voice\TeleSign.Services.Voice.csproj">
-      <Project>{ba63a2a9-47db-4ade-9f6a-f3f2ce3b5f65}</Project>
+      <Project>{13089812-87e9-44a4-9c66-f5f58f3499e0}</Project>
       <Name>TeleSign.Services.Voice</Name>
     </ProjectReference>
     <ProjectReference Include="..\TeleSign.Services\TeleSign.Services.csproj">

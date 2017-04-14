@@ -11,7 +11,7 @@ namespace TeleSign.Services.AutoVerify
     {
         private const string AUTOVERIFY_STATUS_RESOURCE = "/v1/mobile/verification/status/{0}";
 
-        public AutoVerifyClient(TeleSignServiceConfiguration configuration) :base(configuration, null) { }
+        public AutoVerifyClient(TeleSignServiceConfiguration configuration = null) :base(configuration, null) { }
         /// <summary>
         /// Initializes a new instance of the AutoVerifyClient class with a supplied credential and uri and
         /// a web requester. In general you do not need to use this constructor unless you want to intercept

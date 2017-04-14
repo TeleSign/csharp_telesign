@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
+
 namespace TeleSign.Services.Voice
 {
     public class VoiceClient : TeleSignService
@@ -8,7 +9,7 @@ namespace TeleSign.Services.Voice
         private const string VOICE_RESOURCE = "/v1/voice";
         private const string VOICE_STATUS_RESOURCE = "/v1/voice/{0}";
 
-        public VoiceClient(TeleSignServiceConfiguration configuration) :base(configuration, null) { }
+        public VoiceClient(TeleSignServiceConfiguration configuration = null) : base(configuration, null) { }
         /// <summary>
         /// Initializes a new instance of the VoiceClient class with a supplied credential and uri and
         /// a web requester. In general you do not need to use this constructor unless you want to intercept
@@ -52,7 +53,7 @@ namespace TeleSign.Services.Voice
         /// <param name="statusParams"></param>
         /// <returns></returns>
         public TeleSignResponse Status(string referenceId, Dictionary<String, String> statusParams = null)
-        {            
+        {
             if (null == statusParams)
                 statusParams = new Dictionary<string, string>();
             statusParams.Add("reference_id", referenceId);

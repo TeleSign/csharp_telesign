@@ -19,7 +19,7 @@ namespace TeleSign.Services.PhoneId
         /// Initializes a new instance of the PhoneIdService class with a supplied credential and uri.
         /// </summary>
         /// <param name="configuration">The configuration information for the service.</param>
-        public PhoneIdClient(TeleSignServiceConfiguration configuration)
+        public PhoneIdClient(TeleSignServiceConfiguration configuration = null)
             : this(configuration, null)
         {
         }

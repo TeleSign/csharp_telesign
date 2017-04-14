@@ -29,7 +29,7 @@ namespace TeleSign.Services.Verify
         /// credential and uri to be used.
         /// </summary>
         /// <param name="configuration">The configuration information for the service.</param>
-        public VerifyService(TeleSignServiceConfiguration configuration)
+        public VerifyService(TeleSignServiceConfiguration configuration = null)
             : base(configuration, null)
         {
         }

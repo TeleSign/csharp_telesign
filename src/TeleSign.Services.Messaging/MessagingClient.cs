@@ -11,8 +11,8 @@ namespace TeleSign.Services.Messaging
     {
         private const String MESSAGING_RESOURCE = "/v1/messaging";
         private const String MESSAGING_STATUS_RESOURCE = "/v1/messaging/{0}";
-
-        public MessagingClient(TeleSignServiceConfiguration configuration) :base(configuration, null) { }
+                
+        public MessagingClient(TeleSignServiceConfiguration configuration = null) :base(configuration, null) { }
         /// <summary>
         /// Initializes a new instance of the MessagingClient class with a supplied credential and uri and
         /// a web requester. In general you do not need to use this constructor unless you want to intercept

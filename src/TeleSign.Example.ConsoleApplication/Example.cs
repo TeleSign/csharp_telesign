@@ -14,48 +14,38 @@ using TeleSign.Services.Verify;
 
 namespace ConsoleApplication
 {
+    /// <summary>
+    /// Just update TeleSign.config.xml with customer id and secret key and start using the sdk.
+    /// </summary>
     class Example
-    {
-        public static TeleSignServiceConfiguration GetConfiguration()
-        {
-            // return Null below to pick config from TeleSign.config.xml.
-            // 
-            // If you comment out return null, and uncomment below block,
-            // then by filling in your customer id and secret key
-            // you can construct the configuration object in code.
-            return null;
-
-            ////Guid customerId = Guid.Parse("*** Customer ID goes here ***");
-            ////string secretKey = "*** Secret Key goes here ***";
-            ////
-            ////TeleSignCredential credential = new TeleSignCredential(
-            ////            customerId,
-            ////            secretKey);
-            ////
-            ////return new TeleSignServiceConfiguration(credential);
-        }
+    {        
         static void Main()
         {
-            string phoneNo = "918427434777";
+            string phoneNo = "Enter your phone number";
             string externalId = "external_id";
-
-            SendCallWithVerificationCode(phoneNo);
+            // AutoVerifyClient usage
             GetStatusByExternalId(externalId);
+            // MessagingClient Usage
             MessagingExample(phoneNo);
+            MessagingExampleWithCode(phoneNo);
             Cleansing(phoneNo);
             CheckPhoneNoRiskLevel(phoneNo);
+            // PhoneId APIs Usage
             CheckPhoneTypeToBlockVoip(phoneNo);
             CheckPhoneNumberDeactivated(phoneNo);
             CheckPhoneNumberRiskLevel(phoneNo);
             PhoneIdStandard(phoneNo);
-            MessagingExampleWithCode(phoneNo);
+            // VerifyService sms Usage
             SendCustomSms(phoneNo);
             SendCustomSmsInDifferentLanguage(phoneNo);
             SendCustomSmsWithCustomSenderId(phoneNo);
             SendSmsWithVerificationCode(phoneNo);
+            // VerifyService Voice Usage
             SendVoiceCallWithVerificationCode(phoneNo);
             SendCustomVoiceCallWithTextToSpeech(phoneNo);
             SendCustomVoiceCallInDifferentLanguage(phoneNo);
+            // VoiceClient Usage
+            SendCallWithVerificationCode(phoneNo);
             SendVoiceCall(phoneNo);
             SendVoiceCallFrench(phoneNo);
         }
@@ -63,7 +53,7 @@ namespace ConsoleApplication
         public static void CheckPhoneNoRiskLevel(string phoneNo)
         {
             // 1. Initialize ScoreClient
-            ScoreClient scoreClient = new ScoreClient(GetConfiguration());
+            ScoreClient scoreClient = new ScoreClient();
             // 2. Score Api parameters
             string phone_number = phoneNo;
             string account_lifecycle_event = "create";
@@ -83,7 +73,7 @@ namespace ConsoleApplication
         public static void Cleansing(string phoneNo)
         {
             // 1. Initialize PhoneIdService
-            PhoneIdClient phoneId = new PhoneIdClient(GetConfiguration());
+            PhoneIdClient phoneId = new PhoneIdClient();
             // 2. PhoneID Api parameters
             string phone_number = phoneNo;
             string extra_digit = "0";
@@ -111,7 +101,7 @@ namespace ConsoleApplication
         public static void MessagingExample(string phoneNo)
         {            
             // 1. Initialize MessagingClient
-            MessagingClient messagingClient = new MessagingClient(GetConfiguration());
+            MessagingClient messagingClient = new MessagingClient();
             // 2. Messaging Api parameters
             string phone_number = phoneNo;
             string message = "You're scheduled for a dentist appointment at 2:30PM.";
@@ -131,7 +121,7 @@ namespace ConsoleApplication
         public static void GetStatusByExternalId(string externalId)
         {   
             // 1. Initialize AutoVerifyClient
-            AutoVerifyClient autoVerifyClient = new AutoVerifyClient(GetConfiguration());
+            AutoVerifyClient autoVerifyClient = new AutoVerifyClient();
             // 2. AutoVerify Api parameters            
             string external_id = externalId;
             // 3. Make Messaging API call get TeleSign Response
@@ -148,7 +138,7 @@ namespace ConsoleApplication
         public static void SendCallWithVerificationCode(string phoneNo)
         {   
             // 1. Initialize VoiceClient
-            VoiceClient voiceClient = new VoiceClient(GetConfiguration());
+            VoiceClient voiceClient = new VoiceClient();
             // 2. VerifyService Api parameters
             string phone_number = phoneNo;
 
@@ -180,7 +170,7 @@ namespace ConsoleApplication
         {            
 
             // 1. Initialize PhoneIdService
-            PhoneIdService phoneId = new PhoneIdService(GetConfiguration());
+            PhoneIdService phoneId = new PhoneIdService();
             // 2. PhoneID Api parameters
             string phone_number = phoneNo;
             string phone_type_voip = "5";
@@ -200,7 +190,7 @@ namespace ConsoleApplication
         public static void CheckPhoneNumberDeactivated(string phoneNo)
         {
             // 1. Initialize PhoneIdService
-            PhoneIdService phoneId = new PhoneIdService(GetConfiguration());
+            PhoneIdService phoneId = new PhoneIdService();
             // 2. PhoneID Api parameters
             string phone_number = phoneNo;
             string ucid = "ATCK";
@@ -230,7 +220,7 @@ namespace ConsoleApplication
         {           
 
             // 1. Initialize PhoneIdService
-            PhoneIdService phoneId = new PhoneIdService(GetConfiguration());
+            PhoneIdService phoneId = new PhoneIdService();
             // 2. PhoneID Api parameters
             string phone_number = phoneNo;
             string ucid = "BACF";
@@ -254,15 +244,18 @@ namespace ConsoleApplication
             
             string phoneNumber = phoneNo;
 
-            PhoneIdService service = new PhoneIdService(GetConfiguration());
+            PhoneIdService service = new PhoneIdService();
             TeleSignResponse response = service.StandardLookup(phoneNumber);
+            if ((response.StatusCode >= 200) && (response.StatusCode < 300)) {
+                Console.WriteLine("Phone Details retrieved successfully");
+            }
         }
         
         public static void MessagingExampleWithCode(string phoneNo)
         {
             
             // 1. Initialize MessagingClient
-            MessagingClient messagingClient = new MessagingClient(GetConfiguration());
+            MessagingClient messagingClient = new MessagingClient();
             // 2. Messaging Api parameters
             string phone_number = phoneNo;
             string message = "Your code is ";
@@ -288,7 +281,7 @@ namespace ConsoleApplication
         {
             
             // 1. Initialize VerifyService
-            VerifyService ver = new VerifyService(GetConfiguration());
+            VerifyService ver = new VerifyService();
             // 2. Verify SMS Api parameters
             string phone_number = phoneNo;
             string template = "Your Widgets 'n' More verification code is $$CODE$$.";
@@ -309,7 +302,7 @@ namespace ConsoleApplication
         {
             
             // 1. Initialize VerifyService
-            VerifyService ver = new VerifyService(GetConfiguration());
+            VerifyService ver = new VerifyService();
             // 2. Verify SMS Api parameters
             string phone_number = phoneNo;
             string template = "Votre code de vérification Widgets 'n' More est $$CODE$$.";
@@ -330,7 +323,7 @@ namespace ConsoleApplication
         {
             
             // 1. Initialize VerifyService
-            VerifyService ver = new VerifyService(GetConfiguration());
+            VerifyService ver = new VerifyService();
             // 2. Verify SMS Api parameters
             string phone_number = phoneNo;
             // Client Services must white list any custom sender_id for it to take effect
@@ -352,7 +345,7 @@ namespace ConsoleApplication
         {
             
             // 1. Initialize VerifyService
-            VerifyService ver = new VerifyService(GetConfiguration());
+            VerifyService ver = new VerifyService();
             // 2. VerifyService Api parameters
             string phone_number = phoneNo;
             Dictionary<string, string> smsParams = new Dictionary<String, String>();
@@ -379,7 +372,7 @@ namespace ConsoleApplication
         {
             
             // 1. Initialize VerifyService
-            VerifyService ver = new VerifyService(GetConfiguration());
+            VerifyService ver = new VerifyService();
             // 2. VerifyService Api parameters
             string phone_number = phoneNo;
             Dictionary<string, string> callParams = new Dictionary<String, String>();
@@ -406,7 +399,7 @@ namespace ConsoleApplication
         {
             
             // 1. Initialize VerifyService
-            VerifyService ver = new VerifyService(GetConfiguration());
+            VerifyService ver = new VerifyService();
             // 2. VerifyService Api parameters
             string phone_number = phoneNo;
             Dictionary<string, string> callParams = new Dictionary<String, String>();
@@ -438,7 +431,7 @@ namespace ConsoleApplication
         {
             
             // 1. Initialize VerifyService
-            VerifyService ver = new VerifyService(GetConfiguration());
+            VerifyService ver = new VerifyService();
             // 2. VerifyService Api parameters
             string phone_number = phoneNo;
             Dictionary<string, string> callParams = new Dictionary<String, String>();
@@ -463,7 +456,7 @@ namespace ConsoleApplication
         {
             
             // 1. Initialize VoiceClient
-            VoiceClient voiceClient = new VoiceClient(GetConfiguration());
+            VoiceClient voiceClient = new VoiceClient();
             // 2. VerifyService Api parameters
             string phone_number = phoneNo;
             string message = "You're scheduled for a dentist appointment at 2:30PM.";
@@ -483,7 +476,7 @@ namespace ConsoleApplication
         {
             
             // 1. Initialize VoiceClient
-            VoiceClient voiceClient = new VoiceClient(GetConfiguration());
+            VoiceClient voiceClient = new VoiceClient();
             // 2. VerifyService Api parameters
             string phone_number = phoneNo;
 

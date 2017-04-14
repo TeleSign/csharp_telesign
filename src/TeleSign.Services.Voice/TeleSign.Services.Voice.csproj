@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{BA63A2A9-47DB-4ADE-9F6A-F3F2CE3B5F65}</ProjectGuid>
+    <ProjectGuid>{13089812-87E9-44A4-9C66-F5F58F3499E0}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>TeleSign.Services.Voice</RootNamespace>
