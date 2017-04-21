@@ -1,4 +1,10 @@
-﻿========
+﻿.. image:: https://img.shields.io/appveyor/ci/telesign/csharp-telesign.svg
+    :target: https://ci.appveyor.com/project/TeleSign/csharp-telesign
+
+.. image:: https://img.shields.io/github/license/TeleSign/csharp_telesign.svg
+    :target: https://github.com/TeleSign/csharp_telesign/blob/master/LICENSE.txt
+
+========
 TeleSign
 ========
 
