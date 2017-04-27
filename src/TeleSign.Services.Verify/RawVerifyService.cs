@@ -104,11 +104,21 @@ namespace TeleSign.Services.Verify
         /// The language that the message should be in. This parameter is ignored if
         /// you supplied a message template.
         /// </param>
+        /// <param name="extensionType">Phone extension type (Live operator or automated attendants)</param>
+        /// <param name="extensionTemplate">A numerical string that specifies the extension used in the call, as described above. If the user must be reached at an extension, then use this parameter to specify the extension number. The extension string is composed of digits.</param>
+        /// <param name="callForwardingAction">Specifies the action you want TeleSign to perform if this phone number is found to have Call Forwarding enabled.</param>
+        /// <param name="redial">A Boolean value that specifies whether the TeleSign system redials when the call fails.</param>
+        /// <param name="requireUserActionBeforeCodeReadout">Requires that the user press X before reading the code when using phone call (used to prevent leaving code in voicemail which is a better security practice) [Warning: May result in higher call charges.]</param>
         /// <returns>The raw JSON response from the REST API.</returns>
         public string CallRaw(
                     string phoneNumber,
                     string verifyCode = null,
-                    string language = null)
+                    string language = null,
+                    PhoneExtensionTypes extensionType = PhoneExtensionTypes.Unspecified,
+                    string extensionTemplate = null,
+                    bool redial = true,
+                    CallForwardActions callForwardingAction = CallForwardActions.None,
+                    bool requireUserActionBeforeCodeReadout = false)
         {
             phoneNumber = this.CleanupPhoneNumber(phoneNumber);
 
@@ -117,7 +127,12 @@ namespace TeleSign.Services.Verify
                         phoneNumber,
                         verifyCode,
                         null,
-                        language);
+                        language,
+                        extensionType: extensionType,
+                        extensionTemplate: extensionTemplate,
+                        redial: redial,
+                        callForwardingAction: callForwardingAction,
+                        requireUserActionBeforeCodeReadout: requireUserActionBeforeCodeReadout);
         }
         
         /////// <summary>
@@ -170,7 +185,7 @@ namespace TeleSign.Services.Verify
         /// The TeleSign Verify 2-Way SMS web service allows you to authenticate your users and verify user transactions via two-way Short Message Service (SMS) wireless communication. Verification requests are sent to user’s in a text message, and users return their verification responses by replying to the text message.
         /// </summary>
         /// <param name="phoneNumber">The phone number for the Verify Soft Token request, including country code</param>
-        /// <param name="ucid">
+        /// <param name="useCaseId">
         /// A string specifying one of the Use Case Codes
         /// </param>
         /// <param name="message">
@@ -220,10 +235,6 @@ namespace TeleSign.Services.Verify
         /// <param name="verifyCode">
         /// The code to send to the user. When null a code will
         /// be generated for you.
-        /// </param>
-        /// <param name="language">
-        /// The language that the message should be in. This parameter is ignored if
-        /// you supplied a message template.
         /// </param>
         /// <returns>The raw JSON response from the REST API.</returns>
         public string PushRaw(
@@ -295,13 +306,27 @@ namespace TeleSign.Services.Verify
         /// The language that the message should be in. This parameter is ignored for
         /// SMS if you supplied a message template.
         /// </param>
+        /// <param name="validityPeriod">This parameter allows you to place a time-limit on the verification. This provides an extra level of security by restricting the amount of time your end user has to respond.</param>
+        /// <param name="useCaseId">A string the specifies one of the Use Case Codes.</param>
+        /// <param name="extensionType">Phone extension type (Live operator or automated attendants)</param>
+        /// <param name="extensionTemplate">A numerical string that specifies the extension used in the call, as described above. If the user must be reached at an extension, then use this parameter to specify the extension number. The extension string is composed of digits.</param>
+        /// <param name="callForwardingAction">Specifies the action you want TeleSign to perform if this phone number is found to have Call Forwarding enabled.</param>
+        /// <param name="redial">A Boolean value that specifies whether the TeleSign system redials when the call fails.</param>
+        /// <param name="requireUserActionBeforeCodeReadout">Requires that the user press X before reading the code when using phone call (used to prevent leaving code in voicemail which is a better security practice) [Warning: May result in higher call charges.]</param>
         /// <returns>The raw JSON response for a verify REST API call.</returns>
         private string InternalVerify(
                     VerificationMethod verificationMethod,
                     string phoneNumber,
                     string verifyCode = null,
                     string messageTemplate = null,
-                    string language = null)
+                    string language = null,
+                    string validityPeriod = null,
+                    string useCaseId = RawVerifyService.DefaultUseCaseId,
+                    PhoneExtensionTypes extensionType = PhoneExtensionTypes.Unspecified,
+                    string extensionTemplate = null,
+                    bool redial = true,
+                    CallForwardActions callForwardingAction = CallForwardActions.None,
+                    bool requireUserActionBeforeCodeReadout = false)
         {
             this.CleanupPhoneNumber(phoneNumber);
 
@@ -320,7 +345,15 @@ namespace TeleSign.Services.Verify
                         phoneNumber, 
                         verifyCode, 
                         messageTemplate, 
-                        language);
+                        language,
+                        validityPeriod,
+                        useCaseId,
+                        extensionType,
+                        extensionTemplate,
+                        redial,
+                        callForwardingAction,
+                        requireUserActionBeforeCodeReadout
+                        );
 
             string resourceName = string.Format(
                         RawVerifyService.VerifyResourceFormatString, 
@@ -342,6 +375,13 @@ namespace TeleSign.Services.Verify
         /// <param name="verifyCode">The code to be sent to the user. If null - a code will be generated.</param>
         /// <param name="messageTemplate">An optional template for the message. Ignored if not SMS.</param>
         /// <param name="language">The language for the message. Ignored for SMS when a template is provided.</param>
+        /// <param name="validityPeriod">This parameter allows you to place a time-limit on the verification. This provides an extra level of security by restricting the amount of time your end user has to respond.</param>
+        /// <param name="useCaseId">A string the specifies one of the Use Case Codes.</param>
+        /// <param name="extensionType">Phone extension type (Live operator or automated attendants)</param>
+        /// <param name="extensionTemplate">A numerical string that specifies the extension used in the call, as described above. If the user must be reached at an extension, then use this parameter to specify the extension number. The extension string is composed of digits.</param>
+        /// <param name="callForwardingAction">Specifies the action you want TeleSign to perform if this phone number is found to have Call Forwarding enabled.</param>
+        /// <param name="redial">A Boolean value that specifies whether the TeleSign system redials when the call fails.</param>
+        /// <param name="requireUserActionBeforeCodeReadout">Requires that the user press X before reading the code when using phone call (used to prevent leaving code in voicemail which is a better security practice) [Warning: May result in higher call charges.]</param>
         /// <returns>A dictionary of arguments for a Verify transaction.</returns>
         private static Dictionary<string, string> ConstructVerifyArgs(
                     VerificationMethod verificationMethod, 
@@ -350,7 +390,12 @@ namespace TeleSign.Services.Verify
                     string messageTemplate, 
                     string language,
                     string validityPeriod = null,
-                    string useCaseId = RawVerifyService.DefaultUseCaseId)
+                    string useCaseId = RawVerifyService.DefaultUseCaseId,
+                    PhoneExtensionTypes extensionType = PhoneExtensionTypes.Unspecified,
+                    string extensionTemplate = null,
+                    bool redial = true,
+                    CallForwardActions callForwardingAction = CallForwardActions.None,
+                    bool requireUserActionBeforeCodeReadout = false)
         {
             // TODO: Review code generation rules.
             if (verifyCode == null)
@@ -370,6 +415,31 @@ namespace TeleSign.Services.Verify
 
             Dictionary<string, string> args = new Dictionary<string, string>();
             args.Add("phone_number", phoneNumber);
+
+            if (verificationMethod == VerificationMethod.Call)
+            {
+                if (extensionType != PhoneExtensionTypes.Unspecified)
+                {
+                    args.Add("extension_type", extensionType.ToString());
+                }
+                if (!String.IsNullOrWhiteSpace(extensionTemplate))
+                {
+                    args.Add("extension_template", extensionTemplate);
+                }
+                if (!redial)
+                {
+                    args.Add("redial", "false");
+                }
+                if (callForwardingAction != CallForwardActions.None)
+                {
+                    args.Add("call_forward_action", callForwardingAction.ToString().ToLower());
+                }
+                if (requireUserActionBeforeCodeReadout)
+                {
+                    args.Add("pressx", "1");
+                }
+
+            }
 
             if (verificationMethod == VerificationMethod.Push)
             {

@@ -9,3 +9,5 @@ docs/SandcastleHtml/
 
 # Solution source files.
 StyleCop.cache
+
+*.suo

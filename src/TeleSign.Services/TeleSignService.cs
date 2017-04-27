@@ -47,6 +47,7 @@ namespace TeleSign.Services
         /// </summary>
         /// <param name="configuration">The configuration information for the service. If null will try to read the default configuration file.</param>
         /// <param name="webRequester">The web requester to use to perform web requests. If null will use the default.</param>
+        /// <param name="accountName">Telesign account name</param>
         protected TeleSignService(
                     TeleSignServiceConfiguration configuration,
                     IWebRequester webRequester,
