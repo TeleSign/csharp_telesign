@@ -47,18 +47,19 @@ namespace TeleSign.Services
         /// </summary>
         /// <param name="configuration">The configuration information for the service. If null will try to read the default configuration file.</param>
         /// <param name="webRequester">The web requester to use to perform web requests. If null will use the default.</param>
+        /// <param name="accountName"></param>
         protected TeleSignService(
                     TeleSignServiceConfiguration configuration,
                     IWebRequester webRequester,
                     string accountName = "default")
         {
             this.configuration = (configuration == null)
-                        ? TeleSignServiceConfiguration.ReadConfigurationFile(accountName)
-                        : configuration;
+                ? TeleSignServiceConfiguration.ReadConfigurationFile(accountName)
+                : configuration;
 
             this.WebRequester = (webRequester == null)
-                        ? new WebRequester()
-                        : webRequester;
+                ? new WebRequester()
+                : webRequester;
 
             this.ValidateConfiguration();
 
@@ -133,7 +134,7 @@ namespace TeleSign.Services
             CheckArgument.NotNullOrEmpty(phoneNumber, "phoneNumber");
 
             StringBuilder builder = new StringBuilder(
-                        phoneNumber.Length, 
+                        phoneNumber.Length,
                         phoneNumber.Length);
 
             // Remove non-digit characters from the phone number.
@@ -150,11 +151,11 @@ namespace TeleSign.Services
             {
                 string message = string.Format(
                             CultureInfo.InvariantCulture,
-                            "Phone Number '{0}' contains no digits", 
+                            "Phone Number '{0}' contains no digits",
                             phoneNumber);
 
                 throw new ArgumentException(
-                            message, 
+                            message,
                             "phoneNumber");
             }
 
@@ -169,22 +170,22 @@ namespace TeleSign.Services
             if (this.configuration.Credential == null)
             {
                 throw new ArgumentNullException(
-                            "configuration.Credential", 
-                            "The Credential member of the configuration was null");
+                    "configuration.Credential",
+                    "The Credential member of the configuration was null");
             }
 
             if (this.configuration.ServiceAddress == null)
             {
                 throw new ArgumentNullException(
-                            "configuration.ServiceAddress", 
-                            "The ServiceAddress member of the configuration was null");
+                    "configuration.ServiceAddress",
+                    "The ServiceAddress member of the configuration was null");
             }
-            
+
             if (this.configuration.ServiceMobileAddress == null)
             {
                 throw new ArgumentNullException(
-                            "configuration.ServiceMobileAddress", 
-                            "The ServiceAddress member of the configuration was null");
+                    "configuration.ServiceMobileAddress",
+                    "The ServiceAddress member of the configuration was null");
             }
 
             if (string.IsNullOrEmpty(this.configuration.Credential.SecretKey))
@@ -218,8 +219,8 @@ namespace TeleSign.Services
             // method is POST the fields are not used in constructing the Uri,
             // but below they are placed in the encoded body.
             Uri fullUri = this.ConstructResourceUri(
-                        resourceName, 
-                        method, 
+                        resourceName,
+                        method,
                         fields);
 
             HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(fullUri);
@@ -238,7 +239,7 @@ namespace TeleSign.Services
                         method,
                         timeStamp,
                         nonce,
-                        contentType, 
+                        contentType,
                         encodedBody,
                         authMethod);
 
@@ -262,7 +263,7 @@ namespace TeleSign.Services
 
             return request;
         }
-        
+
         /////// <summary>
         /////// Constructs a .NET WebRequest object for the request (using for Mobile).
         /////// </summary>
@@ -344,8 +345,8 @@ namespace TeleSign.Services
         /// <param name="fields">The additional fields.</param>
         /// <returns>The fully qualified URI to the resource.</returns>
         private Uri ConstructResourceUri(
-                    string resourceName, 
-                    string method, 
+                    string resourceName,
+                    string method,
                     Dictionary<string, string> fields)
         {
             string relativePath = resourceName;
@@ -360,10 +361,20 @@ namespace TeleSign.Services
             }
 
             return new Uri(
-                        this.configuration.ServiceAddress, 
+                        this.configuration.ServiceAddress,
                         relativePath);
         }
-        
+
+        /// <summary>
+        /// Implementation of IDisposable.
+        /// </summary>
+        public void Dispose()
+        {
+            this.WebRequester = null;
+            this.authentication = null;
+            this.configuration = null;
+        }
+
         /////// <summary>
         /////// Constructs the resource URI to the MOBILE REST API. For GET
         /////// requests the query string is concatenated into the Uri. For
