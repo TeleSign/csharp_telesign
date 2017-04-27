@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeleSign.Example.ConsoleApp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeleSign.Services.Voice", "TeleSign.Services.Voice\TeleSign.Services.Voice.csproj", "{13089812-87E9-44A4-9C66-F5F58F3499E0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeleSign.RestClient", "TeleSign.RestClient\TeleSign.RestClient.csproj", "{D79E8A80-36C2-421E-BCBC-75573ADDB9D0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -135,6 +137,18 @@ Global
 		{13089812-87E9-44A4-9C66-F5F58F3499E0}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{13089812-87E9-44A4-9C66-F5F58F3499E0}.Release|x86.ActiveCfg = Release|Any CPU
 		{13089812-87E9-44A4-9C66-F5F58F3499E0}.Release|x86.Build.0 = Release|Any CPU
+		{D79E8A80-36C2-421E-BCBC-75573ADDB9D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D79E8A80-36C2-421E-BCBC-75573ADDB9D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D79E8A80-36C2-421E-BCBC-75573ADDB9D0}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{D79E8A80-36C2-421E-BCBC-75573ADDB9D0}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{D79E8A80-36C2-421E-BCBC-75573ADDB9D0}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D79E8A80-36C2-421E-BCBC-75573ADDB9D0}.Debug|x86.Build.0 = Debug|Any CPU
+		{D79E8A80-36C2-421E-BCBC-75573ADDB9D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D79E8A80-36C2-421E-BCBC-75573ADDB9D0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D79E8A80-36C2-421E-BCBC-75573ADDB9D0}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{D79E8A80-36C2-421E-BCBC-75573ADDB9D0}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{D79E8A80-36C2-421E-BCBC-75573ADDB9D0}.Release|x86.ActiveCfg = Release|Any CPU
+		{D79E8A80-36C2-421E-BCBC-75573ADDB9D0}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
