@@ -51,7 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AutoVerifyClient.cs" />
-    <Compile Include="MainClass.cs" />
+    <Compile Include="ExampleClass.cs" />
     <Compile Include="MessagingClient.cs" />
     <Compile Include="PhoneIdClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -60,7 +60,9 @@
     <Compile Include="VoiceClient.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -9,7 +9,7 @@ namespace TeleSign.RestClient
         private const string VOICE_RESOURCE = "/v1/voice";
         private const string VOICE_STATUS_RESOURCE = "/v1/voice/{0}";
 
-        public VoiceClient(string customerId, string apiKey, string restEndPoint, WebProxy proxy = null, string httpProxyUsername = null, string httpProxyPassword = null) : base(customerId, apiKey, restEndPoint, proxy, httpProxyUsername, httpProxyPassword) { }        
+        public VoiceClient(string customerId, string apiKey, string restEndPoint, int timeout = 10000, int readWriteTimeout = 10000, WebProxy proxy = null, string httpProxyUsername = null, string httpProxyPassword = null) : base(customerId, apiKey, restEndPoint, timeout, readWriteTimeout, proxy, httpProxyUsername, httpProxyPassword) { }        
 
         /// <summary>
         /// Send a voice call to the target phone_number. See https://developer.telesign.com/docs/voice-api for detailed API documentation.

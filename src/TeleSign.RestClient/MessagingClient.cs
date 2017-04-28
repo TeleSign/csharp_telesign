@@ -1,18 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TeleSign.RestClient
 {
     class MessagingClient : TeleSignRestClient
     {
-        private const String MESSAGING_RESOURCE = "/v1/messaging";
-        private const String MESSAGING_STATUS_RESOURCE = "/v1/messaging/{0}";
+        private const string MESSAGING_RESOURCE = "/v1/messaging";
+        private const string MESSAGING_STATUS_RESOURCE = "/v1/messaging/{0}";
 
-        public MessagingClient(string customerId, string apiKey, string restEndPoint, WebProxy proxy = null , string httpProxyUsername = null, string httpProxyPassword = null) : base(customerId, apiKey, restEndPoint, proxy, httpProxyUsername, httpProxyPassword) { }
+        public MessagingClient(string customerId, string apiKey, string restEndPoint, int timeout = 10000, int readWriteTimeout = 10000, WebProxy proxy = null , string httpProxyUsername = null, string httpProxyPassword = null) : base(customerId, apiKey, restEndPoint, timeout, readWriteTimeout, proxy, httpProxyUsername, httpProxyPassword) { }
 
         /// <summary>
         /// Send a message to the target phone_number.See <a href ="https://developer.telesign.com/v2.0/docs/messaging-api">for detailed API documentation</a>.         

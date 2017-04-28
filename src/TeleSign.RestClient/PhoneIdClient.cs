@@ -14,12 +14,8 @@ namespace TeleSign.RestClient
     public class PhoneIdClient : TeleSignRestClient
     {
         private const string PHONEID_RESOURCE = "/v1/phoneid/{0}";
-
-        /// <summary>
-        /// Initializes a new instance of the PhoneIdService class with a supplied credential and uri.
-        /// </summary>
-        /// <param name="configuration">The configuration information for the service.</param>
-        public PhoneIdClient(string customerId, string apiKey, string restEndPoint, WebProxy proxy = null, string httpProxyUsername = null, string httpProxyPassword = null) : base(customerId, apiKey, restEndPoint, proxy, httpProxyUsername, httpProxyPassword) { }
+        
+        public PhoneIdClient(string customerId, string apiKey, string restEndPoint, int timeout = 10000, int readWriteTimeout = 10000, WebProxy proxy = null, string httpProxyUsername = null, string httpProxyPassword = null) : base(customerId, apiKey, restEndPoint, timeout, readWriteTimeout, proxy, httpProxyUsername, httpProxyPassword) { }
 
         /// <summary>
         /// The PhoneID API provides a cleansed phone number, phone type, 
@@ -33,7 +29,7 @@ namespace TeleSign.RestClient
             
             string resource = string.Format(
                         CultureInfo.InvariantCulture,
-                        PhoneIdClient.PHONEID_RESOURCE,
+                        PHONEID_RESOURCE,
                         phoneNumber);
 
             return Post(resource, phoneidParams);

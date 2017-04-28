@@ -9,8 +9,8 @@ namespace TeleSign.RestClient
     /// </summary>
     public class ScoreClient : TeleSignRestClient
     {
-        private const String SCORE_RESOURCE = "/v1/score/{0}";	
-        public ScoreClient(string customerId, string apiKey, string restEndPoint, WebProxy proxy = null, string httpProxyUsername = null, string httpProxyPassword = null) : base(customerId, apiKey, restEndPoint, proxy, httpProxyUsername, httpProxyPassword) { }
+        private const string SCORE_RESOURCE = "/v1/score/{0}";	
+        public ScoreClient(string customerId, string apiKey, string restEndPoint, int timeout = 10000, int readWriteTimeout = 10000, WebProxy proxy = null, string httpProxyUsername = null, string httpProxyPassword = null) : base(customerId, apiKey, restEndPoint, timeout, readWriteTimeout, proxy, httpProxyUsername, httpProxyPassword) { }
         
         /// <summary>
         /// Score is an API that delivers reputation scoring based on phone number intelligence, 
@@ -21,7 +21,7 @@ namespace TeleSign.RestClient
         /// <param name="accountLifecycleEvent"></param>        
         /// <param name="scoreParams"></param>
         /// <returns></returns>
-        public TeleSignResponse Score(string phoneNumber, string accountLifecycleEvent, Dictionary<String, String> scoreParams = null) {            
+        public TeleSignResponse Score(string phoneNumber, string accountLifecycleEvent, Dictionary<string, string> scoreParams = null) {            
 
             if (null == scoreParams)
                 scoreParams = new Dictionary<string, string>();

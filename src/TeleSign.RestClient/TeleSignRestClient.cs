@@ -12,6 +12,11 @@ using Newtonsoft.Json;
 
 namespace TeleSign.RestClient
 {
+    /// <summary>
+    /// The TeleSign RestClient is a generic HTTP REST client that can be extended to make requests against any of
+    /// TeleSign's REST API endpoints.
+    /// See https://developer.telesign.com for detailed API documentation.
+    /// </summary>
     public class TeleSignRestClient
     {
         private string customerId { get; }
@@ -19,48 +24,90 @@ namespace TeleSign.RestClient
 
         RestSharp.RestClient client;
 
-        public TeleSignRestClient(string customerId, string apiKey, string restEndpoint= null, WebProxy proxy = null, string httpProxyUsername = null, string httpProxyPassword = null) {
+        public TeleSignRestClient(string customerId, string apiKey, string restEndpoint = null, int timeout = 10000, int readWriteTimeout = 10000, WebProxy proxy = null, string httpProxyUsername = null, string httpProxyPassword = null)
+        {
             this.customerId = customerId;
             this.apiKey = apiKey;
-            
+
             if (!string.IsNullOrEmpty(restEndpoint))
                 client = new RestSharp.RestClient(restEndpoint);
             else
                 client = new RestSharp.RestClient("https://rest-api.telesign.com");
 
+            if (!(timeout == 10000))                
+                client.Timeout = timeout;
+
+            if (!(readWriteTimeout == 10000))                
+                client.ReadWriteTimeout = readWriteTimeout;
+
             client.UserAgent = string.Format("TeleSignSdk/CSharp-v{0} .Net{1}", typeof(TeleSignRestClient).Assembly.GetName().Version, Environment.Version.ToString());
-            if (null != proxy) {
-                if (null != httpProxyUsername && null != httpProxyPassword) {
+            if (null != proxy)
+            {
+                if (null != httpProxyUsername && null != httpProxyPassword)
+                {
                     proxy.Credentials = new NetworkCredential(httpProxyUsername, httpProxyPassword);
                 }
                 client.Proxy = proxy;
             }
         }
 
-        public TeleSignResponse Execute(string resourceName, Method method, Dictionary<string, string> parameters) {          
+        /// <summary>
+        /// Generic API for executing requests.
+        /// </summary>
+        /// <param name="resourceName"></param>
+        /// <param name="method"></param>
+        /// <param name="parameters"></param>
+        /// <returns>TeleSignResponse object</returns>
+        public TeleSignResponse Execute(string resourceName, Method method, Dictionary<string, string> parameters)
+        {
             var request = new RestRequest(resourceName, method);
             string contentType = "application/x-www-form-urlencoded";
             foreach (KeyValuePair<string, string> param in parameters)
                 request.AddParameter(param.Key, param.Value, contentType, ParameterType.GetOrPost);
 
-            client.Authenticator = new TeleSignAuthenticator(customerId, apiKey);            
-            
+            client.Authenticator = new TeleSignAuthenticator(customerId, apiKey);
+
             IRestResponse response = client.Execute(request);
             TeleSignResponse tsResponse = new TeleSignResponse(response);
             return tsResponse;
         }
-        
+
+        /// <summary>
+        /// Generic TeleSign REST API DELETE handler.
+        /// </summary>
+        /// <param name="resource"></param>
+        /// <param name="deleteParams"></param>
+        /// <returns></returns>
         public TeleSignResponse Delete(string resource, Dictionary<string, string> deleteParams)
         {
             return Execute(resource, Method.DELETE, deleteParams);
         }
+        /// <summary>
+        /// Generic TeleSign REST API PUT handler.
+        /// </summary>
+        /// <param name="resource"></param>
+        /// <param name="putParams"></param>
+        /// <returns></returns>
         public TeleSignResponse Put(string resource, Dictionary<string, string> putParams)
         {
             return Execute(resource, Method.PUT, putParams);
         }
-        public TeleSignResponse Post(string resource, Dictionary<string, string> postParams) {
+        /// <summary>
+        /// Generic TeleSign REST API POST handler.
+        /// </summary>
+        /// <param name="resource"></param>
+        /// <param name="postParams"></param>
+        /// <returns></returns>
+        public TeleSignResponse Post(string resource, Dictionary<string, string> postParams)
+        {
             return Execute(resource, Method.POST, postParams);
         }
+        /// <summary>
+        /// Generic TeleSign REST API GET handler.
+        /// </summary>
+        /// <param name="resource"></param>
+        /// <param name="getParams"></param>
+        /// <returns></returns>
         public TeleSignResponse Get(string resource, Dictionary<string, string> getParams)
         {
             return Execute(resource, Method.GET, getParams);
@@ -72,7 +119,7 @@ namespace TeleSign.RestClient
         public class TeleSignResponse
         {
             /// <summary>
-            /// TeleSignResponse Constructor initializes Headers member variable.
+            /// TeleSignResponse Constructor for initializing response variables.
             /// </summary>
             public TeleSignResponse(IRestResponse response)
             {
@@ -99,14 +146,14 @@ namespace TeleSign.RestClient
                     Body = string.Empty;
                     Json = new JObject();
                     if (response.ErrorException != null)
-                        ErrorMessage = response.ErrorMessage;                    
+                        ErrorMessage = response.ErrorMessage;
 
                 }
             }
             /// <summary>
             /// HttpStatus Code returned as part of response
             /// </summary>
-            public int StatusCode { get; set; }           
+            public int StatusCode { get; set; }
             /// <summary>
             /// Headers returned as part of response
             /// </summary>
@@ -119,7 +166,13 @@ namespace TeleSign.RestClient
             /// Response as a Json Object
             /// </summary>
             public JObject Json { get; set; }
+            /// <summary>
+            /// Indicates if request was successfull
+            /// </summary>
             public bool Ok { get; set; }
+            /// <summary>
+            /// Error message if returned by response
+            /// </summary>
             public string ErrorMessage { get; set; }
         }
 
@@ -128,10 +181,21 @@ namespace TeleSign.RestClient
             private string customerId { get; }
             private string secretKey { get; }
 
-            public TeleSignAuthenticator(string customerId, string secretKey) {
+            /// <summary>
+            /// The TeleSignAuthenticator constructor
+            /// </summary>
+            /// <param name="customerId"></param>
+            /// <param name="secretKey"></param>
+            public TeleSignAuthenticator(string customerId, string secretKey)
+            {
                 this.customerId = customerId;
                 this.secretKey = secretKey;
             }
+            /// <summary>
+            /// Custom Authenticator for TeleSign REST APIs using RESTSharp
+            /// </summary>
+            /// <param name="client"></param>
+            /// <param name="request"></param>
             public void Authenticate(IRestClient client, IRestRequest request)
             {
                 string resourceName = request.Resource;
@@ -146,7 +210,7 @@ namespace TeleSign.RestClient
                     contentType = "application/x-www-form-urlencoded";
                     encodedBody = GetEncodedBody(request);
                     byte[] body = Encoding.UTF8.GetBytes(encodedBody);
-                    request.AddParameter(contentType, body, ParameterType.RequestBody);                    
+                    request.AddParameter(contentType, body, ParameterType.RequestBody);
                 }
 
                 StringBuilder stringToSignBuilder = new StringBuilder();
@@ -178,16 +242,20 @@ namespace TeleSign.RestClient
 
 
                 string authorization = string.Format("TSA {0}:{1}", customerId, signature);
-                
+
                 request.AddHeader("Authorization", authorization);
                 request.AddHeader("Date", dateRfc2616);
                 request.AddHeader("Content-Type", contentType);
                 request.AddHeader("x-ts-auth-method", authMethod);
-                
                 request.AddHeader("x-ts-nonce", nonce);
-                
+
             }
 
+            /// <summary>
+            /// Encodes request parameters.
+            /// </summary>
+            /// <param name="request"></param>
+            /// <returns></returns>
             public string GetEncodedBody(IRestRequest request)
             {
                 StringBuilder builder = new StringBuilder();
@@ -205,10 +273,11 @@ namespace TeleSign.RestClient
                     builder.Length -= 1;
                     return builder.ToString();
                 }
-                else {
+                else
+                {
                     return string.Empty;
-                }                
-            }           
+                }
+            }
         }
     }
 }
