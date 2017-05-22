@@ -12,18 +12,30 @@ namespace Telesign.Sdk
         private const string AUTOVERIFY_STATUS_RESOURCE = "/v1/mobile/verification/status/{0}";
 
         public AutoVerifyClient(string customerId,
+                                string apiKey)
+            : base(customerId,
+                   apiKey)
+        { }
+
+        public AutoVerifyClient(string customerId,
+                                string apiKey,
+                                string restEndPoint)
+            : base(customerId,
+                   apiKey,
+                   restEndPoint)
+        { }
+
+        public AutoVerifyClient(string customerId,
                                 string apiKey,
                                 string restEndPoint,
-                                int? timeout = null,
-                                int? readWriteTimeout = null,
-                                WebProxy proxy = null,
-                                string proxyUsername = null,
-                                string proxyPassword = null)
+                                int timeout,
+                                WebProxy proxy,
+                                string proxyUsername,
+                                string proxyPassword)
             : base(customerId,
                    apiKey,
                    restEndPoint,
                    timeout,
-                   readWriteTimeout,
                    proxy,
                    proxyUsername,
                    proxyPassword)

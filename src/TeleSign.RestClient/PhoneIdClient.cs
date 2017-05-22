@@ -9,9 +9,38 @@ namespace Telesign.Sdk
     /// </summary>
     public class PhoneIdClient : RestClient
     {
-        private const string SCORE_RESOURCE = "/v1/score/{0}";	
-        public PhoneIdClient(string customerId, string apiKey, string restEndPoint, int timeout = 10000, int readWriteTimeout = 10000, WebProxy proxy = null, string httpProxyUsername = null, string httpProxyPassword = null) : base(customerId, apiKey, restEndPoint, timeout, readWriteTimeout, proxy, httpProxyUsername, httpProxyPassword) { }
-        
+        private const string SCORE_RESOURCE = "/v1/score/{0}";
+
+        public PhoneIdClient(string customerId,
+                                string apiKey)
+            : base(customerId,
+                   apiKey)
+        { }
+
+        public PhoneIdClient(string customerId,
+                                string apiKey,
+                                string restEndPoint)
+            : base(customerId,
+                   apiKey,
+                   restEndPoint)
+        { }
+
+        public PhoneIdClient(string customerId,
+                                string apiKey,
+                                string restEndPoint,
+                                int timeout,
+                                WebProxy proxy,
+                                string proxyUsername,
+                                string proxyPassword)
+            : base(customerId,
+                   apiKey,
+                   restEndPoint,
+                   timeout,
+                   proxy,
+                   proxyUsername,
+                   proxyPassword)
+        { }
+
         /// <summary>
         /// Score is an API that delivers reputation scoring based on phone number intelligence, 
         /// traffic patterns, machine learning, and a global data consortium. 

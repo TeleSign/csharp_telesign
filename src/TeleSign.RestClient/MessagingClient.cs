@@ -9,22 +9,35 @@ namespace Telesign.Sdk
         private const string MESSAGING_RESOURCE = "/v1/messaging";
         private const string MESSAGING_STATUS_RESOURCE = "/v1/messaging/{0}";
 
-        public MessagingClient(string customerId, 
-                               string apiKey, 
-                               string restEndPoint, 
-                               int? timeout = null, 
-                               int? readWriteTimeout = null, 
-                               WebProxy proxy = null, 
-                               string proxyUsername = null, 
-                               string proxyPassword = null) 
-            : base(customerId, 
-                   apiKey, 
-                   restEndPoint, 
-                   timeout, 
-                   readWriteTimeout, 
-                   proxy, 
-                   proxyUsername, 
-                   proxyPassword) { }
+        public MessagingClient(string customerId,
+                                string apiKey)
+            : base(customerId,
+                   apiKey)
+        { }
+
+        public MessagingClient(string customerId,
+                                string apiKey,
+                                string restEndPoint)
+            : base(customerId,
+                   apiKey,
+                   restEndPoint)
+        { }
+
+        public MessagingClient(string customerId,
+                                string apiKey,
+                                string restEndPoint,
+                                int timeout,
+                                WebProxy proxy,
+                                string proxyUsername,
+                                string proxyPassword)
+            : base(customerId,
+                   apiKey,
+                   restEndPoint,
+                   timeout,
+                   proxy,
+                   proxyUsername,
+                   proxyPassword)
+        { }
 
         /// <summary>
         /// Send a message to the target phone_number.See <a href ="https://developer.telesign.com/v2.0/docs/messaging-api">for detailed API documentation</a>.         
