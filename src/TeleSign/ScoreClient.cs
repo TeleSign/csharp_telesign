@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Net;
 
 namespace Telesign
@@ -42,16 +41,13 @@ namespace Telesign
         { }
 
         /// <summary>
-        /// Score is an API that delivers reputation scoring based on phone number intelligence, 
-        /// traffic patterns, machine learning, and a global data consortium. 
-        /// See https://developer.telesign.com/docs/rest_api-phoneid-score for detailed API documentation.         
+        /// Score is an API that delivers reputation scoring based on phone number intelligence, traffic patterns, machine
+        /// learning, and a global data consortium.
+        /// 
+        /// See https://developer.telesign.com/docs/score-api for detailed API documentation.     
         /// </summary>
-        /// <param name="phoneNumber"></param>
-        /// <param name="accountLifecycleEvent"></param>        
-        /// <param name="scoreParams"></param>
-        /// <returns></returns>
-        public TelesignResponse Score(string phoneNumber, string accountLifecycleEvent, Dictionary<string, string> scoreParams = null) {            
-
+        public TelesignResponse Score(string phoneNumber, string accountLifecycleEvent, Dictionary<string, string> scoreParams = null)
+        {            
             if (null == scoreParams)
                 scoreParams = new Dictionary<string, string>();
             scoreParams.Add("phone_number", phoneNumber);

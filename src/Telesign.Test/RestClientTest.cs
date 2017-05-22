@@ -8,7 +8,7 @@ using System;
 namespace Telesign.Test
 {
     [TestFixture]
-    public class RestClientTest
+    public class RestClientTest : IDisposable
     {
         private string customerId;
         private string apiKey;
@@ -18,6 +18,8 @@ namespace Telesign.Test
         private List<HttpListenerRequest> requests;
         private List<string> requestBodies;
         private List<Dictionary<string, string>> requestHeaders;
+
+        bool disposed = false;
 
         [SetUp]
         public void SetUp()
@@ -46,6 +48,27 @@ namespace Telesign.Test
 
                 return "{}";
             });
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            this.Dispose();
+        }
+
+        public void Dispose()
+        {
+            this.Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (this.disposed)
+                return;
+
+            this.mockServer.Dispose();
+            this.disposed = true;
         }
 
         [Test]

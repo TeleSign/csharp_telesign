@@ -21,7 +21,7 @@ namespace Telesign.Example.PhoneId
 
                 if (telesignResponse.OK)
                 {
-                    Console.WriteLine(string.Format("Cleansed phone number has country code {0} and phone number is {0}.",
+                    Console.WriteLine(string.Format("Cleansed phone number has country code {0} and phone number is {1}.",
                         telesignResponse.Json["numbering"]["cleansing"]["call"]["country_code"],
                         telesignResponse.Json["numbering"]["cleansing"]["call"]["phone_number"]));
 

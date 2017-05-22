@@ -1,9 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Net;
 
 namespace Telesign
 {
+    /// <summary>
+    ///  TeleSign's Voice API allows you to easily send voice messages. You can send alerts, reminders, and notifications,
+    /// or you can send verification messages containing time-based, one-time passcodes(TOTP).
+    /// </summary>
     public class VoiceClient : RestClient
     {
         private const string VOICE_RESOURCE = "/v1/voice";
@@ -40,13 +43,10 @@ namespace Telesign
         { }
 
         /// <summary>
-        /// Send a voice call to the target phone_number. See https://developer.telesign.com/docs/voice-api for detailed API documentation.
+        /// Send a voice call to the target phone_number.
+        /// 
+        /// See https://developer.telesign.com/docs/voice-api for detailed API documentation.
         /// </summary>
-        /// <param name="phoneNumber"></param>
-        /// <param name="message"></param>
-        /// <param name="messageType"></param>
-        /// <param name="callParams"></param>
-        /// <returns></returns>
         public TelesignResponse Call(string phoneNumber, string message, string messageType, Dictionary<string, string> callParams = null)
         {
             if (null == callParams)
@@ -60,11 +60,10 @@ namespace Telesign
         }
 
         /// <summary>
-        /// Retrieves the current status of the voice call. See https://developer.telesign.com/docs/voice-api for detailed API documentation.
+        /// Retrieves the current status of the voice call.
+        /// 
+        /// See https://developer.telesign.com/docs/voice-api for detailed API documentation.
         /// </summary>
-        /// <param name="referenceId"></param>
-        /// <param name="statusParams"></param>
-        /// <returns></returns>
         public TelesignResponse Status(string referenceId, Dictionary<string, string> statusParams = null)
         {
             if (null == statusParams)

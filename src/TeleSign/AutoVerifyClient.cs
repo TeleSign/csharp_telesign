@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Net;
 
 namespace Telesign
 {
     /// <summary>
-    /// AutoVerify is a secure, lightweight SDK that integrates a frictionless user verification process into existing native mobile applications.
+    ///  AutoVerify is a secure, lightweight SDK that integrates a frictionless user verification process into existing native mobile applications.
     /// </summary>
     public class AutoVerifyClient : RestClient
     {
@@ -39,14 +38,17 @@ namespace Telesign
                    proxy,
                    proxyUsername,
                    proxyPassword)
-        { }
+        {
+        }
 
         /// <summary>
-        /// Retrieves the verification result for an AutoVerify transaction by external_id.To ensure a secure verification flow you must check the status using TeleSign's servers on your backend. Do not rely on the SDK alone to indicate a successful verification.See<a href="https://developer.telesign.com/docs/auto-verify-sdk#section-obtaining-verification-status"> for detailed API documentation</a>.
+        /// Retrieves the verification result for an AutoVerify transaction by externalId. To ensure a secure verification
+        /// flow you must check the status using TeleSign's servers on your backend. Do not rely on the SDK alone to
+        /// indicate a successful verification.
+        ///
+        /// See https://developer.telesign.com/docs/auto-verify-sdk-self#section-obtaining-verification-status for detailed
+        /// API documentation.
         /// </summary>
-        /// <param name="externalId"></param>
-        /// <param name="restParams"></param>
-        /// <returns></returns>
         public TelesignResponse Status(string externalId, Dictionary<string, string> parameters = null)
         {
             return this.Get(string.Format(AUTOVERIFY_STATUS_RESOURCE, externalId), parameters);

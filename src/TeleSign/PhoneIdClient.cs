@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Net;
 
 namespace Telesign
 {
     /// <summary>
-    /// Score provides risk information about a specified phone number.
+    /// A set of APIs that deliver deep phone number data attributes that help optimize the end user
+    /// verification process and evaluate risk.
     /// </summary>
     public class PhoneIdClient : RestClient
     {
@@ -42,17 +42,13 @@ namespace Telesign
         { }
 
         /// <summary>
-        /// Score is an API that delivers reputation scoring based on phone number intelligence, 
-        /// traffic patterns, machine learning, and a global data consortium. 
-        /// See https://developer.telesign.com/docs/rest_api-phoneid-score for detailed API documentation.         
+        /// The PhoneID API provides a cleansed phone number, phone type, and telecom carrier information to determine the
+        /// best communication method - SMS or voice.
+        /// 
+        /// See https://developer.telesign.com/docs/phoneid-api for detailed API documentation.      
         /// </summary>
-        /// <param name="phoneNumber"></param>
-        /// <param name="accountLifecycleEvent"></param>        
-        /// <param name="scoreParams"></param>
-        /// <returns></returns>
-        public TelesignResponse PhoneId(string phoneNumber, Dictionary<string, string> phoneIdParams = null) {            
-
-            
+        public TelesignResponse PhoneId(string phoneNumber, Dictionary<string, string> phoneIdParams = null)
+        {               
             if (null == phoneIdParams)
                 phoneIdParams = new Dictionary<string, string>();
 

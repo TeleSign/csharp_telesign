@@ -15,7 +15,7 @@ namespace Telesign
     /// TeleSign's REST API endpoints.
     /// See https://developer.telesign.com for detailed API documentation.
     /// </summary>
-    public class RestClient
+    public class RestClient : IDisposable
     {
         public static readonly string UserAgent = string.Format("TeleSignSdk/csharp-{0} .Net/{1} HttpClient", 
             typeof(RestClient).Assembly.GetName().Version, 
@@ -25,6 +25,8 @@ namespace Telesign
         private string apiKey;
         private string restEndpoint;
         private HttpClient httpClient;
+
+        bool disposed = false;
 
         public RestClient(string customerId,
                           string apiKey,
@@ -58,6 +60,21 @@ namespace Telesign
             this.httpClient.Timeout = TimeSpan.FromSeconds(timeout);
         }
 
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposed)
+                return;
+
+            this.httpClient.Dispose();
+            disposed = true;
+        }
+
         /// <summary>
         /// A simple HTTP Response object.
         /// </summary>
@@ -77,7 +94,7 @@ namespace Telesign
                 {
                     this.Json = JObject.Parse(this.Body);
                 }
-                catch (JsonReaderException ex)
+                catch (JsonReaderException)
                 {
                     this.Json = new JObject();
                 }

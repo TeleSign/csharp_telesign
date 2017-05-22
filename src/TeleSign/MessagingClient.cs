@@ -1,9 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Net;
 
 namespace Telesign
 {
+    /// <summary>
+    ///  TeleSign's Messaging API allows you to easily send SMS messages. You can send alerts, reminders, and notifications,
+    ///  or you can send verification messages containing one-time passcodes(OTP).
+    /// </summary>
     public class MessagingClient : RestClient
     {
         private const string MESSAGING_RESOURCE = "/v1/messaging";
@@ -40,13 +43,10 @@ namespace Telesign
         { }
 
         /// <summary>
-        /// Send a message to the target phone_number.See <a href ="https://developer.telesign.com/v2.0/docs/messaging-api">for detailed API documentation</a>.         
+        /// Send a message to the target phone_number.
+        /// 
+        /// See https://developer.telesign.com/docs/messaging-api for detailed API documentation.
         /// </summary>
-        /// <param name="phoneNumber"></param>
-        /// <param name="message"></param>
-        /// <param name="messageType"></param>
-        /// <param name="messageParams"></param>
-        /// <returns></returns>
         public TelesignResponse Message(string phoneNumber, string message, string messageType, Dictionary<string, string> parameters = null)
         {
             if (null == parameters)
@@ -60,11 +60,10 @@ namespace Telesign
         }
 
         /// <summary>
-        /// Retrieves the current status of the message. See <a href="https://developer.telesign.com/v2.0/docs/messaging-api"> for detailed API documentation</a>.
+        /// Retrieves the current status of the message.
+        /// 
+        /// See https://developer.telesign.com/docs/messaging-api for detailed API documentation.
         /// </summary>
-        /// <param name="referenceId"></param>
-        /// <param name="parameters"></param>
-        /// <returns></returns>
         public TelesignResponse Status(string referenceId, Dictionary<string, string> parameters = null)
         {
             return Get(string.Format(MESSAGING_STATUS_RESOURCE, referenceId), parameters);
