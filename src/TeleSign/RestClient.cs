@@ -17,8 +17,8 @@ namespace Telesign
     /// </summary>
     public class RestClient : IDisposable
     {
-        public static readonly string UserAgent = string.Format("TeleSignSdk/csharp-{0} .Net/{1} HttpClient", 
-            typeof(RestClient).Assembly.GetName().Version, 
+        public static readonly string UserAgent = string.Format("TeleSignSdk/csharp-{0} .Net/{1} HttpClient",
+            typeof(RestClient).Assembly.GetName().Version,
             Environment.Version.ToString());
 
         private string customerId;
@@ -45,7 +45,7 @@ namespace Telesign
                 this.httpClient = new HttpClient();
             }
             else
-            { 
+            {
                 HttpClientHandler httpClientHandler = new HttpClientHandler();
                 httpClientHandler.Proxy = proxy;
 

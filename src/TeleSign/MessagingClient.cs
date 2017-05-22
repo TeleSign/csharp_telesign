@@ -55,7 +55,7 @@ namespace Telesign
             parameters.Add("phone_number", phoneNumber);
             parameters.Add("message", message);
             parameters.Add("message_type", messageType);
-                        
+
             return Post(MESSAGING_RESOURCE, parameters);
         }
 

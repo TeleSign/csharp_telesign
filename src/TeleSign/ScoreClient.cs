@@ -47,13 +47,13 @@ namespace Telesign
         /// See https://developer.telesign.com/docs/score-api for detailed API documentation.     
         /// </summary>
         public TelesignResponse Score(string phoneNumber, string accountLifecycleEvent, Dictionary<string, string> scoreParams = null)
-        {            
+        {
             if (null == scoreParams)
                 scoreParams = new Dictionary<string, string>();
             scoreParams.Add("phone_number", phoneNumber);
             scoreParams.Add("account_lifecycle_event", accountLifecycleEvent);
 
-            string resource = string.Format(SCORE_RESOURCE, phoneNumber);            
+            string resource = string.Format(SCORE_RESOURCE, phoneNumber);
 
             return Post(resource, scoreParams);
         }

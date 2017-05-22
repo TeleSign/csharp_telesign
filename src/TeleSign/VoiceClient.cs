@@ -56,7 +56,7 @@ namespace Telesign
             callParams.Add("message", message);
             callParams.Add("message_type", messageType);
 
-            return Post(VOICE_RESOURCE,callParams);
+            return Post(VOICE_RESOURCE, callParams);
         }
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace Telesign
                 statusParams = new Dictionary<string, string>();
             statusParams.Add("reference_id", referenceId);
 
-            string resource = string.Format(VOICE_STATUS_RESOURCE, referenceId);            
+            string resource = string.Format(VOICE_STATUS_RESOURCE, referenceId);
 
             return Get(resource, statusParams);
         }

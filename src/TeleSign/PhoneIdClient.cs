@@ -48,11 +48,11 @@ namespace Telesign
         /// See https://developer.telesign.com/docs/phoneid-api for detailed API documentation.      
         /// </summary>
         public TelesignResponse PhoneId(string phoneNumber, Dictionary<string, string> phoneIdParams = null)
-        {               
+        {
             if (null == phoneIdParams)
                 phoneIdParams = new Dictionary<string, string>();
 
-            string resource = string.Format(SCORE_RESOURCE, phoneNumber);            
+            string resource = string.Format(SCORE_RESOURCE, phoneNumber);
 
             return Post(resource, phoneIdParams);
         }
