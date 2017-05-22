@@ -7,8 +7,8 @@
     <ProjectGuid>{D79E8A80-36C2-421E-BCBC-75573ADDB9D0}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TeleSign.RestClient</RootNamespace>
-    <AssemblyName>TeleSign.RestClient</AssemblyName>
+    <RootNamespace>Telesign</RootNamespace>
+    <AssemblyName>Telesign</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <PublishUrl>publish\</PublishUrl>

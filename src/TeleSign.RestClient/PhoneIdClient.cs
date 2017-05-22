@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Net;
 
-namespace Telesign.Sdk
+namespace Telesign
 {
     /// <summary>
     /// Score provides risk information about a specified phone number.
     /// </summary>
     public class PhoneIdClient : RestClient
     {
-        private const string SCORE_RESOURCE = "/v1/score/{0}";
+        private const string SCORE_RESOURCE = "/v1/phoneid/{0}";
 
         public PhoneIdClient(string customerId,
                                 string apiKey)
@@ -50,7 +50,7 @@ namespace Telesign.Sdk
         /// <param name="accountLifecycleEvent"></param>        
         /// <param name="scoreParams"></param>
         /// <returns></returns>
-        public TeleSignResponse PhoneId(string phoneNumber, Dictionary<string, string> phoneIdParams = null) {            
+        public TelesignResponse PhoneId(string phoneNumber, Dictionary<string, string> phoneIdParams = null) {            
 
             
             if (null == phoneIdParams)

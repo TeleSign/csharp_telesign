@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Net;
 
-namespace Telesign.Sdk
+namespace Telesign
 {
-    class MessagingClient : RestClient
+    public class MessagingClient : RestClient
     {
         private const string MESSAGING_RESOURCE = "/v1/messaging";
         private const string MESSAGING_STATUS_RESOURCE = "/v1/messaging/{0}";
@@ -47,7 +47,7 @@ namespace Telesign.Sdk
         /// <param name="messageType"></param>
         /// <param name="messageParams"></param>
         /// <returns></returns>
-        public TeleSignResponse Message(string phoneNumber, string message, string messageType, Dictionary<string, string> parameters = null)
+        public TelesignResponse Message(string phoneNumber, string message, string messageType, Dictionary<string, string> parameters = null)
         {
             if (null == parameters)
                 parameters = new Dictionary<string, string>();
@@ -65,7 +65,7 @@ namespace Telesign.Sdk
         /// <param name="referenceId"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public TeleSignResponse Status(string referenceId, Dictionary<string, string> parameters = null)
+        public TelesignResponse Status(string referenceId, Dictionary<string, string> parameters = null)
         {
             return Get(string.Format(MESSAGING_STATUS_RESOURCE, referenceId), parameters);
         }

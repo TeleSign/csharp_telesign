@@ -5,7 +5,7 @@ using System.Net;
 using System.Linq;
 using System;
 
-namespace Telesign.Sdk.Test
+namespace Telesign.Test
 {
     [TestFixture]
     public class RestClientTest

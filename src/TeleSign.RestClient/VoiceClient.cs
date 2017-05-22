@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Net;
 
-namespace Telesign.Sdk
+namespace Telesign
 {
     public class VoiceClient : RestClient
     {
@@ -47,7 +47,7 @@ namespace Telesign.Sdk
         /// <param name="messageType"></param>
         /// <param name="callParams"></param>
         /// <returns></returns>
-        public TeleSignResponse Call(string phoneNumber, string message, string messageType, Dictionary<string, string> callParams = null)
+        public TelesignResponse Call(string phoneNumber, string message, string messageType, Dictionary<string, string> callParams = null)
         {
             if (null == callParams)
                 callParams = new Dictionary<string, string>();
@@ -65,7 +65,7 @@ namespace Telesign.Sdk
         /// <param name="referenceId"></param>
         /// <param name="statusParams"></param>
         /// <returns></returns>
-        public TeleSignResponse Status(string referenceId, Dictionary<string, string> statusParams = null)
+        public TelesignResponse Status(string referenceId, Dictionary<string, string> statusParams = null)
         {
             if (null == statusParams)
                 statusParams = new Dictionary<string, string>();

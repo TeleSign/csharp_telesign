@@ -6,8 +6,8 @@
     <ProjectGuid>{0C63BBDA-1B96-4B18-949A-15B866D43386}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>UnitTestProject1</RootNamespace>
-    <AssemblyName>UnitTestProject1</AssemblyName>
+    <RootNamespace>Telesign.Test</RootNamespace>
+    <AssemblyName>Telesign.Test</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -68,9 +68,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\TeleSign.RestClient\Telesign.Sdk.csproj">
+    <ProjectReference Include="..\TeleSign.RestClient\Telesign.csproj">
       <Project>{d79e8a80-36c2-421e-bcbc-75573addb9d0}</Project>
-      <Name>Telesign.Sdk</Name>
+      <Name>Telesign</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

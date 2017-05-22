@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Net;
 
-namespace Telesign.Sdk
+namespace Telesign
 {
     /// <summary>
     /// AutoVerify is a secure, lightweight SDK that integrates a frictionless user verification process into existing native mobile applications.
@@ -47,7 +47,7 @@ namespace Telesign.Sdk
         /// <param name="externalId"></param>
         /// <param name="restParams"></param>
         /// <returns></returns>
-        public TeleSignResponse Status(string externalId, Dictionary<string, string> parameters = null)
+        public TelesignResponse Status(string externalId, Dictionary<string, string> parameters = null)
         {
             return this.Get(string.Format(AUTOVERIFY_STATUS_RESOURCE, externalId), parameters);
         }

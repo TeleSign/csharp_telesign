@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Net;
 
-namespace Telesign.Sdk
+namespace Telesign
 {
     /// <summary>
     /// Score provides risk information about a specified phone number.
@@ -50,7 +50,7 @@ namespace Telesign.Sdk
         /// <param name="accountLifecycleEvent"></param>        
         /// <param name="scoreParams"></param>
         /// <returns></returns>
-        public TeleSignResponse Score(string phoneNumber, string accountLifecycleEvent, Dictionary<string, string> scoreParams = null) {            
+        public TelesignResponse Score(string phoneNumber, string accountLifecycleEvent, Dictionary<string, string> scoreParams = null) {            
 
             if (null == scoreParams)
                 scoreParams = new Dictionary<string, string>();

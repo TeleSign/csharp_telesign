@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 using System.Net.Http;
 using System.Net.Http.Headers;
 
-namespace Telesign.Sdk
+namespace Telesign
 {
     /// <summary>
     /// The TeleSign RestClient is a generic HTTP REST client that can be extended to make requests against any of
@@ -21,9 +21,9 @@ namespace Telesign.Sdk
             typeof(RestClient).Assembly.GetName().Version, 
             Environment.Version.ToString());
 
-        private string customerId { get; }
-        private string apiKey { get; }
-        private string restEndpoint { get; }
+        private string customerId;
+        private string apiKey;
+        private string restEndpoint;
         private HttpClient httpClient;
 
         public RestClient(string customerId,
@@ -61,12 +61,12 @@ namespace Telesign.Sdk
         /// <summary>
         /// A simple HTTP Response object.
         /// </summary>
-        public class TeleSignResponse
+        public class TelesignResponse
         {
             /// <summary>
             /// TeleSignResponse Constructor for initializing response variables.
             /// </summary>
-            public TeleSignResponse(HttpResponseMessage response)
+            public TelesignResponse(HttpResponseMessage response)
             {
                 this.StatusCode = (int)response.StatusCode;
                 this.Headers = response.Headers;
@@ -184,7 +184,7 @@ namespace Telesign.Sdk
         /// <param name="resource"></param>
         /// <param name="postParams"></param>
         /// <returns></returns>
-        public TeleSignResponse Post(string resource, Dictionary<string, string> postParams)
+        public TelesignResponse Post(string resource, Dictionary<string, string> postParams)
         {
             return Execute(resource, HttpMethod.Post, postParams);
         }
@@ -195,7 +195,7 @@ namespace Telesign.Sdk
         /// <param name="resource"></param>
         /// <param name="getParams"></param>
         /// <returns></returns>
-        public TeleSignResponse Get(string resource, Dictionary<string, string> getParams)
+        public TelesignResponse Get(string resource, Dictionary<string, string> getParams)
         {
             return Execute(resource, HttpMethod.Get, getParams);
         }
@@ -206,7 +206,7 @@ namespace Telesign.Sdk
         /// <param name="resource"></param>
         /// <param name="putParams"></param>
         /// <returns></returns>
-        public TeleSignResponse Put(string resource, Dictionary<string, string> putParams)
+        public TelesignResponse Put(string resource, Dictionary<string, string> putParams)
         {
             return Execute(resource, HttpMethod.Put, putParams);
         }
@@ -217,7 +217,7 @@ namespace Telesign.Sdk
         /// <param name="resource"></param>
         /// <param name="deleteParams"></param>
         /// <returns></returns>
-        public TeleSignResponse Delete(string resource, Dictionary<string, string> deleteParams)
+        public TelesignResponse Delete(string resource, Dictionary<string, string> deleteParams)
         {
             return Execute(resource, HttpMethod.Delete, deleteParams);
         }
@@ -229,7 +229,7 @@ namespace Telesign.Sdk
         /// <param name="method"></param>
         /// <param name="parameters"></param>
         /// <returns>TeleSignResponse object</returns>
-        private TeleSignResponse Execute(string resource, HttpMethod method, Dictionary<string, string> parameters)
+        private TelesignResponse Execute(string resource, HttpMethod method, Dictionary<string, string> parameters)
         {
             if (parameters == null)
             {
@@ -274,7 +274,7 @@ namespace Telesign.Sdk
 
             HttpResponseMessage response = this.httpClient.SendAsync(request).Result;
 
-            TeleSignResponse tsResponse = new TeleSignResponse(response);
+            TelesignResponse tsResponse = new TelesignResponse(response);
             return tsResponse;
         }
     }
