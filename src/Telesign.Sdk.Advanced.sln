@@ -1,6 +1,13 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4EDD5D84-13D3-4728-BD8A-3C5BC76866C6}"
+	ProjectSection(SolutionItems) = preProject
+		..\docs\Telesign.Sdk.vsd = ..\docs\Telesign.Sdk.vsd
+	EndProjectSection
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeleSign.Services", "TeleSign.Services\TeleSign.Services.csproj", "{E4693BDE-4F71-4A89-870D-3117B820F531}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeleSign.TeleSignCmd", "TeleSign.TeleSignCmd\TeleSign.TeleSignCmd.csproj", "{B4D62801-9B06-4AC9-A026-ABA38056F9DB}"
@@ -10,11 +17,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeleSign.Services.Verify", "TeleSign.Services.Verify\TeleSign.Services.Verify.csproj", "{808AE334-F601-4EA1-9676-CEDD8AA8FDFD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeleSign.Services.PhoneId", "TeleSign.Services.PhoneId\TeleSign.Services.PhoneId.csproj", "{5C03303E-4FA0-4168-A103-2CFB3135BAC7}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4EDD5D84-13D3-4728-BD8A-3C5BC76866C6}"
-	ProjectSection(SolutionItems) = preProject
-		..\docs\Telesign.Sdk.vsd = ..\docs\Telesign.Sdk.vsd
-	EndProjectSection
 EndProject
 Project("{7CF6DF6D-3B04-46F8-A40B-537D21BCA0B4}") = "TeleSignSdkDocumentation", "..\docs\TeleSignSdkDocumentation.shfbproj", "{A16C6D0E-539A-4702-A862-86787F3875FD}"
 EndProject

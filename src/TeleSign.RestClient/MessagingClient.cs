@@ -2,14 +2,29 @@
 using System.Collections.Generic;
 using System.Net;
 
-namespace TeleSign.RestClient
+namespace Telesign.Sdk
 {
-    class MessagingClient : TeleSignRestClient
+    class MessagingClient : RestClient
     {
         private const string MESSAGING_RESOURCE = "/v1/messaging";
         private const string MESSAGING_STATUS_RESOURCE = "/v1/messaging/{0}";
 
-        public MessagingClient(string customerId, string apiKey, string restEndPoint, int timeout = 10000, int readWriteTimeout = 10000, WebProxy proxy = null , string httpProxyUsername = null, string httpProxyPassword = null) : base(customerId, apiKey, restEndPoint, timeout, readWriteTimeout, proxy, httpProxyUsername, httpProxyPassword) { }
+        public MessagingClient(string customerId, 
+                               string apiKey, 
+                               string restEndPoint, 
+                               int? timeout = null, 
+                               int? readWriteTimeout = null, 
+                               WebProxy proxy = null, 
+                               string proxyUsername = null, 
+                               string proxyPassword = null) 
+            : base(customerId, 
+                   apiKey, 
+                   restEndPoint, 
+                   timeout, 
+                   readWriteTimeout, 
+                   proxy, 
+                   proxyUsername, 
+                   proxyPassword) { }
 
         /// <summary>
         /// Send a message to the target phone_number.See <a href ="https://developer.telesign.com/v2.0/docs/messaging-api">for detailed API documentation</a>.         
@@ -19,33 +34,27 @@ namespace TeleSign.RestClient
         /// <param name="messageType"></param>
         /// <param name="messageParams"></param>
         /// <returns></returns>
-        public TeleSignResponse Message(string phoneNumber, string message, string messageType, Dictionary<string, string> messageParams = null)
+        public TeleSignResponse Message(string phoneNumber, string message, string messageType, Dictionary<string, string> parameters = null)
         {
-            if (null == messageParams)
-                messageParams = new Dictionary<string, string>();
+            if (null == parameters)
+                parameters = new Dictionary<string, string>();
 
-            messageParams.Add("phone_number", phoneNumber);
-            messageParams.Add("message", message);
-            messageParams.Add("message_type", messageType);
+            parameters.Add("phone_number", phoneNumber);
+            parameters.Add("message", message);
+            parameters.Add("message_type", messageType);
                         
-            return Post(MESSAGING_RESOURCE, messageParams);
+            return Post(MESSAGING_RESOURCE, parameters);
         }
 
         /// <summary>
         /// Retrieves the current status of the message. See <a href="https://developer.telesign.com/v2.0/docs/messaging-api"> for detailed API documentation</a>.
         /// </summary>
         /// <param name="referenceId"></param>
-        /// <param name="statusParams"></param>
+        /// <param name="parameters"></param>
         /// <returns></returns>
-        public TeleSignResponse Status(string referenceId, Dictionary<string, string> statusParams = null)
+        public TeleSignResponse Status(string referenceId, Dictionary<string, string> parameters = null)
         {
-            if (null == statusParams)
-                statusParams = new Dictionary<string, string>();
-            statusParams.Add("reference_id", referenceId);
-
-            string resourceName = string.Format(MESSAGING_STATUS_RESOURCE, referenceId);
-
-            return Get(resourceName, statusParams);
+            return Get(string.Format(MESSAGING_STATUS_RESOURCE, referenceId), parameters);
         }
     }
 }

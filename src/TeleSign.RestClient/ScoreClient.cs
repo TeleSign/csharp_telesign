@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Net;
 
-namespace TeleSign.RestClient
+namespace Telesign.Sdk
 {
     /// <summary>
     /// Score provides risk information about a specified phone number.
     /// </summary>
-    public class ScoreClient : TeleSignRestClient
+    public class ScoreClient : RestClient
     {
         private const string SCORE_RESOURCE = "/v1/score/{0}";	
         public ScoreClient(string customerId, string apiKey, string restEndPoint, int timeout = 10000, int readWriteTimeout = 10000, WebProxy proxy = null, string httpProxyUsername = null, string httpProxyPassword = null) : base(customerId, apiKey, restEndPoint, timeout, readWriteTimeout, proxy, httpProxyUsername, httpProxyPassword) { }

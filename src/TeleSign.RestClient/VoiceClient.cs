@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Net;
 
-namespace TeleSign.RestClient
+namespace Telesign.Sdk
 {
-    public class VoiceClient : TeleSignRestClient
+    public class VoiceClient : RestClient
     {
         private const string VOICE_RESOURCE = "/v1/voice";
         private const string VOICE_STATUS_RESOURCE = "/v1/voice/{0}";

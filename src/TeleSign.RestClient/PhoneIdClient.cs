@@ -1,38 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
 using System.Net;
-using System.Text;
 
-namespace TeleSign.RestClient
+namespace Telesign.Sdk
 {
     /// <summary>
-    /// A set of APIs that deliver deep phone number data attributes 
-    /// that help optimize the end user verification process and evaluate risk.
+    /// Score provides risk information about a specified phone number.
     /// </summary>
-    public class PhoneIdClient : TeleSignRestClient
+    public class PhoneIdClient : RestClient
     {
-        private const string PHONEID_RESOURCE = "/v1/phoneid/{0}";
-        
+        private const string SCORE_RESOURCE = "/v1/score/{0}";	
         public PhoneIdClient(string customerId, string apiKey, string restEndPoint, int timeout = 10000, int readWriteTimeout = 10000, WebProxy proxy = null, string httpProxyUsername = null, string httpProxyPassword = null) : base(customerId, apiKey, restEndPoint, timeout, readWriteTimeout, proxy, httpProxyUsername, httpProxyPassword) { }
-
+        
         /// <summary>
-        /// The PhoneID API provides a cleansed phone number, phone type, 
-        /// and telecom carrier information to determine the best communication method - SMS or voice. 
-        /// See https://developer.telesign.com/docs/phoneid-api for detailed API documentation.
+        /// Score is an API that delivers reputation scoring based on phone number intelligence, 
+        /// traffic patterns, machine learning, and a global data consortium. 
+        /// See https://developer.telesign.com/docs/rest_api-phoneid-score for detailed API documentation.         
         /// </summary>
         /// <param name="phoneNumber"></param>
-        /// <param name="phoneidParams"></param>
+        /// <param name="accountLifecycleEvent"></param>        
+        /// <param name="scoreParams"></param>
         /// <returns></returns>
-        public TeleSignResponse PhoneId(string phoneNumber, Dictionary<String, String> phoneidParams = null) {
-            
-            string resource = string.Format(
-                        CultureInfo.InvariantCulture,
-                        PHONEID_RESOURCE,
-                        phoneNumber);
+        public TeleSignResponse PhoneId(string phoneNumber, Dictionary<string, string> phoneIdParams = null) {            
 
-            return Post(resource, phoneidParams);
+            
+            if (null == phoneIdParams)
+                phoneIdParams = new Dictionary<string, string>();
+
+            string resource = string.Format(SCORE_RESOURCE, phoneNumber);            
+
+            return Post(resource, phoneIdParams);
         }
     }
 }
