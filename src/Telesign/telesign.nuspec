@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<package>
+    <metadata>
+    <id>Telesign</id>
+    <version>2.1.0</version>
+    <title>Telesign</title>
+    <authors>Telesign</authors>
+    <owners>Telesign</owners>
+    <licenseUrl>https://github.com/TeleSign/csharp_telesign/blob/master/LICENSE.txt</licenseUrl>
+    <projectUrl>https://github.com/TeleSign/csharp_telesign</projectUrl>
+    <iconUrl>https://raw.github.com/TeleSign/csharp_telesign/master/nuget_icon.jpg</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>The TeleSign C# SDK lets you easily integrate with our REST API.</description>
+    <releaseNotes><![CDATA[
+            For full release notes see https://github.com/TeleSign/csharp_telesign/blob/master/RELEASE.md
+            ]]></releaseNotes>
+    <copyright>Copyright © 2017</copyright>
+    <tags>telesign sms voice mobile authentication identity messaging</tags>
+    </metadata>
+</package>
