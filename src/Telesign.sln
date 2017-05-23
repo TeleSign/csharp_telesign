@@ -10,7 +10,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\LICENSE.txt = ..\LICENSE.txt
 		..\README.rst = ..\README.rst
 		..\RELEASE.md = ..\RELEASE.md
-		..\telesign.nuspec = ..\telesign.nuspec
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Telesign.Test", "Telesign.Test\Telesign.Test.csproj", "{0C63BBDA-1B96-4B18-949A-15B866D43386}"
