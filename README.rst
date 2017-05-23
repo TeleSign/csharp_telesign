@@ -1,184 +1,84 @@
-﻿.. image:: https://img.shields.io/appveyor/ci/telesign/csharp-telesign.svg
+﻿.. image:: https://raw.github.com/TeleSign/csharp_telesign/master/csharp_banner.jpg
+    :target: https://developer.telesign.com
+
+.. image:: https://img.shields.io/appveyor/ci/telesign/csharp-telesign.svg
     :target: https://ci.appveyor.com/project/TeleSign/csharp-telesign
+
+.. image:: https://img.shields.io/codecov/c/github/TeleSign/csharp_telesign.svg
+    :target: https://codecov.io/gh/TeleSign/csharp_telesign
+
+.. image:: https://img.shields.io/nuget/v/Telesign.svg
+    :target: https://www.nuget.org/packages/Telesign
 
 .. image:: https://img.shields.io/github/license/TeleSign/csharp_telesign.svg
     :target: https://github.com/TeleSign/csharp_telesign/blob/master/LICENSE.txt
 
-========
-TeleSign
-========
+===============
+TeleSign C# SDK
+===============
 
-**Information**: For more information, visit the `TeleSign website <http://www.TeleSign.com>`_ or the `TeleSign Developer Portal <https://developer.telesign.com/>`_.
+TeleSign is a communications platform as a service (CPaaS) company, founded on security. Since 2005, TeleSign has
+been a trusted partner to the world’s leading websites and mobile applications, helping secure billions of end-user
+accounts. Today, TeleSign’s data-driven, cloud communications platform is changing the way businesses engage with
+customers and prevent fraud.
 
-**Author**: Telesign Corp.
-
-TeleSign Web Services: .NET SDK
----------------------------------
-
-**TeleSign web services** conform to the `REST Web Service Design Model <http://en.wikipedia.org/wiki/Representational_state_transfer>`_. Services are exposed as URI-addressable resources through the set of *RESTful* procedures in our **TeleSign REST API**.
-
-The **TeleSign .NET SDK** is a Microsoft .NET component that provides an interface to `TeleSign web services <https://developer.telesign.com/docs/getting-started-with-the-rest-api>`_. 
-
-It contains a .NET Framework class library that presents our web services in an intuitive, hierarchical object model, so you can create and manipulate them in the way you're accustomed to. You can use this SDK to build TeleSign‑based .NET applications.
-
-Authentication
---------------
-
-**You will need a Customer ID and API Key in order to use TeleSign’s REST API**.  If you are already a customer and need an API Key, you can generate one in `TelePortal <https://teleportal.telesign.com>`_.  If you are not a customer and would like to get an API Key, please contact `support@telesign.com <mailto:support@telesign.com>`_.
-
-You supply your credentials to the API either by editing the TeleSign.config.xml file and filling in the CustomerId and
-SecretKey values or you can create the credentials in code. Passing null to the service constructors uses the file.
-
-**Option 1. Supply TeleSign.config.xml**
-
->>>
-  <?xml version="1.0" encoding="utf-8" ?>
-  <TeleSignConfig>
-  <ServiceUri>https://rest.telesign.com</ServiceUri>
-  <Accounts>
-    <Account name="default">
-      <!-- Enter your customer id and secret key here. -->
-      <CustomerId>99999999-9999-9999-9999-000000000000</CustomerId>
-      <SecretKey>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx==</SecretKey>
-    </Account>
-  </Accounts>
- </TeleSignConfig>
-
-
-**Option 2. Supply the credential with code**
-
->>>
-  Guid customerId = Guid.Parse("*** Customer ID goes here ***");
-  string secretKey = "*** Secret Key goes here ***";
-  TeleSignCredential credential = new TeleSignCredential(
-              customerId,
-              secretKey);
-  TeleSignServiceConfiguration config = new TeleSignServiceConfiguration(credential);
-  // For Verify Sms or Call Service
-  VerifyService verify = new VerifyService(config);
-  // For PhoneId products
-  PhoneIdServer phoneId = PhoneIdService(config);
-
-Operating Modes
----------------
-
-You can use the TeleSign .NET SDK in either of two modes. The rich mode is recommended and handles all aspects of authentication and response parsing, providing a high level object model.
-
-+----------------------+--------------------------------------------------------------------------+ 
-| Mode                 | Description                                                              | 
-+======================+==========================================================================+ 
-| Rich                 | Provides an object-oriented framework that models web services as        |
-|                      | high-level actors, and low-level processes as mediator objects.          |
-|                      | Automatically parses the JSON data from server responses and creates     |
-|                      | Response objects from it.                                                | 
-|                      |                                                                          | 
-+----------------------+--------------------------------------------------------------------------+ 
-| Raw                  | Abstracts the interaction with only the web services. Method calls       |
-|                      | return the web service's JSON response bodies verbatim. This gives you   |
-|                      | the flexibility of handling the response processing any way you want.    | 
-|                      |                                                                          | 
-+----------------------+--------------------------------------------------------------------------+ 
+For more information about TeleSign, visit our `website <http://www.TeleSign.com>`_.
 
 Documentation
 -------------
 
-All classes and functions are documented with XML comments. Installing `Sandcastle Help File Builder 
-<http://shfb.codeplex.com/>`_ will allow you to build the HTML version of the documentation locally.
+Code documentation is included in the SDK. Complete documentation, quick start guides and reference material
+for the TeleSign API is available within the `TeleSign Developer Center <https://developer.telesign.com/>`_.
 
-Rich Mode Classes
------------------
+Installation
+------------
 
-+----------------------+--------------------------------------------------------------------------+ 
-| Mode                 | Description                                                              | 
-+======================+==========================================================================+ 
-| PhoneIdService.cs    | The **PhoneIdService** class exposes four services that each provide     | 
-|                      | information about a specified phone number.                              | 
-|                      |                                                                          | 
-|                      | ``public PhoneIdStandardResponse StandardLookup(string phoneNumber)``    | 
-|                      |     Retrieves the standard set of details about the specified phone      | 
-|                      |     number. This includes the type of phone (for example, land line or   | 
-|                      |     mobile), and its approximate geographic location.                    | 
-|                      | ``public PhoneIdScoreResponse ScoreLookup(string phoneNumber)``          | 
-|                      |     Retrieves a score for the specified phone number. This ranks the     | 
-|                      |     phone number's "risk level" on a scale from 0 to 1000, so you can    | 
-|                      |     code your web application to handle particular use cases (for        | 
-|                      |     example, to stop things like chargebacks, identity theft, fraud,     |
-|                      |     and spam).                                                           |
-|                      | ``public PhoneIdContactResponse ContactLookup(string phoneNumber)``      | 
-|                      |     In addition to the information retrieved by *standard*, this service | 
-|                      |     provides the name and address associated with the specified phone    | 
-|                      |     number.                                                              |
-|                      |                                                                          | 
-|                      | ``public PhoneIdLiveResponse LiveLookup(string phoneNumber)``            | 
-|                      |     In addition to the information retrieved by *standard*, this service | 
-|                      |     provides information about the subscriber status, device status,     | 
-|                      |     roaming status, and roaming country.                                 | 
-|                      |                                                                          | 
-|                      |                                                                          | 
-+----------------------+--------------------------------------------------------------------------+ 
-| VerifyService.cs     | The **VerifyService** class exposes four services for sending users a    | 
-|                      | verification token (a three to five-digit number). You can use this      | 
-|                      | mechanism to test whether you can reach users at the phone number        | 
-|                      | they supplied, or you can have them use the token to authenticate        | 
-|                      | themselves with your web application. In addition, this class also       | 
-|                      | exposes a service that allows you to confirm the result of the           | 
-|                      | authentication.                                                          | 
-|                      |                                                                          | 
-|                      | You can use this verification factor in combination with *username*      | 
-|                      | and *password* to provide *two-factor* authentication for higher         | 
-|                      | security.                                                                | 
-|                      |                                                                          | 
-|                      | ``public VerifyResponse SendSms(string phoneNumber)``                    | 
-|                      |     Sends a text message containing the verification code to the         | 
-|                      |     specified phone number (supported for mobile phones only).           | 
-|                      |                                                                          | 
-|                      | ``public VerifyResponse InitiateCall(string phoneNumber)``               | 
-|                      |     Calls the specified phone number and uses a recorded message to      | 
-|                      |     speak the verification code to the user.                             | 
-|                      |                                                                          | 
-|                      | ``public VerifyResponse ValidateCode(``                                  |
-|                      |               ``string referenceId,``                                    |
-|                      |               ``string verifyCode)``                                     |
-|                      |                                                                          | 
-|                      |     Checks that the code supplied is correct. You make this call in      |
-|                      |     your application after users complete the authentication             |
-|                      |     transaction.                                                         |
-|                      |                                                                          | 
-|                      | ``public VerifyResponse CheckStatus(string referenceId)``                |
-|                      |                                                                          | 
-|                      |                                                                          | 
-+----------------------+--------------------------------------------------------------------------+ 
+To add the TeleSign C# SDK to your project, add Telesign to your packages.config:
 
-Code Example: PhoneId Contact Lookup
-------------------------------------
-These examples assume you are using the file for authentication/configuration described above.
+.. code-block:: xml
 
->>>
-string phoneNumber = "+1 555-555-5555";
-PhoneIdService service = new PhoneIdService();
-PhoneIdContactResponse response = service.ContactLookup(phoneNumber);
-Console.WriteLine("Phone Number: {0}", phoneNumber);
-Console.WriteLine("Name        : {0}", response.Contact.FullName);
-Console.WriteLine("Address     :\r\n{0}", response.Contact.GetFullAddress());
+    <package id="Telesign" version="(insert latest version)" targetFramework="(insert framework)" />
 
-Code Example: Initiate Sms Verify
----------------------------------
->>>
-string code = "1234";
-string phoneNumber = "+1 555-555-5555";
-string language = "en";
-VerifyService verify = new VerifyService();
-VerifyResponse verifyResponse = verify.SendSms(phoneNumber, code, string.Empty, language);
+Authentication
+--------------
 
+You will need a Customer ID and API Key in order to use TeleSign’s API. If you already have an account you can retrieve
+them from your account dashboard within the `Portal <https://portal.telesign.com/login>`_. If you have not signed up
+yet, sign up `here <https://portal.telesign.com/signup>`_.
 
-For more examples, see the documentation or browse the example command line app source code in 
-**Commands.cs** in the **TeleSign.TeleSignCmd** project.
+Dependencies
+------------
 
+We make use of popular, feature-rich and well-tested open-source libraries to perform the underlying functionality of
+the SDK. These dependencies are managed by the community accepted package manager. If you are unable to add these
+additional third party dependencies to your project we have ensured that the SDK code is easy to read and can serve as
+sample code. We have also made sure that more complicated functions such as GenerateTelesignHeaders can be easily
+extracted from the SDK and used 'as is' in your project.
 
-Support and Feedback
---------------------
+C# Code Example: Messaging
+--------------------------
 
-For more information about the Phone Verify and PhoneID Standard services, please contact your TeleSign representative:
+Here is a basic code example with JSON response.
 
-Email: `support@telesign.com <mailto:support@telesign.com>`_
+.. code-block:: java
 
+    string customerId = "FFFFFFFF-EEEE-DDDD-1234-AB1234567890";
+    string apiKey = "EXAMPLETE8sTgg45yusumoN6BYsBVkh+yRJ5czgsnCehZaOYldPJdmFh6NeX8kunZ2zU1YWaUw/0wV6xfw==";
+
+    string phoneNumber = "phone_number";
+    string message = "You're scheduled for a dentist appointment at 2:30PM.";
+    string messageType = "ARN";
+
+    MessagingClient messagingClient = new MessagingClient(customerId, apiKey);
+    RestClient.TelesignResponse telesignResponse = messagingClient.message(phoneNumber, message, messageType);
+
+.. code-block:: javascript
+    
+    {'reference_id': 'DGFDF6E11AB86303ASDFD425BE00000657',
+     'status': {'code': 103,
+        'description': 'Call in progress',
+        'updated_on': '2016-12-12T00:39:58.325559Z'}}
+
+For more examples, see the
+`examples <https://github.com/TeleSign/csharp_telesign/tree/master/src/Telesign.Example>`_ project or visit
+the `TeleSign Developer Portal <https://developer.telesign.com/>`_.
