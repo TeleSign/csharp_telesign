@@ -13,6 +13,7 @@ namespace Telesign
     /// <summary>
     /// The TeleSign RestClient is a generic HTTP REST client that can be extended to make requests against any of
     /// TeleSign's REST API endpoints.
+    /// 
     /// See https://developer.telesign.com for detailed API documentation.
     /// </summary>
     public class RestClient : IDisposable
@@ -28,6 +29,16 @@ namespace Telesign
 
         bool disposed = false;
 
+        /// <summary>
+        /// TeleSign RestClient useful for making generic RESTful requests against our API.
+        /// </summary>
+        /// <param name="customerId">Your customer_id string associated with your account.</param>
+        /// <param name="apiKey">Your api_key string associated with your account.</param>
+        /// <param name="restEndpoint">Override the default restEndpoint to target another endpoint.</param>
+        /// <param name="timeout">The timeout passed into HttpClient.</param>
+        /// <param name="proxy">The proxy passed into HttpClient.</param>
+        /// <param name="proxyUsername">The username passed into HttpClient.</param>
+        /// <param name="proxyPassword">The password passed into HttpClient.</param>
         public RestClient(string customerId,
                           string apiKey,
                           string restEndpoint = "https://rest-api.telesign.com",
@@ -76,13 +87,10 @@ namespace Telesign
         }
 
         /// <summary>
-        /// A simple HTTP Response object.
+        /// A simple HTTP Response object to abstract the underlying HttpClient library response.
         /// </summary>
         public class TelesignResponse
         {
-            /// <summary>
-            /// TeleSignResponse Constructor for initializing response variables.
-            /// </summary>
             public TelesignResponse(HttpResponseMessage response)
             {
                 this.StatusCode = (int)response.StatusCode;
@@ -99,33 +107,31 @@ namespace Telesign
                     this.Json = new JObject();
                 }
             }
-            /// <summary>
-            /// HttpStatus Code returned as part of response
-            /// </summary>
+
             public int StatusCode { get; set; }
-            /// <summary>
-            /// Headers returned as part of response
-            /// </summary>
             public HttpResponseHeaders Headers { get; set; }
-            /// <summary>
-            /// Response body in String
-            /// </summary>
             public string Body { get; set; }
-            /// <summary>
-            /// Response as a Json Object
-            /// </summary>
             public JObject Json { get; set; }
-            /// <summary>
-            /// Indicates if request was successfull
-            /// </summary>
             public bool OK { get; set; }
         }
 
         /// <summary>
-        /// Custom Authenticator for TeleSign REST APIs using RESTSharp
+        /// Generates the TeleSign REST API headers used to authenticate requests.
+        ///
+        /// Creates the canonicalized stringToSign and generates the HMAC signature.This is used to authenticate requests
+        /// against the TeleSign REST API.
+        ///
+        /// See https://developer.telesign.com/docs/authentication for detailed API documentation.
         /// </summary>
-        /// <param name="client"></param>
-        /// <param name="request"></param>
+        /// <param name="customerId">Your account customer_id.</param>
+        /// <param name="apiKey">Your account api_key.</param>
+        /// <param name="methodName">The HTTP method name of the request as a upper case string, should be one of 'POST', 'GET', 'PUT' or 'DELETE'.</param>
+        /// <param name="resource">The partial resource URI to perform the request against.</param>
+        /// <param name="urlEncodedFields">URL encoded HTTP body to perform the HTTP request with.</param>
+        /// <param name="dateRfc2616">The date and time of the request formatted in rfc 2616.</param>
+        /// <param name="nonce">A unique cryptographic nonce for the request.</param>
+        /// <param name="userAgent">User Agent associated with the request.</param>
+        /// <returns>A dictionary of HTTP headers to be applied to the request.</returns>
         public static Dictionary<string, string> GenerateTelesignHeaders(string customerId,
                                                                          string apiKey,
                                                                          string methodName,
@@ -198,54 +204,54 @@ namespace Telesign
         /// <summary>
         /// Generic TeleSign REST API POST handler.
         /// </summary>
-        /// <param name="resource"></param>
-        /// <param name="postParams"></param>
-        /// <returns></returns>
-        public TelesignResponse Post(string resource, Dictionary<string, string> postParams)
+        /// <param name="resource">The partial resource URI to perform the request against.</param>
+        /// <param name="parameters">Body params to perform the POST request with.</param>
+        /// <returns>The TelesignResponse for the request.</returns>
+        public TelesignResponse Post(string resource, Dictionary<string, string> parameters)
         {
-            return Execute(resource, HttpMethod.Post, postParams);
+            return Execute(resource, HttpMethod.Post, parameters);
         }
 
         /// <summary>
         /// Generic TeleSign REST API GET handler.
         /// </summary>
-        /// <param name="resource"></param>
-        /// <param name="getParams"></param>
-        /// <returns></returns>
-        public TelesignResponse Get(string resource, Dictionary<string, string> getParams)
+        /// <param name="resource">The partial resource URI to perform the request against.</param>
+        /// <param name="parameters">Body params to perform the GET request with.</param>
+        /// <returns>The TelesignResponse for the request.</returns>
+        public TelesignResponse Get(string resource, Dictionary<string, string> parameters)
         {
-            return Execute(resource, HttpMethod.Get, getParams);
+            return Execute(resource, HttpMethod.Get, parameters);
         }
 
         /// <summary>
         /// Generic TeleSign REST API PUT handler.
         /// </summary>
-        /// <param name="resource"></param>
-        /// <param name="putParams"></param>
-        /// <returns></returns>
-        public TelesignResponse Put(string resource, Dictionary<string, string> putParams)
+        /// <param name="resource">The partial resource URI to perform the request against.</param>
+        /// <param name="parameters">Body params to perform the PUT request with.</param>
+        /// <returns>The TelesignResponse for the request.</returns>
+        public TelesignResponse Put(string resource, Dictionary<string, string> parameters)
         {
-            return Execute(resource, HttpMethod.Put, putParams);
+            return Execute(resource, HttpMethod.Put, parameters);
         }
 
         /// <summary>
         /// Generic TeleSign REST API DELETE handler.
         /// </summary>
-        /// <param name="resource"></param>
-        /// <param name="deleteParams"></param>
-        /// <returns></returns>
-        public TelesignResponse Delete(string resource, Dictionary<string, string> deleteParams)
+        /// <param name="resource">The partial resource URI to perform the request against.</param>
+        /// <param name="parameters">Body params to perform the DELETE request with.</param>
+        /// <returns>The TelesignResponse for the request.</returns>
+        public TelesignResponse Delete(string resource, Dictionary<string, string> parameters)
         {
-            return Execute(resource, HttpMethod.Delete, deleteParams);
+            return Execute(resource, HttpMethod.Delete, parameters);
         }
 
         /// <summary>
-        /// Generic API for executing requests.
+        /// Generic TeleSign REST API request handler.
         /// </summary>
-        /// <param name="resourceName"></param>
-        /// <param name="method"></param>
-        /// <param name="parameters"></param>
-        /// <returns>TeleSignResponse object</returns>
+        /// <param name="resource">The partial resource URI to perform the request against.</param>
+        /// <param name="method">The HTTP method name, as an upper case string.</param>
+        /// <param name="parameters">Params to perform the request with.</param>
+        /// <returns></returns>
         private TelesignResponse Execute(string resource, HttpMethod method, Dictionary<string, string> parameters)
         {
             if (parameters == null)
@@ -283,7 +289,7 @@ namespace Telesign
             foreach (KeyValuePair<string, string> header in headers)
             {
                 if (header.Key == "Content-Type")
-                    // skip Content-Type for HttpClient
+                    // skip Content-Type, otherwise HttpClient will complain
                     continue;
 
                 request.Headers.Add(header.Key, header.Value);
