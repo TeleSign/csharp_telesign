@@ -1,4 +1,19 @@
-﻿===============
+﻿.. image:: https://raw.github.com/TeleSign/csharp_telesign/master/csharp_banner.jpg
+    :target: https://developer.telesign.com
+
+.. image:: https://img.shields.io/appveyor/ci/telesign/csharp-telesign.svg
+    :target: https://ci.appveyor.com/project/TeleSign/csharp-telesign
+
+.. image:: https://img.shields.io/codecov/c/github/TeleSign/csharp_telesign.svg
+    :target: https://codecov.io/gh/TeleSign/csharp_telesign
+
+.. image:: https://img.shields.io/nuget/v/Telesign.svg
+    :target: http://maven-repository.com/artifact/com.telesign/telesign/
+
+.. image:: https://img.shields.io/github/license/TeleSign/csharp_telesign.svg
+    :target: https://github.com/TeleSign/csharp_telesign/blob/master/LICENSE.txt
+
+===============
 TeleSign C# SDK
 ===============
 
