@@ -63,7 +63,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\TeleSign\Telesign.csproj">
+    <ProjectReference Include="..\Telesign\Telesign.csproj">
       <Project>{d79e8a80-36c2-421e-bcbc-75573addb9d0}</Project>
       <Name>Telesign</Name>
     </ProjectReference>

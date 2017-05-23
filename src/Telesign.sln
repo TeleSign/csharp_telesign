@@ -11,11 +11,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\README.rst = ..\README.rst
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Telesign", "TeleSign\Telesign.csproj", "{D79E8A80-36C2-421E-BCBC-75573ADDB9D0}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Telesign.Test", "Telesign.Test\Telesign.Test.csproj", "{0C63BBDA-1B96-4B18-949A-15B866D43386}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Telesign.Example", "Telesign.Example\Telesign.Example.csproj", "{BBB0568D-C6F9-4A13-B2BD-42B1441BC03B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Telesign", "Telesign\Telesign.csproj", "{D79E8A80-36C2-421E-BCBC-75573ADDB9D0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,10 +23,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{D79E8A80-36C2-421E-BCBC-75573ADDB9D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D79E8A80-36C2-421E-BCBC-75573ADDB9D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D79E8A80-36C2-421E-BCBC-75573ADDB9D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D79E8A80-36C2-421E-BCBC-75573ADDB9D0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0C63BBDA-1B96-4B18-949A-15B866D43386}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0C63BBDA-1B96-4B18-949A-15B866D43386}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0C63BBDA-1B96-4B18-949A-15B866D43386}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -35,6 +31,10 @@ Global
 		{BBB0568D-C6F9-4A13-B2BD-42B1441BC03B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BBB0568D-C6F9-4A13-B2BD-42B1441BC03B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BBB0568D-C6F9-4A13-B2BD-42B1441BC03B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D79E8A80-36C2-421E-BCBC-75573ADDB9D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D79E8A80-36C2-421E-BCBC-75573ADDB9D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D79E8A80-36C2-421E-BCBC-75573ADDB9D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D79E8A80-36C2-421E-BCBC-75573ADDB9D0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
