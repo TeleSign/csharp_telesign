@@ -4,7 +4,7 @@ before_build:
 build:
   project: src\Telesign.sln
 after_test: 
-    - src\packages\OpenCover.4.6.519\tools\OpenCover.Console.exe -register:user -target:"src\packages\NUnit.ConsoleRunner.3.6.1\tools\nunit3-console.exe" -targetargs:"\noresults \noisolation \testcontainer:"".\src\Telesign.Test\bin\Debug\Telesign.Test.dll" -excludebyattribute:*.ExcludeFromCodeCoverage* -hideskipped:All -output:.\coverage.xml 
+    - src\packages\OpenCover.4.6.519\tools\OpenCover.Console.exe -register:user -target:"src\packages\NUnit.ConsoleRunner.3.6.1\tools\nunit3-console.exe" -targetargs:"\noresults \noisolation \testcontainer:""src\Telesign.Test\bin\Debug\Telesign.Test.dll" -excludebyattribute:*.ExcludeFromCodeCoverage* -hideskipped:All -output:.\coverage.xml 
     - "SET PATH=C:\\Python34;C:\\Python34\\Scripts;%PATH%"
     - pip install codecov
     - codecov -f "coverage.xml"
