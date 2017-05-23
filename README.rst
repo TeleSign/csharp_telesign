@@ -80,5 +80,5 @@ Here is a basic code example with JSON response.
         'updated_on': '2016-12-12T00:39:58.325559Z'}}
 
 For more examples, see the
-`examples <https://github.com/TeleSign/csharp_telesign/tree/master/src/Telesign.Example>`_ project or visit
+`examples <https://github.com/TeleSign/csharp_telesign/tree/master/Telesign.Example>`_ project or visit
 the `TeleSign Developer Portal <https://developer.telesign.com/>`_.

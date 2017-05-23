@@ -1,10 +1,10 @@
 version: 2.1.0.{build}
 before_build:
-- nuget restore src\Telesign.sln
+- nuget restore Telesign.sln
 build:
-  project: src\Telesign.sln
+  project: Telesign.sln
 after_test: 
-    - src\packages\OpenCover.4.6.519\tools\OpenCover.Console.exe -register:user -target:"src\packages\NUnit.ConsoleRunner.3.6.1\tools\nunit3-console.exe" -targetargs:"src\Telesign.Test\bin\Debug\Telesign.Test.dll --noresult" -excludebyattribute:*.ExcludeFromCodeCoverage* -hideskipped:All -output:.\coverage.xml
+    - packages\OpenCover.4.6.519\tools\OpenCover.Console.exe -register:user -target:"packages\NUnit.ConsoleRunner.3.6.1\tools\nunit3-console.exe" -targetargs:"Telesign.Test\bin\Debug\Telesign.Test.dll --noresult" -excludebyattribute:*.ExcludeFromCodeCoverage* -hideskipped:All -output:.\coverage.xml
     - "SET PATH=C:\\Python34;C:\\Python34\\Scripts;%PATH%"
     - pip install codecov
     - codecov -f "coverage.xml"
