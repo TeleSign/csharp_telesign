@@ -4,10 +4,12 @@ using MockHttpServer;
 using System.Net;
 using System.Linq;
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Telesign.Test
 {
     [TestFixture]
+    [ExcludeFromCodeCoverage]
     public class RestClientTest : IDisposable
     {
         private string customerId;
