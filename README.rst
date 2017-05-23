@@ -45,7 +45,7 @@ C# Code Example: Messaging
 
 Here is a basic code example with JSON response.
 
-.. code-block:: c#
+.. code-block:: java
 
     string customerId = "FFFFFFFF-EEEE-DDDD-1234-AB1234567890";
     string apiKey = "EXAMPLETE8sTgg45yusumoN6BYsBVkh+yRJ5czgsnCehZaOYldPJdmFh6NeX8kunZ2zU1YWaUw/0wV6xfw==";
