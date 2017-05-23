@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("TeleSign.RestClient")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("TeleSign")]
+[assembly: AssemblyDescription("The TeleSign C# SDK lets you easily integrate with our REST API.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("TeleSign.RestClient")]
-[assembly: AssemblyCopyright("Copyright ©  2017")]
+[assembly: AssemblyCompany("Telesign")]
+[assembly: AssemblyProduct("TeleSign")]
+[assembly: AssemblyCopyright("Copyright © 2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

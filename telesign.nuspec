@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<package>
+    <metadata>
+    <id>Telesign</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>$company$</authors>
+    <owners>$company$</owners>
+    <licenseUrl>https://github.com/TeleSign/csharp_telesign/blob/master/LICENSE.txt</licenseUrl>
+    <projectUrl>https://github.com/TeleSign/csharp_telesign</projectUrl>
+    <iconUrl>https://raw.github.com/TeleSign/csharp_telesign/master/nuget_icon.jpg</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>The TeleSign C# SDK lets you easily integrate with our REST API.</description>
+    <releaseNotes><![CDATA[
+            For full release notes see https://github.com/TeleSign/csharp_telesign/blob/master/RELEASE.md
+            ]]></releaseNotes>
+    <copyright>$copyright$</copyright>
+    <tags>telesign</tags>
+    </metadata>
+</package>
