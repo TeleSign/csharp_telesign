@@ -5,11 +5,14 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4EDD5D84-13D3-4728-BD8A-3C5BC76866C6}"
 	ProjectSection(SolutionItems) = preProject
-		..\.appveyor.yml = ..\.appveyor.yml
-		..\.gitignore = ..\.gitignore
-		..\LICENSE.txt = ..\LICENSE.txt
-		..\README.rst = ..\README.rst
-		..\RELEASE.md = ..\RELEASE.md
+		.appveyor.yml = .appveyor.yml
+		.gitignore = .gitignore
+		csharp_banner.jpg = csharp_banner.jpg
+		csharp_banner_enterprise.jpg = csharp_banner_enterprise.jpg
+		LICENSE.txt = LICENSE.txt
+		nuget_icon.png = nuget_icon.png
+		README.rst = README.rst
+		RELEASE.md = RELEASE.md
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Telesign.Test", "Telesign.Test\Telesign.Test.csproj", "{0C63BBDA-1B96-4B18-949A-15B866D43386}"
