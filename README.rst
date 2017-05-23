@@ -33,7 +33,7 @@ for the TeleSign API is available within the `TeleSign Developer Center <https:/
 Installation
 ------------
 
-To add the TeleSign C# SDK to your project, add the NuGet package:
+To add the TeleSign C# SDK to your project, add Telesign to your packages.config:
 
 .. code-block:: xml
 

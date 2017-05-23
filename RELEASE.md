@@ -6,3 +6,6 @@
 - UserAgent is now set to track client usage and help debug issues.
 - GenerateTelesignHeaders is now static and easily extracted from the SDK if
   custom behavior/implementation is required.
+
+1.0.0
+- Initial release
