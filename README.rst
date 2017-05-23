@@ -8,7 +8,7 @@
     :target: https://codecov.io/gh/TeleSign/csharp_telesign
 
 .. image:: https://img.shields.io/nuget/v/Telesign.svg
-    :target: http://maven-repository.com/artifact/com.telesign/telesign/
+    :target: https://www.nuget.org/packages/Telesign
 
 .. image:: https://img.shields.io/github/license/TeleSign/csharp_telesign.svg
     :target: https://github.com/TeleSign/csharp_telesign/blob/master/LICENSE.txt
