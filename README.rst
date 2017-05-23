@@ -18,7 +18,7 @@ for the TeleSign API is available within the `TeleSign Developer Center <https:/
 Installation
 ------------
 
-To add the TeleSign C# SDK to your NuGet packages:
+To add the TeleSign C# SDK to your project, add the NuGet package:
 
 .. code-block:: xml
 
