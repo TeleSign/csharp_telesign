@@ -1,3 +1,6 @@
+2.2.0
+- AutoVerify rebranded to AppVerify, please update your integration.
+
 2.1.0
 - Major refactor and simplification into generic REST client.
 - updated and improved README

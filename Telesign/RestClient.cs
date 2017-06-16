@@ -19,7 +19,7 @@ namespace Telesign
     public class RestClient : IDisposable
     {
         public static readonly string UserAgent = string.Format("TeleSignSdk/csharp-{0} .Net/{1} HttpClient",
-            typeof(RestClient).Assembly.GetName().Version,
+            "2.2.0",
             Environment.Version.ToString());
 
         private string customerId;

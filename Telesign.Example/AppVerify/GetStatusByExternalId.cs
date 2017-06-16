@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Telesign.Example.AutoVerify
+namespace Telesign.Example.AppVerify
 {
     class GetStatusByExternalId
     {
@@ -13,12 +13,12 @@ namespace Telesign.Example.AutoVerify
 
             try
             {
-                AutoVerifyClient autoverifyClient = new AutoVerifyClient(customerId, apiKey);
-                RestClient.TelesignResponse telesignResponse = autoverifyClient.Status(externalId);
+                AppVerifyClient appVerifyClient = new AppVerifyClient(customerId, apiKey);
+                RestClient.TelesignResponse telesignResponse = appVerifyClient.Status(externalId);
 
                 if (telesignResponse.OK)
                 {
-                    Console.WriteLine(string.Format("AutoVerify transaction with external_id {0} has status code {1} and status description {2}.",
+                    Console.WriteLine(string.Format("AppVerify transaction with external_id {0} has status code {1} and status description {2}.",
                             externalId,
                             telesignResponse.Json["status"]["code"],
                             telesignResponse.Json["status"]["description"]));

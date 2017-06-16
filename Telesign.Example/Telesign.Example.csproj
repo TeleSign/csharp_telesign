@@ -50,7 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AutoVerify\GetStatusByExternalId.cs" />
+    <Compile Include="AppVerify\GetStatusByExternalId.cs" />
     <Compile Include="Messaging\SendMessage.cs" />
     <Compile Include="Messaging\SendMessageWithVerificationCode.cs" />
     <Compile Include="PhoneId\CheckPhoneTypeToBlockVoip.cs" />
