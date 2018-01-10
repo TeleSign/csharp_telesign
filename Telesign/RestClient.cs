@@ -22,10 +22,10 @@ namespace Telesign
             "2.2.0",
             Environment.Version.ToString());
 
-        private string customerId;
-        private string apiKey;
-        private string restEndpoint;
-        private HttpClient httpClient;
+        protected string customerId;
+        protected string apiKey;
+        protected string restEndpoint;
+        protected HttpClient httpClient;
 
         bool disposed = false;
 
@@ -115,6 +115,16 @@ namespace Telesign
             public bool OK { get; set; }
         }
 
+        protected virtual string GetContentType(string methodName)
+        {
+            string contentType = "";
+            if (methodName == "POST" || methodName == "PUT")
+            {
+                contentType = "application/x-www-form-urlencoded";
+            }
+            return contentType;
+        }
+
         /// <summary>
         /// Generates the TeleSign REST API headers used to authenticate requests.
         ///
@@ -132,7 +142,7 @@ namespace Telesign
         /// <param name="nonce">A unique cryptographic nonce for the request.</param>
         /// <param name="userAgent">User Agent associated with the request.</param>
         /// <returns>A dictionary of HTTP headers to be applied to the request.</returns>
-        public static Dictionary<string, string> GenerateTelesignHeaders(string customerId,
+        public Dictionary<string, string> GenerateTelesignHeaders(string customerId,
                                                                          string apiKey,
                                                                          string methodName,
                                                                          string resource,
@@ -151,11 +161,7 @@ namespace Telesign
                 nonce = Guid.NewGuid().ToString();
             }
 
-            string contentType = "";
-            if (methodName == "POST" || methodName == "PUT")
-            {
-                contentType = "application/x-www-form-urlencoded";
-            }
+            string contentType = this.GetContentType(methodName);
 
             string authMethod = "HMAC-SHA256";
 
@@ -277,14 +283,14 @@ namespace Telesign
                 request = new HttpRequestMessage(method, resourceUriWithQuery.ToString());
             }
 
-            Dictionary<string, string> headers = RestClient.GenerateTelesignHeaders(this.customerId,
-                                                                                    this.apiKey,
-                                                                                    method.ToString().ToUpper(),
-                                                                                    resource,
-                                                                                    urlEncodedFields,
-                                                                                    null,
-                                                                                    null,
-                                                                                    RestClient.UserAgent);
+            Dictionary<string, string> headers = this.GenerateTelesignHeaders(this.customerId,
+                                                                              this.apiKey,
+                                                                              method.ToString().ToUpper(),
+                                                                              resource,
+                                                                              urlEncodedFields,
+                                                                              null,
+                                                                              null,
+                                                                              RestClient.UserAgent);
 
             foreach (KeyValuePair<string, string> header in headers)
             {
