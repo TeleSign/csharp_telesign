@@ -39,6 +39,8 @@ To add the TeleSign C# SDK to your project, add Telesign to your packages.config
 
     <package id="Telesign" version="(insert latest version)" targetFramework="(insert framework)" />
 
+.NET framework **v4.5.2+** is required for the TeleSign C# SDK.
+
 Authentication
 --------------
 
