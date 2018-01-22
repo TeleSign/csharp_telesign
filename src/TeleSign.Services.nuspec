@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>TeleSign.Services</id>
+    <version>1.0.0.0</version>
+    <title>TeleSign Web Services SDK</title>
+    <authors>TeleSign Corp.</authors>
+    <owners>TeleSign Corp.</owners>
+    <licenseUrl>https://raw.githubusercontent.com/TeleSign/csharp_telesign/master/LICENSE.txt</licenseUrl>
+    <projectUrl>https://github.com/TeleSign/csharp_telesign</projectUrl>
+    <iconUrl>http://www.telesign.com/images/made/icon-product-verifysms-@2x-100-.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>The TeleSign .NET SDK is a Microsoft .NET component that provides an interface to TeleSign Web Services.</description>
+    <releaseNotes />
+    <copyright>Copyright (c) 2012 TeleSign Corp.</copyright>
+    <tags>TeleSign</tags>
+    <dependencies>
+      <dependency id="Newtonsoft.Json" version="4.5.4" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="TeleSign.Services\bin\Release\TeleSign.Services.dll" target = "lib\net40" />
+    <file src="TeleSign.Services\bin\Release\TeleSign.Services.pdb" target = "lib\net40" />
+    <file src="TeleSign.Services\bin\Release\TeleSign.Services.xml" target = "lib\net40" />
+
+    <file src="TeleSign.Services.PhoneId\bin\Release\TeleSign.Services.PhoneId.dll" target = "lib\net40" />
+    <file src="TeleSign.Services.PhoneId\bin\Release\TeleSign.Services.PhoneId.pdb" target = "lib\net40" />
+
+    <file src="TeleSign.Services.Verify\bin\Release\TeleSign.Services.Verify.dll" target = "lib\net40" />
+    <file src="TeleSign.Services.Verify\bin\Release\TeleSign.Services.Verify.pdb" target = "lib\net40" />
+  </files>
+</package>
