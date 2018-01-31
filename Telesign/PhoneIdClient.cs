@@ -48,11 +48,6 @@ namespace Telesign
                    proxyPassword)
         { }
 
-        protected override string GetContentType(string methodName)
-        {
-            return "application/json";
-        }
-
         /// <summary>
         /// Generic TeleSign REST API request handler.
         /// </summary>
@@ -62,6 +57,7 @@ namespace Telesign
         /// <returns></returns>
         protected TelesignResponse Execute(string resource, HttpMethod method, Dictionary<string, object> parameters)
         {
+            string contentType = "application/json";
             HttpRequestMessage request;
             string fieldsToSign = null;
             if (parameters == null)
@@ -72,10 +68,9 @@ namespace Telesign
             fieldsToSign = JsonConvert.SerializeObject(parameters);
             request = new HttpRequestMessage(method, resourceUri);
             request.Content = new StringContent(fieldsToSign);
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue(this.GetContentType(method.Method));
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue(contentType);
 
-
-            Dictionary<string, string> headers = this.GenerateTelesignHeaders(
+            Dictionary<string, string> headers = RestClient.GenerateTelesignHeaders(
                 this.customerId,
                 this.apiKey,
                 method.ToString().ToUpper(),
@@ -83,7 +78,8 @@ namespace Telesign
                 fieldsToSign,
                 null,
                 null,
-                RestClient.UserAgent);
+                RestClient.UserAgent,
+                contentType);
 
             foreach (KeyValuePair<string, string> header in headers)
             {

@@ -10,7 +10,7 @@ namespace Telesign.Example.PhoneId
             string customerId = "FFFFFFFF-EEEE-DDDD-1234-AB1234567890";
             string apiKey = "EXAMPLETE8sTgg45yusumoN6BYsBVkh+yRJ5czgsnCehZaOYldPJdmFh6NeX8kunZ2zU1YWaUw/0wV6xfw==";
 
-            string phoneNumber = "14329345827";
+            string phoneNumber = "phone_number";
 
             Dictionary<string, object> contact = new Dictionary<string, object>();
             contact.Add("contact", new Dictionary<string, object>());

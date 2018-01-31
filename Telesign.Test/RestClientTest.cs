@@ -91,7 +91,7 @@ namespace Telesign.Test
             string expectedAuthorizationHeader = "TSA FFFFFFFF-EEEE-DDDD-1234-AB1234567890:" +
                 "2xVlmbrxLjYrrPun3G3WMNG6Jon4yKcTeOoK9DjXJ/Q=";
 
-            Dictionary<string, string> actualHeaders = new RestClient(customerId, apiKey).GenerateTelesignHeaders(this.customerId,
+            Dictionary<string, string> actualHeaders = RestClient.GenerateTelesignHeaders(this.customerId,
                 this.apiKey,
                 methodName,
                 resource,
@@ -118,7 +118,7 @@ namespace Telesign.Test
             string expectedAuthorizationHeader = "TSA FFFFFFFF-EEEE-DDDD-1234-AB1234567890:" +
                 "h8d4I0RTxErbxYXuzCOtNqb/f0w3Ck8e5SEkGNj01+8=";
 
-            Dictionary<string, string> actualHeaders = new RestClient(customerId, apiKey).GenerateTelesignHeaders(this.customerId,
+            Dictionary<string, string> actualHeaders = RestClient.GenerateTelesignHeaders(this.customerId,
                 this.apiKey,
                 methodName,
                 resource,
@@ -145,7 +145,7 @@ namespace Telesign.Test
             string expectedAuthorizationHeader = "TSA FFFFFFFF-EEEE-DDDD-1234-AB1234567890:" +
                 "aUm7I+9GKl3ww7PNeeJntCT0iS7b+EmRKEE4LnRzChQ=";
 
-            Dictionary<string, string> actualHeaders = new RestClient(customerId, apiKey).GenerateTelesignHeaders(this.customerId,
+            Dictionary<string, string> actualHeaders = RestClient.GenerateTelesignHeaders(this.customerId,
                 this.apiKey,
                 methodName,
                 resource,
@@ -166,7 +166,7 @@ namespace Telesign.Test
             string methodName = "GET";
             string resource = "/v1/resource";
 
-            Dictionary<string, string> actualHeaders = new RestClient(customerId, apiKey).GenerateTelesignHeaders(this.customerId,
+            Dictionary<string, string> actualHeaders = RestClient.GenerateTelesignHeaders(this.customerId,
                 this.apiKey,
                 methodName,
                 resource,
