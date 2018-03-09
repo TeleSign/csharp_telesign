@@ -1,3 +1,6 @@
+2.2.1
+- Added support for application/json content-type
+
 2.2.0
 - AutoVerify rebranded to AppVerify, please update your integration.
 
