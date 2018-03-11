@@ -88,7 +88,7 @@ namespace Telesign
                 // proper way to set content-type is through content property of the request object
                 if (header.Key == "Content-Type")
                     continue;
-                request.Headers.Add(header.Key, header.Value);
+                request.Headers[header.Key] = header.Value;
             }
 
             HttpResponseMessage response = this.httpClient.SendAsync(request).Result;

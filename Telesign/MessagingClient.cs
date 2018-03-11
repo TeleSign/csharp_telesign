@@ -52,9 +52,9 @@ namespace Telesign
             if (null == parameters)
                 parameters = new Dictionary<string, string>();
 
-            parameters.Add("phone_number", phoneNumber);
-            parameters.Add("message", message);
-            parameters.Add("message_type", messageType);
+            parameters["phone_number"] = phoneNumber;
+            parameters["message"] = message;
+            parameters["message_type"] = messageType;
 
             return Post(MESSAGING_RESOURCE, parameters);
         }
