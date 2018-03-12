@@ -277,7 +277,7 @@ namespace Telesign.Test
         {
             string testResource = "/test/resource";
             Dictionary<string, string> testParams = new Dictionary<string, string>();
-            testParam["test"] = "123_\u03ff_test";
+            testParams["test"] = "123_\u03ff_test";
 
             RestClient client = new RestClient(this.customerId,
                                                this.apiKey,
