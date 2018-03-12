@@ -12,11 +12,11 @@ namespace Telesign.Example.PhoneId
 
             string phoneNumber = "phone_number";
 
-            Dictionary<string, object> parameters = {
-                "addons": [
-                    "contact"
-                ],
+            Dictionary<string, object> parameters = new Dictionary<string, object>()
+            {
+                { "addons", new List<string>() { "contact" } },
             };
+            
             try
             {
                 PhoneIdClient phoneIdClient = new PhoneIdClient(customerId, apiKey);
