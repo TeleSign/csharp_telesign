@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Net;
+using System.Threading.Tasks;
 
 namespace Telesign
 {
@@ -67,6 +68,33 @@ namespace Telesign
         public TelesignResponse Status(string referenceId, Dictionary<string, string> parameters = null)
         {
             return Get(string.Format(MESSAGING_STATUS_RESOURCE, referenceId), parameters);
+        }
+        
+        /// <summary>
+        /// Send a message to the target phone_number.
+        /// 
+        /// See https://developer.telesign.com/docs/messaging-api for detailed API documentation.
+        /// </summary>
+        public Task<TelesignResponse> MessageAsync(string phoneNumber, string message, string messageType, Dictionary<string, string> parameters = null)
+        {
+            if (null == parameters)
+                parameters = new Dictionary<string, string>();
+
+            parameters.Add("phone_number", phoneNumber);
+            parameters.Add("message", message);
+            parameters.Add("message_type", messageType);
+
+            return PostAsync(MESSAGING_RESOURCE, parameters);
+        }
+        
+        /// <summary>
+        /// Retrieves the current status of the message.
+        /// 
+        /// See https://developer.telesign.com/docs/messaging-api for detailed API documentation.
+        /// </summary>
+        public Task<TelesignResponse> StatusAsync(string referenceId, Dictionary<string, string> parameters = null)
+        {
+            return GetAsync(string.Format(MESSAGING_STATUS_RESOURCE, referenceId), parameters);
         }
     }
 }

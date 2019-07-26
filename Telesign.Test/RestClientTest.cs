@@ -5,6 +5,7 @@ using System.Net;
 using System.Linq;
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
 
 namespace Telesign.Test
 {
@@ -284,6 +285,127 @@ namespace Telesign.Test
                                                string.Format("http://localhost:{0}", this.mockServer.Port));
 
             client.Delete(testResource, testParams);
+
+            Assert.AreEqual("DELETE", this.requests.Last().HttpMethod, "method is not as expected");
+            Assert.AreEqual("/test/resource?test=123_%CF%BF_test", this.requests.Last().RawUrl, "path is not as expected");
+
+            Assert.AreEqual("", this.requestBodies.Last(), "body is not as expected");
+
+            Assert.AreEqual(null, this.requestHeaders.Last()["Content-Type"], "Content-Type header is not as expected");
+            Assert.AreEqual("HMAC-SHA256", this.requestHeaders.Last()["x-ts-auth-method"], "x-ts-auth-method header is not as expected");
+
+            Guid dummyGuid;
+            Assert.IsTrue(Guid.TryParse(this.requestHeaders.Last()["x-ts-nonce"], out dummyGuid), "x-ts-nonce header is not a valid UUID");
+
+            DateTime dummyDateTime;
+            Assert.IsTrue(DateTime.TryParse(this.requestHeaders.Last()["Date"], out dummyDateTime), "Date header is not valid rfc2616 format");
+
+            Assert.IsNotNull(this.requestHeaders.Last()["Authorization"]);
+        }
+        
+        
+        [Test]
+        public async Task TestRestClientPostAsync()
+        {
+            string testResource = "/test/resource";
+            Dictionary<string, string> testParams = new Dictionary<string, string>();
+            testParams.Add("test", "123_\u03ff_test");
+
+            RestClient client = new RestClient(this.customerId,
+                                               this.apiKey,
+                                               string.Format("http://localhost:{0}", this.mockServer.Port));
+
+            await client.PostAsync(testResource, testParams);
+
+            Assert.AreEqual("POST", this.requests.Last().HttpMethod, "method is not as expected");
+            Assert.AreEqual("/test/resource", this.requests.Last().RawUrl, "path is not as expected");
+
+            Assert.AreEqual("test=123_%CF%BF_test", this.requestBodies.Last(), "body is not as expected");
+
+            Assert.AreEqual("application/x-www-form-urlencoded", this.requestHeaders.Last()["Content-Type"], "Content-Type header is not as expected");
+            Assert.AreEqual("HMAC-SHA256", this.requestHeaders.Last()["x-ts-auth-method"], "x-ts-auth-method header is not as expected");
+
+            Guid dummyGuid;
+            Assert.IsTrue(Guid.TryParse(this.requestHeaders.Last()["x-ts-nonce"], out dummyGuid), "x-ts-nonce header is not a valid UUID");
+
+            DateTime dummyDateTime;
+            Assert.IsTrue(DateTime.TryParse(this.requestHeaders.Last()["Date"], out dummyDateTime), "Date header is not valid rfc2616 format");
+
+            Assert.IsNotNull(this.requestHeaders.Last()["Authorization"]);
+        }
+
+        [Test]
+        public async Task TestRestClientGetAsync()
+        {
+            string testResource = "/test/resource";
+            Dictionary<string, string> testParams = new Dictionary<string, string>();
+            testParams.Add("test", "123_\u03ff_test");
+
+            RestClient client = new RestClient(this.customerId,
+                                               this.apiKey,
+                                               string.Format("http://localhost:{0}", this.mockServer.Port));
+
+            await client.GetAsync(testResource, testParams);
+
+            Assert.AreEqual("GET", this.requests.Last().HttpMethod, "method is not as expected");
+            Assert.AreEqual("/test/resource?test=123_%CF%BF_test", this.requests.Last().RawUrl, "path is not as expected");
+
+            Assert.AreEqual("", this.requestBodies.Last(), "body is not as expected");
+
+            Assert.AreEqual(null, this.requestHeaders.Last()["Content-Type"], "Content-Type header is not as expected");
+            Assert.AreEqual("HMAC-SHA256", this.requestHeaders.Last()["x-ts-auth-method"], "x-ts-auth-method header is not as expected");
+
+            Guid dummyGuid;
+            Assert.IsTrue(Guid.TryParse(this.requestHeaders.Last()["x-ts-nonce"], out dummyGuid), "x-ts-nonce header is not a valid UUID");
+
+            DateTime dummyDateTime;
+            Assert.IsTrue(DateTime.TryParse(this.requestHeaders.Last()["Date"], out dummyDateTime), "Date header is not valid rfc2616 format");
+
+            Assert.IsNotNull(this.requestHeaders.Last()["Authorization"]);
+        }
+
+        [Test]
+        public async Task TestRestClientPutAsync()
+        {
+            string testResource = "/test/resource";
+            Dictionary<string, string> testParams = new Dictionary<string, string>();
+            testParams.Add("test", "123_\u03ff_test");
+
+            RestClient client = new RestClient(this.customerId,
+                                               this.apiKey,
+                                               string.Format("http://localhost:{0}", this.mockServer.Port));
+
+            await client.PutAsync(testResource, testParams);
+
+            Assert.AreEqual("PUT", this.requests.Last().HttpMethod, "method is not as expected");
+            Assert.AreEqual("/test/resource", this.requests.Last().RawUrl, "path is not as expected");
+
+            Assert.AreEqual("test=123_%CF%BF_test", this.requestBodies.Last(), "body is not as expected");
+
+            Assert.AreEqual("application/x-www-form-urlencoded", this.requestHeaders.Last()["Content-Type"], "Content-Type header is not as expected");
+            Assert.AreEqual("HMAC-SHA256", this.requestHeaders.Last()["x-ts-auth-method"], "x-ts-auth-method header is not as expected");
+
+            Guid dummyGuid;
+            Assert.IsTrue(Guid.TryParse(this.requestHeaders.Last()["x-ts-nonce"], out dummyGuid), "x-ts-nonce header is not a valid UUID");
+
+            DateTime dummyDateTime;
+            Assert.IsTrue(DateTime.TryParse(this.requestHeaders.Last()["Date"], out dummyDateTime), "Date header is not valid rfc2616 format");
+
+            Assert.IsNotNull(this.requestHeaders.Last()["Authorization"]);
+        }
+
+        [Test]
+        public async Task TestRestClientDeleteAsync()
+        {
+            string testResource = "/test/resource";
+            Dictionary<string, string> testParams = new Dictionary<string, string>();
+            testParams.Add("test", "123_\u03ff_test");
+
+            RestClient client = new RestClient(this.customerId,
+                                               this.apiKey,
+                                               string.Format("http://localhost:{0}", this.mockServer.Port));
+
+            await client.DeleteAsync(testResource, testParams);
 
             Assert.AreEqual("DELETE", this.requests.Last().HttpMethod, "method is not as expected");
             Assert.AreEqual("/test/resource?test=123_%CF%BF_test", this.requests.Last().RawUrl, "path is not as expected");

@@ -55,8 +55,12 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="AppVerifyClientTest.cs" />
+    <Compile Include="MessagingClientTest.cs" />
+    <Compile Include="PhoneIdClientTest.cs" />
     <Compile Include="RestClientTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ScoreClientTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

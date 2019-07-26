@@ -7,6 +7,7 @@ using System.Net;
 using Newtonsoft.Json;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 
 namespace Telesign
 {
@@ -19,7 +20,7 @@ namespace Telesign
     public class RestClient : IDisposable
     {
         public static readonly string UserAgent = string.Format("TeleSignSdk/csharp-{0} .Net/{1} HttpClient",
-            "2.2.1",
+            "2.2.2",
             Environment.Version.ToString());
 
         protected string customerId;
@@ -91,13 +92,37 @@ namespace Telesign
         /// </summary>
         public class TelesignResponse
         {
-            public TelesignResponse(HttpResponseMessage response)
+            private Task<string> BodyTask;
+            
+            public TelesignResponse(HttpResponseMessage response, bool isAsync = false)
             {
                 this.StatusCode = (int)response.StatusCode;
                 this.Headers = response.Headers;
-                this.Body = response.Content.ReadAsStringAsync().Result;
                 this.OK = response.IsSuccessStatusCode;
 
+                if (isAsync)
+                {
+                    this.BodyTask = response.Content.ReadAsStringAsync();
+                }
+                else
+                {
+                    this.Body = response.Content.ReadAsStringAsync().Result;
+
+                    try
+                    {
+                        this.Json = JObject.Parse(this.Body);
+                    }
+                    catch (JsonReaderException)
+                    {
+                        this.Json = new JObject();
+                    }    
+                }
+                
+            }
+
+            public async Task Initialize()
+            {
+                this.Body = await BodyTask.ConfigureAwait(false) ;
                 try
                 {
                     this.Json = JObject.Parse(this.Body);
@@ -106,6 +131,7 @@ namespace Telesign
                 {
                     this.Json = new JObject();
                 }
+                
             }
 
             public int StatusCode { get; set; }
@@ -215,6 +241,18 @@ namespace Telesign
         {
             return Execute(resource, HttpMethod.Post, parameters);
         }
+        
+        
+        /// <summary>
+        /// Generic TeleSign REST API POST handler.
+        /// </summary>
+        /// <param name="resource">The partial resource URI to perform the request against.</param>
+        /// <param name="parameters">Body params to perform the POST request with.</param>
+        /// <returns>The TelesignResponse for the request.</returns>
+        public Task<TelesignResponse> PostAsync(string resource, Dictionary<string, string> parameters)
+        {
+            return ExecuteAsync(resource, HttpMethod.Post, parameters);
+        }
 
         /// <summary>
         /// Generic TeleSign REST API GET handler.
@@ -225,6 +263,17 @@ namespace Telesign
         public TelesignResponse Get(string resource, Dictionary<string, string> parameters)
         {
             return Execute(resource, HttpMethod.Get, parameters);
+        }
+        
+        /// <summary>
+        /// Generic TeleSign REST API GET handler.
+        /// </summary>
+        /// <param name="resource">The partial resource URI to perform the request against.</param>
+        /// <param name="parameters">Body params to perform the GET request with.</param>
+        /// <returns>The TelesignResponse for the request.</returns>
+        public Task<TelesignResponse> GetAsync(string resource, Dictionary<string, string> parameters)
+        {
+            return ExecuteAsync(resource, HttpMethod.Get, parameters);
         }
 
         /// <summary>
@@ -239,6 +288,17 @@ namespace Telesign
         }
 
         /// <summary>
+        /// Generic TeleSign REST API PUT handler.
+        /// </summary>
+        /// <param name="resource">The partial resource URI to perform the request against.</param>
+        /// <param name="parameters">Body params to perform the PUT request with.</param>
+        /// <returns>The TelesignResponse for the request.</returns>
+        public Task<TelesignResponse> PutAsync(string resource, Dictionary<string, string> parameters)
+        {
+            return ExecuteAsync(resource, HttpMethod.Put, parameters);
+        }
+        
+        /// <summary>
         /// Generic TeleSign REST API DELETE handler.
         /// </summary>
         /// <param name="resource">The partial resource URI to perform the request against.</param>
@@ -250,6 +310,17 @@ namespace Telesign
         }
 
         /// <summary>
+        /// Generic TeleSign REST API DELETE handler.
+        /// </summary>
+        /// <param name="resource">The partial resource URI to perform the request against.</param>
+        /// <param name="parameters">Body params to perform the DELETE request with.</param>
+        /// <returns>The TelesignResponse for the request.</returns>
+        public Task<TelesignResponse> DeleteAsync(string resource, Dictionary<string, string> parameters)
+        {
+            return ExecuteAsync(resource, HttpMethod.Delete, parameters);
+        }
+        
+        /// <summary>
         /// Generic TeleSign REST API request handler.
         /// </summary>
         /// <param name="resource">The partial resource URI to perform the request against.</param>
@@ -257,6 +328,11 @@ namespace Telesign
         /// <param name="parameters">Params to perform the request with.</param>
         /// <returns></returns>
         private TelesignResponse Execute(string resource, HttpMethod method, Dictionary<string, string> parameters)
+        {
+            return ExecuteAsync(resource, method, parameters).Result;
+        }
+
+        private async Task<TelesignResponse> ExecuteAsync(string resource, HttpMethod method, Dictionary<string, string> parameters)
         {
             if (parameters == null)
             {
@@ -266,7 +342,7 @@ namespace Telesign
             string resourceUri = string.Format("{0}{1}", this.restEndpoint, resource);
 
             FormUrlEncodedContent formBody = new FormUrlEncodedContent(parameters);
-            string urlEncodedFields = formBody.ReadAsStringAsync().Result;
+            string urlEncodedFields = await formBody.ReadAsStringAsync().ConfigureAwait(false);
 
             HttpRequestMessage request;
             if (method == HttpMethod.Post || method == HttpMethod.Put)
@@ -299,9 +375,10 @@ namespace Telesign
                 request.Headers.Add(header.Key, header.Value);
             }
 
-            HttpResponseMessage response = this.httpClient.SendAsync(request).Result;
+            HttpResponseMessage response = await this.httpClient.SendAsync(request).ConfigureAwait(false);
 
-            TelesignResponse tsResponse = new TelesignResponse(response);
+            TelesignResponse tsResponse = new TelesignResponse(response, isAsync: true);
+            await tsResponse.Initialize();
             return tsResponse;
         }
     }

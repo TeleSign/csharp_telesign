@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Net;
+using System.Threading.Tasks;
 
 namespace Telesign
 {
@@ -56,6 +57,25 @@ namespace Telesign
             string resource = string.Format(SCORE_RESOURCE, phoneNumber);
 
             return Post(resource, scoreParams);
+        }
+        
+
+        /// <summary>
+        /// Score is an API that delivers reputation scoring based on phone number intelligence, traffic patterns, machine
+        /// learning, and a global data consortium.
+        /// 
+        /// See https://developer.telesign.com/docs/score-api for detailed API documentation.     
+        /// </summary>
+        public Task<TelesignResponse> ScoreAsync(string phoneNumber, string accountLifecycleEvent, Dictionary<string, string> scoreParams = null)
+        {
+            if (null == scoreParams)
+                scoreParams = new Dictionary<string, string>();
+            scoreParams.Add("phone_number", phoneNumber);
+            scoreParams.Add("account_lifecycle_event", accountLifecycleEvent);
+
+            string resource = string.Format(SCORE_RESOURCE, phoneNumber);
+
+            return PostAsync(resource, scoreParams);
         }
     }
 }
