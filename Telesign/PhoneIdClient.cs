@@ -1,12 +1,9 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Security.Cryptography;
-using System.Text;
+using System.Threading.Tasks;
 
 namespace Telesign
 {
@@ -57,6 +54,11 @@ namespace Telesign
         /// <returns></returns>
         protected TelesignResponse Execute(string resource, HttpMethod method, Dictionary<string, object> parameters)
         {
+            return ExecuteAsync(resource, method, parameters).Result;
+        }
+
+        protected async Task<TelesignResponse> ExecuteAsync(string resource, HttpMethod method, Dictionary<string, object> parameters)
+        {
             string contentType = "application/json";
             HttpRequestMessage request;
             string fieldsToSign = null;
@@ -91,9 +93,10 @@ namespace Telesign
                 request.Headers.Add(header.Key, header.Value);
             }
 
-            HttpResponseMessage response = this.httpClient.SendAsync(request).Result;
+            HttpResponseMessage response = await this.httpClient.SendAsync(request).ConfigureAwait(false);
 
-            TelesignResponse tsResponse = new TelesignResponse(response);
+            TelesignResponse tsResponse = new TelesignResponse(response, isAsync: true);
+            await tsResponse.Initialize();
             return tsResponse;
         }
 
@@ -108,6 +111,10 @@ namespace Telesign
             return Execute(resource, HttpMethod.Post, parameters);
         }
 
+        public Task<TelesignResponse> PostAsync(string resource, Dictionary<string, object> parameters)
+        {
+            return ExecuteAsync(resource, HttpMethod.Post, parameters);
+        }
 
         /// <summary>
         /// The PhoneID API provides a cleansed phone number, phone type, and telecom carrier information to determine the
@@ -123,6 +130,22 @@ namespace Telesign
             string resource = string.Format(SCORE_RESOURCE, phoneNumber);
 
             return Post(resource, phoneIdParams);
+        }
+        
+        /// <summary>
+        /// The PhoneID API provides a cleansed phone number, phone type, and telecom carrier information to determine the
+        /// best communication method - SMS or voice.
+        /// 
+        /// See https://developer.telesign.com/docs/phoneid-api for detailed API documentation.      
+        /// </summary>
+        public Task<TelesignResponse> PhoneIdAsync(string phoneNumber, Dictionary<string, object> phoneIdParams = null)
+        {
+            if (null == phoneIdParams)
+                phoneIdParams = new Dictionary<string, object>();
+
+            string resource = string.Format(SCORE_RESOURCE, phoneNumber);
+
+            return PostAsync(resource, phoneIdParams);
         }
     }
 }
