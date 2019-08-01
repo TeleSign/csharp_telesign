@@ -188,7 +188,7 @@ namespace Telesign.Test
         {
             string testResource = "/test/resource";
             Dictionary<string, string> testParams = new Dictionary<string, string>();
-            testParams.Add("test", "123_\u03ff_test");
+            testParams["test"] = "123_\u03ff_test";
 
             RestClient client = new RestClient(this.customerId,
                                                this.apiKey,
@@ -218,7 +218,7 @@ namespace Telesign.Test
         {
             string testResource = "/test/resource";
             Dictionary<string, string> testParams = new Dictionary<string, string>();
-            testParams.Add("test", "123_\u03ff_test");
+            testParams["test"] = "123_\u03ff_test";
 
             RestClient client = new RestClient(this.customerId,
                                                this.apiKey,
@@ -248,7 +248,7 @@ namespace Telesign.Test
         {
             string testResource = "/test/resource";
             Dictionary<string, string> testParams = new Dictionary<string, string>();
-            testParams.Add("test", "123_\u03ff_test");
+            testParams["test"] = "123_\u03ff_test";
 
             RestClient client = new RestClient(this.customerId,
                                                this.apiKey,
@@ -278,7 +278,7 @@ namespace Telesign.Test
         {
             string testResource = "/test/resource";
             Dictionary<string, string> testParams = new Dictionary<string, string>();
-            testParams.Add("test", "123_\u03ff_test");
+            testParams["test"] = "123_\u03ff_test";
 
             RestClient client = new RestClient(this.customerId,
                                                this.apiKey,

@@ -53,9 +53,9 @@ namespace Telesign
             if (null == callParams)
                 callParams = new Dictionary<string, string>();
 
-            callParams.Add("phone_number", phoneNumber);
-            callParams.Add("message", message);
-            callParams.Add("message_type", messageType);
+            callParams["phone_number"] = phoneNumber;
+            callParams["message"] = message;
+            callParams["message_type"] = messageType;
 
             return Post(VOICE_RESOURCE, callParams);
         }
@@ -69,7 +69,7 @@ namespace Telesign
         {
             if (null == statusParams)
                 statusParams = new Dictionary<string, string>();
-            statusParams.Add("reference_id", referenceId);
+            statusParams["reference_id"] = referenceId;
 
             string resource = string.Format(VOICE_STATUS_RESOURCE, referenceId);
 

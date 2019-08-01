@@ -217,15 +217,15 @@ namespace Telesign
 
             Dictionary<string, string> headers = new Dictionary<string, string>();
 
-            headers.Add("Authorization", authorization);
-            headers.Add("Date", dateRfc2616);
-            headers.Add("Content-Type", contentType);
-            headers.Add("x-ts-auth-method", authMethod);
-            headers.Add("x-ts-nonce", nonce);
+            headers["Authorization"] = authorization;
+            headers["Date"] = dateRfc2616;
+            headers["Content-Type"] = contentType;
+            headers["x-ts-auth-method"] = authMethod;
+            headers["x-ts-nonce"] = nonce;
 
             if (userAgent != null)
             {
-                headers.Add("User-Agent", userAgent);
+                headers["User-Agent"] = userAgent;
             }
 
             return headers;

@@ -51,8 +51,8 @@ namespace Telesign
         {
             if (null == scoreParams)
                 scoreParams = new Dictionary<string, string>();
-            scoreParams.Add("phone_number", phoneNumber);
-            scoreParams.Add("account_lifecycle_event", accountLifecycleEvent);
+            scoreParams["phone_number"] = phoneNumber;
+            scoreParams["account_lifecycle_event"] = accountLifecycleEvent;
 
             string resource = string.Format(SCORE_RESOURCE, phoneNumber);
 
