@@ -1,4 +1,4 @@
-﻿[![Maven Central](https://img.shields.io/maven-central/v/com.telesign/telesign.svg)](https://mvnrepository.com/artifact/com.telesign/telesign) [![license](https://img.shields.io/github/license/TeleSign/java_telesign.svg)](https://github.com/TeleSign/java_telesign/blob/master/LICENSE.txt)
+﻿[![NuGet](https://img.shields.io/nuget/v/Telesign.svg)](https://www.nuget.org/packages/Telesign) [![license](https://img.shields.io/pypi/l/telesign.svg)](https://github.com/TeleSign/python_telesign/blob/master/LICENSE.txt)
 
 # Telesign Self-service C# SDK
 
