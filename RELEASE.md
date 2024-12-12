@@ -1,4 +1,4 @@
-2.3.1
+2.3.0
 - Moved support for application/json content-type from PhoneIdClient class to RestClient class
 - Added two testing post method for application json test.
 
