@@ -213,6 +213,36 @@ namespace Telesign.Test
             Assert.IsNotNull(this.requestHeaders.Last()["Authorization"]);
         }
 
+        public void TestRestClientPost2()
+        {
+            string testResource = "/test/resource";
+            Dictionary<string, object> testParams = new Dictionary<string, object>();
+            testParams.Add("test", "123_\u03ff_test");
+            testParams.Add("testInteger", 123);
+
+            RestClient client = new RestClient(this.customerId,
+                                               this.apiKey,
+                                               string.Format("http://localhost:{0}", this.mockServer.Port));
+
+            client.Post(testResource, testParams);
+
+            Assert.AreEqual("POST", this.requests.Last().HttpMethod, "method is not as expected");
+            Assert.AreEqual("/test/resource", this.requests.Last().RawUrl, "path is not as expected");
+
+            Assert.AreEqual("{\"test\":\"123_Ͽ_test\",\"testInteger\":123}", this.requestBodies.Last(), "body is not as expected");
+
+            Assert.AreEqual("application/json", this.requestHeaders.Last()["Content-Type"], "Content-Type header is not as expected");
+            Assert.AreEqual("HMAC-SHA256", this.requestHeaders.Last()["x-ts-auth-method"], "x-ts-auth-method header is not as expected");
+
+            Guid dummyGuid;
+            Assert.IsTrue(Guid.TryParse(this.requestHeaders.Last()["x-ts-nonce"], out dummyGuid), "x-ts-nonce header is not a valid UUID");
+
+            DateTime dummyDateTime;
+            Assert.IsTrue(DateTime.TryParse(this.requestHeaders.Last()["Date"], out dummyDateTime), "Date header is not valid rfc2616 format");
+
+            Assert.IsNotNull(this.requestHeaders.Last()["Authorization"]);
+        }
+
         [Test]
         public void TestRestClientGet()
         {
@@ -302,8 +332,8 @@ namespace Telesign.Test
 
             Assert.IsNotNull(this.requestHeaders.Last()["Authorization"]);
         }
-        
-        
+
+
         [Test]
         public async Task TestRestClientPostAsync()
         {
@@ -323,6 +353,36 @@ namespace Telesign.Test
             Assert.AreEqual("test=123_%CF%BF_test", this.requestBodies.Last(), "body is not as expected");
 
             Assert.AreEqual("application/x-www-form-urlencoded", this.requestHeaders.Last()["Content-Type"], "Content-Type header is not as expected");
+            Assert.AreEqual("HMAC-SHA256", this.requestHeaders.Last()["x-ts-auth-method"], "x-ts-auth-method header is not as expected");
+
+            Guid dummyGuid;
+            Assert.IsTrue(Guid.TryParse(this.requestHeaders.Last()["x-ts-nonce"], out dummyGuid), "x-ts-nonce header is not a valid UUID");
+
+            DateTime dummyDateTime;
+            Assert.IsTrue(DateTime.TryParse(this.requestHeaders.Last()["Date"], out dummyDateTime), "Date header is not valid rfc2616 format");
+
+            Assert.IsNotNull(this.requestHeaders.Last()["Authorization"]);
+        }
+
+        public async Task TestRestClientPost2Async()
+        {
+            string testResource = "/test/resource";
+            Dictionary<string, object> testParams = new Dictionary<string, object>();
+            testParams.Add("test", "123_\u03ff_test");
+            testParams.Add("testInteger", 123);
+
+            RestClient client = new RestClient(this.customerId,
+                                               this.apiKey,
+                                               string.Format("http://localhost:{0}", this.mockServer.Port));
+
+            client.Post(testResource, testParams);
+
+            Assert.AreEqual("POST", this.requests.Last().HttpMethod, "method is not as expected");
+            Assert.AreEqual("/test/resource", this.requests.Last().RawUrl, "path is not as expected");
+
+            Assert.AreEqual("{\"test\":\"123_Ͽ_test\",\"testInteger\":123}", this.requestBodies.Last(), "body is not as expected");
+
+            Assert.AreEqual("application/json", this.requestHeaders.Last()["Content-Type"], "Content-Type header is not as expected");
             Assert.AreEqual("HMAC-SHA256", this.requestHeaders.Last()["x-ts-auth-method"], "x-ts-auth-method header is not as expected");
 
             Guid dummyGuid;
