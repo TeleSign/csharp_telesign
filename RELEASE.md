@@ -1,3 +1,7 @@
+3.0.0
+- Added supported version of .NET Framework 4.8 & 4.8.1
+- Added supported version of .NET Core 6, 7, 8 & 9
+
 2.3.0
 - Moved support for application/json content-type from PhoneIdClient class to RestClient class
 - Added two testing post method for application json test.
