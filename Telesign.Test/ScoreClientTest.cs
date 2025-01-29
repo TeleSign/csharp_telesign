@@ -1,156 +1,111 @@
-using NUnit.Framework;
-using System.Collections.Generic;
-using MockHttpServer;
-using System.Net;
-using System.Linq;
 using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Threading.Tasks;
+using System.Net;
+using MockHttpServer;
 
-namespace Telesign.Test
+namespace Telesign.Test;
+
+[TestFixture]
+[ExcludeFromCodeCoverage]
+public class ScoreClientTest : IDisposable
 {
-    [TestFixture]
-    [ExcludeFromCodeCoverage]
-    public class ScoreClientTest : IDisposable
+    private string customerId = string.Empty;
+    private string apiKey = string.Empty;
+    private MockServer mockServer;
+    private List<HttpListenerRequest> requests = [];
+    private List<string> requestBodies = [];
+    private List<Dictionary<string, string>> requestHeaders = [];
+    private Func<HttpListenerRequest, HttpListenerResponse, Dictionary<string, string>, string>? handlerLambda;
+
+    bool disposed = false;
+
+    [SetUp]
+    public void SetUp()
     {
-        private string customerId;
-        private string apiKey;
+        customerId = Environment.GetEnvironmentVariable("CUSTOMER_ID")?? "FFFFFFFF-EEEE-DDDD-1234-AB1234567890";
+        apiKey = Environment.GetEnvironmentVariable("API_KEY") ?? "Example/idksdjKJD+==";
 
-        private MockServer mockServer;
+        requests = [];
+        requestBodies = [];
+        requestHeaders = [];
 
-        private List<HttpListenerRequest> requests;
-        private List<string> requestBodies;
-        private List<Dictionary<string, string>> requestHeaders;
-        private Func<HttpListenerRequest, HttpListenerResponse, Dictionary<string, string>, string> handlerLambda;
-
-        bool disposed = false;
-
-        [SetUp]
-        public void SetUp()
+        handlerLambda = (req, rsp, prm) =>
         {
-            this.customerId = "FFFFFFFF-EEEE-DDDD-1234-AB1234567890";
-            this.apiKey = "EXAMPLETE8sTgg45yusumoN6BYsBVkh+yRJ5czgsnCehZaOYldPJdmFh6NeX8kunZ2zU1YWaUw/0wV6xfw==";
+            requests.Add(req);
+            requestBodies.Add(req.Content());
 
-            this.requests = new List<HttpListenerRequest>();
-            this.requestBodies = new List<string>();
-            this.requestHeaders = new List<Dictionary<string, string>>();
-            
-            this.handlerLambda = (req, rsp, prm) =>
+            Dictionary<string, string> headers = new()
             {
-                requests.Add(req);
-                requestBodies.Add(req.Content());
-
-                Dictionary<string, string> headers = new Dictionary<string, string>
-                {
-                    {"Content-Type", req.Headers["Content-Type"]},
-                    {"x-ts-auth-method", req.Headers["x-ts-auth-method"]},
-                    {"x-ts-nonce", req.Headers["x-ts-nonce"]},
-                    {"Date", req.Headers["Date"]},
-                    {"Authorization", req.Headers["Authorization"]}
-                };
-                requestHeaders.Add(headers);
-
-                return "{}";
+                    {"Content-Type", req.Headers["Content-Type"] ?? string.Empty},
+                    {"x-ts-auth-method", req.Headers["x-ts-auth-method"] ?? string.Empty},
+                    {"x-ts-nonce", req.Headers["x-ts-nonce"] ?? string.Empty},
+                    {"Date", req.Headers["Date"] ?? string.Empty},
+                    {"Authorization", req.Headers["Authorization"] ?? string.Empty}
             };
-            
-            this.mockServer = new MockServer(0, "/v1/score/15555555555", (req, rsp, prm) =>
-            {
-                requests.Add(req);
-                requestBodies.Add(req.Content());
+            requestHeaders.Add(headers);
 
-                Dictionary<string, string> headers = new Dictionary<string, string>
-                {
-                    {"Content-Type", req.Headers["Content-Type"]},
-                    {"x-ts-auth-method", req.Headers["x-ts-auth-method"]},
-                    {"x-ts-nonce", req.Headers["x-ts-nonce"]},
-                    {"Date", req.Headers["Date"]},
-                    {"Authorization", req.Headers["Authorization"]}
-                };
-                requestHeaders.Add(headers);
+            return "{}";
+        };
 
-                return "{}";
-            });
-        }
+        mockServer = new MockServer(0, "/v1/score/15555555555", handlerLambda);
+    }
 
-        [TearDown]
-        public void TearDown()
-        {
-            this.Dispose();
-        }
+    [TearDown]
+    public void TearDown()
+    {
+        Dispose();
+    }
 
-        public void Dispose()
-        {
-            this.Dispose(true);
-            GC.SuppressFinalize(this);
-        }
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
 
-        protected virtual void Dispose(bool disposing)
-        {
-            if (this.disposed)
-                return;
+    protected virtual void Dispose(bool disposing)
+    {
+        if (disposed)
+            return;
 
-            this.mockServer.Dispose();
-            this.disposed = true;
-        }
+        mockServer.Dispose();
+        disposed = true;
+    }
 
-        [Test]
-        public void TestScoreClientConstructors()
-        {
-            var ScoreClient = new ScoreClient(this.customerId, this.apiKey);
-        }
+    [Test]
+    public void TestScoreClientConstructors()
+    {
+        var ScoreClient = new ScoreClient(customerId, apiKey);
+    }
 
-        [Test]
-        public void TestScoreClientScore()
-        {
+    [Test]
+    public void TestScoreClientScore()
+    {
+        ScoreClient client = new (customerId, apiKey, string.Format("http://localhost:{0}", mockServer.Port));
 
-            var client = new ScoreClient(this.customerId,
-                this.apiKey,
-                string.Format("http://localhost:{0}", this.mockServer.Port));
+        client.Score("15555555555", "create");
 
-            client.Score("15555555555", "create");
+        Assert.That(requests.Last().HttpMethod, Is.EqualTo("POST"), "method is not as expected");
+        Assert.That(requests.Last().RawUrl, Is.EqualTo("/v1/score/15555555555"), "path is not as expected");
+        Assert.That(requestHeaders.Last()["Content-Type"], Is.EqualTo("application/x-www-form-urlencoded"));
+        Assert.That(requestHeaders.Last()["x-ts-auth-method"], Is.EqualTo("HMAC-SHA256"), "x-ts-auth-method header is not as expected");
+        Assert.That(Guid.TryParse(requestHeaders.Last()["x-ts-nonce"], out _), Is.True, "x-ts-nonce header is not a valid UUID");
+        Assert.That(DateTime.TryParse(requestHeaders.Last()["Date"], out _), Is.True, "Date header is not valid rfc2616 format");
+        Assert.That(requestHeaders.Last()["Authorization"], Is.Not.Null);
+    }
 
-            Assert.AreEqual("POST", this.requests.Last().HttpMethod, "method is not as expected");
-            Assert.AreEqual("/v1/score/15555555555", this.requests.Last().RawUrl, "path is not as expected");
-            Assert.AreEqual("application/x-www-form-urlencoded", this.requestHeaders.Last()["Content-Type"]);
-            Assert.AreEqual("HMAC-SHA256", this.requestHeaders.Last()["x-ts-auth-method"],
-                "x-ts-auth-method header is not as expected");
+    [Test]
+    public async Task TestScoreClientStatusAsync()
+    {
+        ScoreClient client = new (customerId, apiKey, string.Format("http://localhost:{0}", mockServer.Port));
 
-            Guid dummyGuid;
-            Assert.IsTrue(Guid.TryParse(this.requestHeaders.Last()["x-ts-nonce"], out dummyGuid),
-                "x-ts-nonce header is not a valid UUID");
+        await client.ScoreAsync("15555555555", "create");
 
-            DateTime dummyDateTime;
-            Assert.IsTrue(DateTime.TryParse(this.requestHeaders.Last()["Date"], out dummyDateTime),
-                "Date header is not valid rfc2616 format");
-
-            Assert.IsNotNull(this.requestHeaders.Last()["Authorization"]);
-        }
-        
-        [Test]
-        public async Task TestScoreClientStatusAsync()
-        {
-
-            var client = new ScoreClient(this.customerId,
-                this.apiKey,
-                string.Format("http://localhost:{0}", this.mockServer.Port));
-
-            await client.ScoreAsync("15555555555", "create");
-
-            Assert.AreEqual("POST", this.requests.Last().HttpMethod, "method is not as expected");
-            Assert.AreEqual("/v1/score/15555555555", this.requests.Last().RawUrl, "path is not as expected");
-            Assert.AreEqual("application/x-www-form-urlencoded", this.requestHeaders.Last()["Content-Type"]);
-            Assert.AreEqual("HMAC-SHA256", this.requestHeaders.Last()["x-ts-auth-method"],
-                "x-ts-auth-method header is not as expected");
-
-            Guid dummyGuid;
-            Assert.IsTrue(Guid.TryParse(this.requestHeaders.Last()["x-ts-nonce"], out dummyGuid),
-                "x-ts-nonce header is not a valid UUID");
-
-            DateTime dummyDateTime;
-            Assert.IsTrue(DateTime.TryParse(this.requestHeaders.Last()["Date"], out dummyDateTime),
-                "Date header is not valid rfc2616 format");
-
-            Assert.IsNotNull(this.requestHeaders.Last()["Authorization"]);
-        }
+        Assert.That(requests.Last().HttpMethod, Is.EqualTo("POST"), "method is not as expected");
+        Assert.That(requests.Last().RawUrl, Is.EqualTo("/v1/score/15555555555"), "path is not as expected");
+        Assert.That(requestHeaders.Last()["Content-Type"], Is.EqualTo("application/x-www-form-urlencoded"));
+        Assert.That(requestHeaders.Last()["x-ts-auth-method"], Is.EqualTo("HMAC-SHA256"), "x-ts-auth-method header is not as expected");
+        Assert.That(Guid.TryParse(requestHeaders.Last()["x-ts-nonce"], out _), Is.True, "x-ts-nonce header is not a valid UUID");
+        Assert.That(DateTime.TryParse(requestHeaders.Last()["Date"], out _), Is.True, "Date header is not valid rfc2616 format");
+        Assert.That(requestHeaders.Last()["Authorization"], Is.Not.Null);
     }
 }

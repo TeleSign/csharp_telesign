@@ -1,13 +1,10 @@
-﻿using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 
 namespace Telesign
 {
-    /// <summary>
-    ///  TeleSign's Messaging API allows you to easily send SMS messages. You can send alerts, reminders, and notifications,
-    ///  or you can send verification messages containing one-time passcodes(OTP).
-    /// </summary>
     public class MessagingClient : RestClient
     {
         private const string MESSAGING_RESOURCE = "/v1/messaging";
@@ -69,7 +66,7 @@ namespace Telesign
         {
             return Get(string.Format(MESSAGING_STATUS_RESOURCE, referenceId), parameters);
         }
-        
+
         /// <summary>
         /// Send a message to the target phone_number.
         /// 
@@ -86,7 +83,7 @@ namespace Telesign
 
             return PostAsync(MESSAGING_RESOURCE, parameters);
         }
-        
+
         /// <summary>
         /// Retrieves the current status of the message.
         /// 
@@ -97,4 +94,5 @@ namespace Telesign
             return GetAsync(string.Format(MESSAGING_STATUS_RESOURCE, referenceId), parameters);
         }
     }
+
 }
