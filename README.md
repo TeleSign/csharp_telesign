@@ -5,8 +5,8 @@
 [Telesign](https://telesign.com) connects, protects, and defends the customer experience with intelligence from billions of digital interactions and mobile signals. Through developer-friendly APIs that deliver user verification, digital identity, and omnichannel communications, we help the world's largest brands secure onboarding, maintain account integrity, prevent fraud, and streamline omnichannel engagement.
 
 ## Supported .NET versions
-* Framework 4.8+ *(It only works for Windows SO)*
-* Core 6, 7, 8 & 9 *(New and recomended. It works for multiplatforms SO)*
+* .NET Framework 4.8+ 
+* .NET Core 6, 7, 8, and 9
 
 ## Requirements
 
@@ -40,7 +40,7 @@ Follow these steps to add this SDK as a dependency to your project.
 
 3. Install the Telesign SDK using the dotnet CLI. 
 
-   `dotnet add package Telesign --version 3.0.0`
+   `dotnet add package Telesign --version 2.3.0`
 
    Once the SDK is installed, you should see a message in the terminal notifying you that you have successfully installed the SDK.
 
