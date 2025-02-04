@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Newtonsoft.Json.Linq;
-using System.Security.Cryptography;
+using System;
 using System.Net;
-using Newtonsoft.Json;
-using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Security.Cryptography;
+using System.Text;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace Telesign
@@ -20,7 +20,7 @@ namespace Telesign
     public class RestClient : IDisposable
     {
         public static readonly string UserAgent = string.Format("TeleSignSdk/csharp-{0} .Net/{1} HttpClient",
-            "2.2.2",
+            "3.0.0",
             Environment.Version.ToString());
 
         protected string customerId;
@@ -54,22 +54,24 @@ namespace Telesign
 
             if (proxy == null)
             {
-                this.httpClient = new HttpClient();
+                httpClient = new HttpClient();
             }
             else
             {
-                HttpClientHandler httpClientHandler = new HttpClientHandler();
-                httpClientHandler.Proxy = proxy;
+                HttpClientHandler httpClientHandler = new HttpClientHandler()
+                {
+                    Proxy = proxy
+                };
 
                 if (proxyUsername != null && proxyPassword != null)
                 {
                     httpClientHandler.Credentials = new NetworkCredential(proxyUsername, proxyPassword);
                 }
 
-                this.httpClient = new HttpClient(httpClientHandler);
+                httpClient = new HttpClient(httpClientHandler);
             }
 
-            this.httpClient.Timeout = TimeSpan.FromSeconds(timeout);
+            httpClient.Timeout = TimeSpan.FromSeconds(timeout);
         }
 
         public void Dispose()
@@ -92,46 +94,46 @@ namespace Telesign
         /// </summary>
         public class TelesignResponse
         {
-            private Task<string> BodyTask;
-            
+            private readonly Task<string> BodyTask;
+
             public TelesignResponse(HttpResponseMessage response, bool isAsync = false)
             {
-                this.StatusCode = (int)response.StatusCode;
-                this.Headers = response.Headers;
-                this.OK = response.IsSuccessStatusCode;
+                StatusCode = (int)response.StatusCode;
+                Headers = response.Headers;
+                OK = response.IsSuccessStatusCode;
 
                 if (isAsync)
                 {
-                    this.BodyTask = response.Content.ReadAsStringAsync();
+                    BodyTask = response.Content.ReadAsStringAsync();
                 }
                 else
                 {
-                    this.Body = response.Content.ReadAsStringAsync().Result;
+                    Body = response.Content.ReadAsStringAsync().Result;
 
                     try
                     {
-                        this.Json = JObject.Parse(this.Body);
+                        Json = JObject.Parse(Body);
                     }
                     catch (JsonReaderException)
                     {
-                        this.Json = new JObject();
-                    }    
+                        Json = new JObject();
+                    }
                 }
-                
+
             }
 
             public async Task Initialize()
             {
-                this.Body = await BodyTask.ConfigureAwait(false) ;
+                Body = await BodyTask.ConfigureAwait(false);
                 try
                 {
-                    this.Json = JObject.Parse(this.Body);
+                    Json = JObject.Parse(Body);
                 }
                 catch (JsonReaderException)
                 {
-                    this.Json = new JObject();
+                    Json = new JObject();
                 }
-                
+
             }
 
             public int StatusCode { get; set; }
@@ -241,8 +243,8 @@ namespace Telesign
         {
             return Execute(resource, HttpMethod.Post, parameters);
         }
-        
-        
+
+
         /// <summary>
         /// Generic TeleSign REST API POST handler.
         /// </summary>
@@ -264,7 +266,7 @@ namespace Telesign
         {
             return Execute(resource, HttpMethod.Get, parameters);
         }
-        
+
         /// <summary>
         /// Generic TeleSign REST API GET handler.
         /// </summary>
@@ -297,7 +299,7 @@ namespace Telesign
         {
             return ExecuteAsync(resource, HttpMethod.Put, parameters);
         }
-        
+
         /// <summary>
         /// Generic TeleSign REST API DELETE handler.
         /// </summary>
@@ -319,7 +321,7 @@ namespace Telesign
         {
             return ExecuteAsync(resource, HttpMethod.Delete, parameters);
         }
-        
+
         /// <summary>
         /// Generic TeleSign REST API request handler.
         /// </summary>
@@ -334,12 +336,10 @@ namespace Telesign
 
         private async Task<TelesignResponse> ExecuteAsync(string resource, HttpMethod method, Dictionary<string, string> parameters)
         {
-            if (parameters == null)
-            {
+            if (parameters == null) 
                 parameters = new Dictionary<string, string>();
-            }
 
-            string resourceUri = string.Format("{0}{1}", this.restEndpoint, resource);
+            string resourceUri = string.Format("{0}{1}", restEndpoint, resource);
 
             FormUrlEncodedContent formBody = new FormUrlEncodedContent(parameters);
             string urlEncodedFields = await formBody.ReadAsStringAsync().ConfigureAwait(false);
@@ -347,18 +347,22 @@ namespace Telesign
             HttpRequestMessage request;
             if (method == HttpMethod.Post || method == HttpMethod.Put)
             {
-                request = new HttpRequestMessage(method, resourceUri);
-                request.Content = formBody;
+                request = new HttpRequestMessage(method, resourceUri)
+                {
+                    Content = formBody
+                };
             }
             else
             {
-                UriBuilder resourceUriWithQuery = new UriBuilder(resourceUri);
-                resourceUriWithQuery.Query = urlEncodedFields;
+                UriBuilder resourceUriWithQuery = new UriBuilder(resourceUri)
+                {
+                    Query = urlEncodedFields
+                };
                 request = new HttpRequestMessage(method, resourceUriWithQuery.ToString());
             }
 
-            Dictionary<string, string> headers = GenerateTelesignHeaders(this.customerId,
-                                                                         this.apiKey,
+            Dictionary<string, string> headers = GenerateTelesignHeaders(customerId,
+                                                                         apiKey,
                                                                          method.ToString().ToUpper(),
                                                                          resource,
                                                                          urlEncodedFields,
@@ -380,6 +384,82 @@ namespace Telesign
             TelesignResponse tsResponse = new TelesignResponse(response, isAsync: true);
             await tsResponse.Initialize();
             return tsResponse;
+        }
+
+        /*Overriding Method only work for Json Content type*/
+
+        /// <summary>
+        /// Generic TeleSign REST API request handler.
+        /// </summary>
+        /// <param name="resource">The partial resource URI to perform the request against.</param>
+        /// <param name="method">The HTTP method name, as an upper case string.</param>
+        /// <param name="parameters">Params to perform the request with. With application/json content type, Dictionary with string keys and object values should be used, otherwise string keys and string values</param>
+        /// <returns></returns>
+        protected TelesignResponse Execute(string resource, HttpMethod method, Dictionary<string, object> parameters)
+        {
+            return ExecuteAsync(resource, method, parameters).Result;
+        }
+
+        protected async Task<TelesignResponse> ExecuteAsync(string resource, HttpMethod method, Dictionary<string, object> parameters)
+        {
+            string contentType = "application/json";
+            HttpRequestMessage request;
+            string fieldsToSign = null;
+
+            if (parameters == null)
+                parameters = new Dictionary<string, object>();
+
+            string resourceUri = string.Format("{0}{1}", this.restEndpoint, resource);
+
+            fieldsToSign = JsonConvert.SerializeObject(parameters);
+            request = new HttpRequestMessage(method, resourceUri)
+            {
+                Content = new StringContent(fieldsToSign)
+            };
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue(contentType);
+
+            Dictionary<string, string> headers = RestClient.GenerateTelesignHeaders(
+                this.customerId,
+                this.apiKey,
+                method.ToString().ToUpper(),
+                resource,
+                fieldsToSign,
+                null,
+                null,
+                RestClient.UserAgent,
+                contentType);
+
+            foreach (KeyValuePair<string, string> header in headers)
+            {
+                // .NET considers content-type header to be part of the content, not the request
+                // when content-type is set as request header, exception is raised
+                // proper way to set content-type is through content property of the request object
+                if (header.Key == "Content-Type")
+                    continue;
+                request.Headers.Add(header.Key, header.Value);
+            }
+
+            HttpResponseMessage response = await this.httpClient.SendAsync(request).ConfigureAwait(false);
+
+            TelesignResponse tsResponse = new TelesignResponse(response, isAsync: true);
+            await tsResponse.Initialize();
+            return tsResponse;
+        }
+
+        /// <summary>
+        /// Generic TeleSign REST API POST handler.
+        /// </summary>
+        /// <param name="resource">The partial resource URI to perform the request against.</param>
+        /// <param name="parameters">Body params to perform the POST request with.</param>
+        /// <returns>The TelesignResponse for the request.</returns>
+        public TelesignResponse Post(string resource, Dictionary<string, object> parameters)
+        {
+            return Execute(resource, HttpMethod.Post, parameters);
+        }
+
+        public Task<TelesignResponse> PostAsync(string resource, Dictionary<string, object> parameters)
+        {
+            return ExecuteAsync(resource, HttpMethod.Post, parameters);
         }
     }
 }
