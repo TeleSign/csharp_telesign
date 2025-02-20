@@ -1,13 +1,10 @@
-﻿using System.Collections.Generic;
+using System;
 using System.Net;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Telesign
 {
-    /// <summary>
-    ///  TeleSign's Voice API allows you to easily send voice messages. You can send alerts, reminders, and notifications,
-    /// or you can send verification messages containing time-based, one-time passcodes(TOTP).
-    /// </summary>
     public class VoiceClient : RestClient
     {
         private const string VOICE_RESOURCE = "/v1/voice";
@@ -109,4 +106,5 @@ namespace Telesign
             return GetAsync(resource, statusParams);
         }
     }
+
 }

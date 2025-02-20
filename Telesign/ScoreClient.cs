@@ -1,12 +1,10 @@
-﻿using System.Collections.Generic;
+using System;
 using System.Net;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Telesign
 {
-    /// <summary>
-    /// Score provides risk information about a specified phone number.
-    /// </summary>
     public class ScoreClient : RestClient
     {
         private const string SCORE_RESOURCE = "/v1/score/{0}";
@@ -58,7 +56,7 @@ namespace Telesign
 
             return Post(resource, scoreParams);
         }
-        
+
 
         /// <summary>
         /// Score is an API that delivers reputation scoring based on phone number intelligence, traffic patterns, machine
@@ -78,4 +76,5 @@ namespace Telesign
             return PostAsync(resource, scoreParams);
         }
     }
+
 }

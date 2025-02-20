@@ -1,207 +1,155 @@
-using NUnit.Framework;
-using System.Collections.Generic;
-using MockHttpServer;
-using System.Net;
-using System.Linq;
 using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Threading.Tasks;
+using System.Net;
+using MockHttpServer;
 
-namespace Telesign.Test
+namespace Telesign.Test;
+
+[TestFixture]
+[ExcludeFromCodeCoverage]
+public class MessagingClientTest : IDisposable
 {
-    [TestFixture]
-    [ExcludeFromCodeCoverage]
-    public class MessagingClientTest : IDisposable
+    private string customerId = string.Empty;
+    private string apiKey = string.Empty;
+    private MockServer mockServer;
+    private List<HttpListenerRequest> requests = [];
+    private List<string> requestBodies = [];
+    private List<Dictionary<string, string>> requestHeaders = [];
+    private Func<HttpListenerRequest, HttpListenerResponse, Dictionary<string, string>, string>? handlerLambda;
+
+    bool disposed = false;
+
+    [SetUp]
+    public void SetUp()
     {
-        private string customerId;
-        private string apiKey;
+        customerId = Environment.GetEnvironmentVariable("CUSTOMER_ID")?? "FFFFFFFF-EEEE-DDDD-1234-AB1234567890";
+        apiKey = Environment.GetEnvironmentVariable("API_KEY") ?? "Example/idksdjKJD+==";
 
-        private MockServer mockServer;
-
-        private List<HttpListenerRequest> requests;
-        private List<string> requestBodies;
-        private List<Dictionary<string, string>> requestHeaders;
-        private Func<HttpListenerRequest, HttpListenerResponse, Dictionary<string, string>, string> handlerLambda;
-
-        bool disposed = false;
-
-        [SetUp]
-        public void SetUp()
+        requests = [];
+        requestBodies = [];
+        requestHeaders = [];
+        
+        handlerLambda = (req, rsp, prm) =>
         {
-            this.customerId = "FFFFFFFF-EEEE-DDDD-1234-AB1234567890";
-            this.apiKey = "EXAMPLETE8sTgg45yusumoN6BYsBVkh+yRJ5czgsnCehZaOYldPJdmFh6NeX8kunZ2zU1YWaUw/0wV6xfw==";
+            requests.Add(req);
+            requestBodies.Add(req.Content());
 
-            this.requests = new List<HttpListenerRequest>();
-            this.requestBodies = new List<string>();
-            this.requestHeaders = new List<Dictionary<string, string>>();
-            this.handlerLambda = (req, rsp, prm) =>
+            Dictionary<string, string> headers = new()
             {
-                requests.Add(req);
-                requestBodies.Add(req.Content());
-
-                Dictionary<string, string> headers = new Dictionary<string, string>
-                {
-                    {"Content-Type", req.Headers["Content-Type"]},
-                    {"x-ts-auth-method", req.Headers["x-ts-auth-method"]},
-                    {"x-ts-nonce", req.Headers["x-ts-nonce"]},
-                    {"Date", req.Headers["Date"]},
-                    {"Authorization", req.Headers["Authorization"]}
-                };
-                requestHeaders.Add(headers);
-
-                return "{}";
+                    {"Content-Type", req.Headers["Content-Type"] ?? string.Empty},
+                    {"x-ts-auth-method", req.Headers["x-ts-auth-method"] ?? string.Empty},
+                    {"x-ts-nonce", req.Headers["x-ts-nonce"] ?? string.Empty},
+                    {"Date", req.Headers["Date"] ?? string.Empty},
+                    {"Authorization", req.Headers["Authorization"] ?? string.Empty}
             };
-            
-            this.mockServer = new MockServer(0, "/v1/messaging", handlerLambda);
-        }
+            requestHeaders.Add(headers);
 
-        [TearDown]
-        public void TearDown()
-        {
-            this.Dispose();
-        }
+            return "{}";
+        };
 
-        public void Dispose()
-        {
-            this.Dispose(true);
-            GC.SuppressFinalize(this);
-        }
+        mockServer = new MockServer(0, "/v1/messaging", handlerLambda);
+    }
 
-        protected virtual void Dispose(bool disposing)
-        {
-            if (this.disposed)
-                return;
+    [TearDown]
+    public void TearDown()
+    {
+        Dispose();
+    }
 
-            this.mockServer.Dispose();
-            this.disposed = true;
-        }
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
 
-        [Test]
-        public void TestMessagingClientConstructors()
-        {
-            var MessagingClient = new MessagingClient(this.customerId, this.apiKey);
-        }
+    protected virtual void Dispose(bool disposing)
+    {
+        if (disposed)
+            return;
 
-        [Test]
-        public void TestMessagingClientMessage()
-        {
+        mockServer.Dispose();
+        disposed = true;
+    }
 
-            var client = new MessagingClient(this.customerId,
-                this.apiKey,
-                string.Format("http://localhost:{0}", this.mockServer.Port));
+    [Test]
+    public void TestMessagingClientConstructors()
+    {
+        _ = new MessagingClient(customerId, apiKey);
+    }
 
-            client.Message("15555555555", "TestMessagingClientMessage", "ARN");
+    [Test]
+    public void TestMessagingClientMessage()
+    {
+        MessagingClient client = new(customerId, apiKey, string.Format("http://localhost:{0}", mockServer.Port));
 
-            Assert.AreEqual("POST", this.requests.Last().HttpMethod, "method is not as expected");
-            Assert.AreEqual("/v1/messaging", this.requests.Last().RawUrl, "path is not as expected");
-            Assert.AreEqual("phone_number=15555555555&message=TestMessagingClientMessage&message_type=ARN", this.requestBodies.Last());
-            Assert.AreEqual("application/x-www-form-urlencoded", this.requestHeaders.Last()["Content-Type"],
-                "Content-Type header is not as expected");
-            Assert.AreEqual("HMAC-SHA256", this.requestHeaders.Last()["x-ts-auth-method"],
-                "x-ts-auth-method header is not as expected");
+        client.Message("15555555555", "TestMessagingClientMessage", "ARN");
 
-            Guid dummyGuid;
-            Assert.IsTrue(Guid.TryParse(this.requestHeaders.Last()["x-ts-nonce"], out dummyGuid),
-                "x-ts-nonce header is not a valid UUID");
+        Assert.That(requests.Last().HttpMethod, Is.EqualTo("POST"), "method is not as expected");
+        Assert.That(requests.Last().RawUrl, Is.EqualTo("/v1/messaging"), "path is not as expected");
+        Assert.That(requestBodies.Last(), Is.EqualTo("phone_number=15555555555&message=TestMessagingClientMessage&message_type=ARN"));
+        Assert.That(requestHeaders.Last()["Content-Type"], Is.EqualTo("application/x-www-form-urlencoded"), "Content-Type header is not as expected");
+        Assert.That(requestHeaders.Last()["x-ts-auth-method"], Is.EqualTo("HMAC-SHA256"), "x-ts-auth-method header is not as expected");
+        Assert.That(Guid.TryParse(requestHeaders.Last()["x-ts-nonce"], out Guid dummyGuid), Is.True, "x-ts-nonce header is not a valid UUID");
+        Assert.That(DateTime.TryParse(requestHeaders.Last()["Date"], out DateTime dummyDateTime), Is.True, "Date header is not valid rfc2616 format");
+        Assert.That(requestHeaders.Last()["Authorization"], Is.Not.Null);
+    }
 
-            DateTime dummyDateTime;
-            Assert.IsTrue(DateTime.TryParse(this.requestHeaders.Last()["Date"], out dummyDateTime),
-                "Date header is not valid rfc2616 format");
+    [Test]
+    public async Task TestMessagingClientMessageAsync()
+    {
+        MessagingClient client = new(customerId, apiKey, string.Format("http://localhost:{0}", mockServer.Port));
 
-            Assert.IsNotNull(this.requestHeaders.Last()["Authorization"]);
-        }
+        await client.MessageAsync("15555555555", "TestMessagingClientMessage", "ARN");
 
-        [Test]
-        public async Task TestMessagingClientMessageAsync()
-        {
+        Assert.That(requests.Last().HttpMethod, Is.EqualTo("POST"), "method is not as expected");
+        Assert.That(requests.Last().RawUrl, Is.EqualTo("/v1/messaging"), "path is not as expected");
+        Assert.That(requestBodies.Last(), Is.EqualTo("phone_number=15555555555&message=TestMessagingClientMessage&message_type=ARN"));
+        Assert.That(requestHeaders.Last()["Content-Type"], Is.EqualTo("application/x-www-form-urlencoded"), "Content-Type header is not as expected");
+        Assert.That(requestHeaders.Last()["x-ts-auth-method"], Is.EqualTo("HMAC-SHA256"), "x-ts-auth-method header is not as expected");
+        Assert.That(Guid.TryParse(requestHeaders.Last()["x-ts-nonce"], out Guid dummyGuid), Is.True, "x-ts-nonce header is not a valid UUID");
+        Assert.That(DateTime.TryParse(requestHeaders.Last()["Date"], out DateTime dummyDateTime), Is.True, "Date header is not valid rfc2616 format");
+        Assert.That(requestHeaders.Last()["Authorization"], Is.Not.Null);
+    }
 
-            var client = new MessagingClient(this.customerId,
-                this.apiKey,
-                string.Format("http://localhost:{0}", this.mockServer.Port));
+    [Test]
+    public void TestMessagingClientStatus()
+    {
+        MessagingClient client = new(customerId, apiKey, string.Format("http://localhost:{0}", mockServer.Port));
 
-            await client.MessageAsync("15555555555", "TestMessagingClientMessage", "ARN");
+        string refid = new Guid().ToString();
 
-            Assert.AreEqual("POST", this.requests.Last().HttpMethod, "method is not as expected");
-            Assert.AreEqual("/v1/messaging", this.requests.Last().RawUrl, "path is not as expected");
-            Assert.AreEqual("phone_number=15555555555&message=TestMessagingClientMessage&message_type=ARN", this.requestBodies.Last());
-            Assert.AreEqual("application/x-www-form-urlencoded", this.requestHeaders.Last()["Content-Type"],
-                "Content-Type header is not as expected");
-            Assert.AreEqual("HMAC-SHA256", this.requestHeaders.Last()["x-ts-auth-method"],
-                "x-ts-auth-method header is not as expected");
+        mockServer.AddRequestHandler(new MockHttpHandler($"/v1/messaging/{refid}", "GET", handlerLambda));
 
-            Guid dummyGuid;
-            Assert.IsTrue(Guid.TryParse(this.requestHeaders.Last()["x-ts-nonce"], out dummyGuid),
-                "x-ts-nonce header is not a valid UUID");
+        client.Status(refid);
 
-            DateTime dummyDateTime;
-            Assert.IsTrue(DateTime.TryParse(this.requestHeaders.Last()["Date"], out dummyDateTime),
-                "Date header is not valid rfc2616 format");
+        Assert.That(requests.Last().HttpMethod, Is.EqualTo("GET"), "method is not as expected");
+        Assert.That(requests.Last().RawUrl, Is.EqualTo($"/v1/messaging/{refid}"), "path is not as expected");
+        Assert.That(requestBodies.Last(), Is.Empty);
+        Assert.That(requestHeaders.Last()["Content-Type"], Is.Empty);
+        Assert.That(requestHeaders.Last()["x-ts-auth-method"], Is.EqualTo("HMAC-SHA256"), "x-ts-auth-method header is not as expected");
+        Assert.That(Guid.TryParse(requestHeaders.Last()["x-ts-nonce"], out Guid dummyGuid), Is.True, "x-ts-nonce header is not a valid UUID");
+        Assert.That(DateTime.TryParse(requestHeaders.Last()["Date"], out DateTime dummyDateTime), Is.True, "Date header is not valid rfc2616 format");
+        Assert.That(requestHeaders.Last()["Authorization"], Is.Not.Null);
+    }
 
-            Assert.IsNotNull(this.requestHeaders.Last()["Authorization"]);
-        }
+    [Test]
+    public async Task TestMessagingClientStatusAsync()
+    {
+        MessagingClient client = new(customerId, apiKey, string.Format("http://localhost:{0}", mockServer.Port));
 
-        [Test]
-        public void TestMessagingClientStatus()
-        {
+        string refid = new Guid().ToString();
 
-            var client = new MessagingClient(this.customerId,
-                this.apiKey,
-                string.Format("http://localhost:{0}", this.mockServer.Port));
+        mockServer.AddRequestHandler(new MockHttpHandler($"/v1/messaging/{refid}", "GET", handlerLambda));
 
-            var refid = new Guid().ToString();
-            
-            this.mockServer.AddRequestHandler(new MockHttpHandler($"/v1/messaging/{refid}", "GET", handlerLambda));
-            
-            client.Status(refid);
+        await client.StatusAsync(refid);
 
-            Assert.AreEqual("GET", this.requests.Last().HttpMethod, "method is not as expected");
-            Assert.AreEqual($"/v1/messaging/{refid}", this.requests.Last().RawUrl, "path is not as expected");
-            Assert.IsEmpty(this.requestBodies.Last());
-            Assert.IsNull(this.requestHeaders.Last()["Content-Type"]);
-            Assert.AreEqual("HMAC-SHA256", this.requestHeaders.Last()["x-ts-auth-method"],
-                "x-ts-auth-method header is not as expected");
-
-            Guid dummyGuid;
-            Assert.IsTrue(Guid.TryParse(this.requestHeaders.Last()["x-ts-nonce"], out dummyGuid),
-                "x-ts-nonce header is not a valid UUID");
-
-            DateTime dummyDateTime;
-            Assert.IsTrue(DateTime.TryParse(this.requestHeaders.Last()["Date"], out dummyDateTime),
-                "Date header is not valid rfc2616 format");
-
-            Assert.IsNotNull(this.requestHeaders.Last()["Authorization"]);
-        }
-
-        [Test]
-        public async Task TestMessagingClientStatusAsync()
-        {
-
-            var client = new MessagingClient(this.customerId,
-                this.apiKey,
-                string.Format("http://localhost:{0}", this.mockServer.Port));
-
-            var refid = new Guid().ToString();
-            
-            this.mockServer.AddRequestHandler(new MockHttpHandler($"/v1/messaging/{refid}", "GET", handlerLambda));
-            
-            await client.StatusAsync(refid);
-
-            Assert.AreEqual("GET", this.requests.Last().HttpMethod, "method is not as expected");
-            Assert.AreEqual($"/v1/messaging/{refid}", this.requests.Last().RawUrl, "path is not as expected");
-            Assert.IsEmpty(this.requestBodies.Last());
-            Assert.IsNull(this.requestHeaders.Last()["Content-Type"]);
-            Assert.AreEqual("HMAC-SHA256", this.requestHeaders.Last()["x-ts-auth-method"],
-                "x-ts-auth-method header is not as expected");
-
-            Guid dummyGuid;
-            Assert.IsTrue(Guid.TryParse(this.requestHeaders.Last()["x-ts-nonce"], out dummyGuid),
-                "x-ts-nonce header is not a valid UUID");
-
-            DateTime dummyDateTime;
-            Assert.IsTrue(DateTime.TryParse(this.requestHeaders.Last()["Date"], out dummyDateTime),
-                "Date header is not valid rfc2616 format");
-
-            Assert.IsNotNull(this.requestHeaders.Last()["Authorization"]);
-        }
+        Assert.That(requests.Last().HttpMethod, Is.EqualTo("GET"), "method is not as expected");
+        Assert.That(requests.Last().RawUrl, Is.EqualTo($"/v1/messaging/{refid}"), "path is not as expected");
+        Assert.That(requestBodies.Last(), Is.Empty);
+        Assert.That(requestHeaders.Last()["Content-Type"], Is.Empty);
+        Assert.That(requestHeaders.Last()["x-ts-auth-method"], Is.EqualTo("HMAC-SHA256"), "x-ts-auth-method header is not as expected");
+        Assert.That(Guid.TryParse(requestHeaders.Last()["x-ts-nonce"], out Guid dummyGuid), Is.True, "x-ts-nonce header is not a valid UUID");
+        Assert.That(DateTime.TryParse(requestHeaders.Last()["Date"], out DateTime dummyDateTime), Is.True, "Date header is not valid rfc2616 format");
+        Assert.That(requestHeaders.Last()["Authorization"], Is.Not.Null);
     }
 }

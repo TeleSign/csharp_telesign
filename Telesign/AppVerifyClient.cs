@@ -1,5 +1,6 @@
-﻿using System.Collections.Generic;
+using System;
 using System.Net;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Telesign
@@ -53,7 +54,7 @@ namespace Telesign
         /// </summary>
         public TelesignResponse Status(string externalId, Dictionary<string, string> parameters = null)
         {
-            return this.Get(string.Format(APPVERIFY_STATUS_RESOURCE, externalId), parameters);
+            return Get(string.Format(APPVERIFY_STATUS_RESOURCE, externalId), parameters);
         }
 
         /// <summary>
@@ -67,7 +68,7 @@ namespace Telesign
         /// </summary>
         public Task<TelesignResponse> StatusAsync(string externalId, Dictionary<string, string> parameters = null)
         {
-            return this.GetAsync(string.Format(APPVERIFY_STATUS_RESOURCE, externalId), parameters);
+            return GetAsync(string.Format(APPVERIFY_STATUS_RESOURCE, externalId), parameters);
         }
     }
 }
