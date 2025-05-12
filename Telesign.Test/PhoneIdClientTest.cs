@@ -78,7 +78,7 @@ public class PhoneIdClientTest : IDisposable
     [Test]
     public async Task TestPhoneIdClientPhoneIdAsync()
     {
-        PhoneIdClient client = new(customerId, apiKey, string.Format("http://localhost:{0}", mockServer.Port));
+        PhoneIdClient client = new(customerId, apiKey, string.Format("http://localhost:{0}", mockServer.Port), "csharp_telesign", null, null);
 
         await client.PhoneIdAsync("15555555555");
 

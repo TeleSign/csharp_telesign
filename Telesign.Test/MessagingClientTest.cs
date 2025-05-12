@@ -80,7 +80,7 @@ public class MessagingClientTest : IDisposable
     [Test]
     public void TestMessagingClientMessage()
     {
-        MessagingClient client = new(customerId, apiKey, string.Format("http://localhost:{0}", mockServer.Port));
+        MessagingClient client = new(customerId, apiKey, string.Format("http://localhost:{0}", mockServer.Port), "csharp_telesign", null, null);
 
         client.Message("15555555555", "TestMessagingClientMessage", "ARN");
 
@@ -97,7 +97,7 @@ public class MessagingClientTest : IDisposable
     [Test]
     public async Task TestMessagingClientMessageAsync()
     {
-        MessagingClient client = new(customerId, apiKey, string.Format("http://localhost:{0}", mockServer.Port));
+        MessagingClient client = new(customerId, apiKey, string.Format("http://localhost:{0}", mockServer.Port), "csharp_telesign", null, null);
 
         await client.MessageAsync("15555555555", "TestMessagingClientMessage", "ARN");
 
@@ -114,7 +114,7 @@ public class MessagingClientTest : IDisposable
     [Test]
     public void TestMessagingClientStatus()
     {
-        MessagingClient client = new(customerId, apiKey, string.Format("http://localhost:{0}", mockServer.Port));
+        MessagingClient client = new(customerId, apiKey, string.Format("http://localhost:{0}", mockServer.Port), "csharp_telesign", null, null);
 
         string refid = new Guid().ToString();
 
@@ -135,7 +135,7 @@ public class MessagingClientTest : IDisposable
     [Test]
     public async Task TestMessagingClientStatusAsync()
     {
-        MessagingClient client = new(customerId, apiKey, string.Format("http://localhost:{0}", mockServer.Port));
+        MessagingClient client = new(customerId, apiKey, string.Format("http://localhost:{0}", mockServer.Port), "csharp_telesign", null, null);
 
         string refid = new Guid().ToString();
 

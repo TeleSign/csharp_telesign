@@ -80,7 +80,7 @@ public class ScoreClientTest : IDisposable
     [Test]
     public void TestScoreClientScore()
     {
-        ScoreClient client = new (customerId, apiKey, string.Format("http://localhost:{0}", mockServer.Port));
+        ScoreClient client = new (customerId, apiKey, string.Format("http://localhost:{0}", mockServer.Port), "csharp_telesign", null, null);
 
         client.Score("15555555555", "create");
 
@@ -96,7 +96,7 @@ public class ScoreClientTest : IDisposable
     [Test]
     public async Task TestScoreClientStatusAsync()
     {
-        ScoreClient client = new (customerId, apiKey, string.Format("http://localhost:{0}", mockServer.Port));
+        ScoreClient client = new (customerId, apiKey, string.Format("http://localhost:{0}", mockServer.Port), "csharp_telesign", null, null);
 
         await client.ScoreAsync("15555555555", "create");
 
