@@ -1,5 +1,6 @@
 2.5.0
 - Added tracking to requests
+- Updated instructions in README file to install this SDK by default using the latest version.
 
 2.4.0
 - Added supported versions of .NET Core 6, 7, 8, and 9
