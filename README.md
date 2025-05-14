@@ -40,7 +40,7 @@ Follow these steps to add this SDK as a dependency to your project.
 
 3. Install the Telesign SDK using the dotnet CLI. 
 
-   `dotnet add package Telesign --version 2.3.0`
+   `dotnet add package Telesign`
 
    Once the SDK is installed, you should see a message in the terminal notifying you that you have successfully installed the SDK.
 

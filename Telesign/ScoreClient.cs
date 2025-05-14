@@ -17,10 +17,16 @@ namespace Telesign
 
         public ScoreClient(string customerId,
                                 string apiKey,
-                                string restEndPoint)
+                                string restEndPoint,
+                                string source,
+                                string sdkVersionOrigin,
+                                string sdkVersionDependency)
             : base(customerId,
                    apiKey,
-                   restEndPoint)
+                   restEndPoint,
+                   source: source,
+                   sdkVersionOrigin: sdkVersionOrigin,
+                   sdkVersionDependency: sdkVersionDependency)
         { }
 
         public ScoreClient(string customerId,
@@ -29,14 +35,20 @@ namespace Telesign
                                 int timeout,
                                 WebProxy proxy,
                                 string proxyUsername,
-                                string proxyPassword)
+                                string proxyPassword,
+                                string source,
+                                string sdkVersionOrigin,
+                                string sdkVersionDependency)
             : base(customerId,
                    apiKey,
                    restEndPoint,
                    timeout,
                    proxy,
                    proxyUsername,
-                   proxyPassword)
+                   proxyPassword,
+                   source,
+                   sdkVersionOrigin,
+                   sdkVersionDependency)
         { }
 
         /// <summary>

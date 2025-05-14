@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Security.Cryptography;
@@ -19,10 +19,8 @@ namespace Telesign
     /// </summary>
     public class RestClient : IDisposable
     {
-        public static readonly string UserAgent = string.Format("TeleSignSdk/csharp-{0} .Net/{1} HttpClient",
-            "3.0.0",
-            Environment.Version.ToString());
-
+        public static readonly string sdkVersion = System.Reflection.Assembly.GetCallingAssembly().GetName().Version.ToString();
+        protected string userAgent;
         protected string customerId;
         protected string apiKey;
         protected string restEndpoint;
@@ -46,11 +44,21 @@ namespace Telesign
                           int timeout = 10,
                           WebProxy proxy = null,
                           string proxyUsername = null,
-                          string proxyPassword = null)
+                          string proxyPassword = null,
+                          string source = "csharp_telesign",
+                          string sdkVersionOrigin = null,
+                          string sdkVersionDependency = null)
         {
             this.customerId = customerId;
             this.apiKey = apiKey;
             this.restEndpoint = restEndpoint;
+            this.userAgent = string.Format("TeleSignSdk/csharp .Net/{0} HttpClient/1.0 OriginatingSDK/{1} SDKVersion/{2}",
+            Environment.Version.ToString(),
+            source,
+            sdkVersionOrigin ?? sdkVersion
+            );
+            if (source != "csharp_telesign" && sdkVersionDependency != null)
+                this.userAgent += $" DependencySDKVersion/{sdkVersionDependency}";
 
             if (proxy == null)
             {
@@ -368,7 +376,7 @@ namespace Telesign
                                                                          urlEncodedFields,
                                                                          null,
                                                                          null,
-                                                                         RestClient.UserAgent);
+                                                                         this.userAgent);
 
             foreach (KeyValuePair<string, string> header in headers)
             {
@@ -426,7 +434,7 @@ namespace Telesign
                 fieldsToSign,
                 null,
                 null,
-                RestClient.UserAgent,
+                this.userAgent,
                 contentType);
 
             foreach (KeyValuePair<string, string> header in headers)

@@ -79,7 +79,7 @@ public class VoiceClientTest : IDisposable
     [Test]
     public void TestVoiceClientCall()
     {
-        VoiceClient client = new(customerId, apiKey, string.Format("http://localhost:{0}", mockServer.Port));
+        VoiceClient client = new(customerId, apiKey, string.Format("http://localhost:{0}", mockServer.Port), "csharp_telesign", null, null);
 
         client.Call("15555555555", "TestVoiceClientCall", "ARN");
 
@@ -96,7 +96,7 @@ public class VoiceClientTest : IDisposable
     [Test]
     public async Task TestVoiceClientCallAsync()
     {
-        VoiceClient client = new(customerId, apiKey, string.Format("http://localhost:{0}", mockServer.Port));
+        VoiceClient client = new(customerId, apiKey, string.Format("http://localhost:{0}", mockServer.Port), "csharp_telesign", null, null);
 
         await client.CallAsync("15555555555", "TestVoiceClientCall", "ARN");
 
@@ -113,7 +113,7 @@ public class VoiceClientTest : IDisposable
     [Test]
     public void TestVoiceClientStatus()
     {
-        VoiceClient client = new(customerId, apiKey, string.Format("http://localhost:{0}", mockServer.Port));
+        VoiceClient client = new(customerId, apiKey, string.Format("http://localhost:{0}", mockServer.Port), "csharp_telesign", null, null);
 
         string refid = new Guid().ToString();
 
@@ -134,7 +134,7 @@ public class VoiceClientTest : IDisposable
     [Test]
     public async Task TestVoiceClientStatusAsync()
     {
-        VoiceClient client = new(customerId, apiKey, string.Format("http://localhost:{0}", mockServer.Port));
+        VoiceClient client = new(customerId, apiKey, string.Format("http://localhost:{0}", mockServer.Port), "csharp_telesign", null, null);
 
         string refid = new Guid().ToString();
 

@@ -80,7 +80,7 @@ public class AppVerifyClientTest : IDisposable
     [Test]
     public void TestAppVerifyClientStatus()
     {
-        AppVerifyClient client = new(customerId, apiKey, string.Format("http://localhost:{0}", mockServer.Port));
+        AppVerifyClient client = new(customerId, apiKey, string.Format("http://localhost:{0}", mockServer.Port), "csharp_telesign", null, null);
 
         string externalId = new Guid().ToString();
 
@@ -100,7 +100,7 @@ public class AppVerifyClientTest : IDisposable
     [Test]
     public async Task TestAppVerifyClientStatusAsync()
     {
-        AppVerifyClient client = new(customerId, apiKey, string.Format("http://localhost:{0}", mockServer.Port));
+        AppVerifyClient client = new(customerId, apiKey, string.Format("http://localhost:{0}", mockServer.Port), "csharp_telesign", null, null);
 
         string externalId = new Guid().ToString();
 
