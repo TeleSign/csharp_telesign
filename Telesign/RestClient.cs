@@ -52,7 +52,7 @@ namespace Telesign
             this.customerId = customerId;
             this.apiKey = apiKey;
             this.restEndpoint = restEndpoint;
-            this.userAgent = string.Format("TeleSignSdk/csharp .Net/{0} HttpClient/1.0 OriginatingSDK/{1} SDKVersion/{2}",
+            this.userAgent = string.Format("TeleSignSDK/csharp .Net/{0} HttpClient/1.0 OriginatingSDK/{1} SDKVersion/{2}",
             Environment.Version.ToString(),
             source,
             sdkVersionOrigin ?? sdkVersion
