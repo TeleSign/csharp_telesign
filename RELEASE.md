@@ -1,3 +1,7 @@
+2.6.0
+- Added PATCH method to RestClient.cs file
+- Updated version in the Telesign.csproj
+
 2.5.0
 - Added tracking to requests
 - Updated instructions in README file to install this SDK by default using the latest version.
