@@ -20,6 +20,8 @@ namespace Telesign
     public class RestClient : IDisposable
     {
         public static readonly string sdkVersion = System.Reflection.Assembly.GetCallingAssembly().GetName().Version.ToString();
+        public static readonly HttpMethod PatchMethod = new HttpMethod("PATCH");
+
         protected string userAgent;
         protected string customerId;
         protected string apiKey;
@@ -191,7 +193,7 @@ namespace Telesign
 
             if (contentType == null)
             {
-                if (methodName == "POST" || methodName == "PUT")
+                if (methodName == "POST" || methodName == "PUT" || methodName == "PATCH")
                     contentType = "application/x-www-form-urlencoded";
                 else
                     contentType = "";
@@ -344,7 +346,7 @@ namespace Telesign
 
         private async Task<TelesignResponse> ExecuteAsync(string resource, HttpMethod method, Dictionary<string, string> parameters)
         {
-            if (parameters == null) 
+            if (parameters == null)
                 parameters = new Dictionary<string, string>();
 
             string resourceUri = string.Format("{0}{1}", restEndpoint, resource);
@@ -353,7 +355,7 @@ namespace Telesign
             string urlEncodedFields = await formBody.ReadAsStringAsync().ConfigureAwait(false);
 
             HttpRequestMessage request;
-            if (method == HttpMethod.Post || method == HttpMethod.Put)
+            if (method == HttpMethod.Post || method == HttpMethod.Put || method == PatchMethod)
             {
                 request = new HttpRequestMessage(method, resourceUri)
                 {
@@ -468,6 +470,29 @@ namespace Telesign
         public Task<TelesignResponse> PostAsync(string resource, Dictionary<string, object> parameters)
         {
             return ExecuteAsync(resource, HttpMethod.Post, parameters);
+        }
+
+        /// <summary>
+        /// Generic TeleSign REST API PATCH handler (form-urlencoded).
+        /// </summary>
+        /// <param name="resource">The partial resource URI to perform the request against.</param>
+        /// <param name="parameters">Body params to perform the PATCH request with.</param>
+        /// <returns>The TelesignResponse for the request.</returns>
+        public TelesignResponse Patch(string resource, Dictionary<string, string> parameters)
+        {
+            return Execute(resource, PatchMethod, parameters);
+        }
+        public Task<TelesignResponse> PatchAsync(string resource, Dictionary<string, string> parameters)
+        {
+            return ExecuteAsync(resource, PatchMethod, parameters);
+        }
+        public TelesignResponse Patch(string resource, Dictionary<string, object> parameters)
+        {
+            return Execute(resource, PatchMethod, parameters);
+        }
+        public Task<TelesignResponse> PatchAsync(string resource, Dictionary<string, object> parameters)
+        {
+            return ExecuteAsync(resource, PatchMethod, parameters);
         }
     }
 }
