@@ -1,7 +1,4 @@
-using System;
 using System.Net;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Telesign
 {
@@ -10,8 +7,6 @@ namespace Telesign
     /// </summary>
     public class AppVerifyClient : RestClient
     {
-        private const string APPVERIFY_STATUS_RESOURCE = "/v1/mobile/verification/status/{0}";
-
         public AppVerifyClient(string customerId,
                                 string apiKey)
             : base(customerId,
@@ -53,34 +48,6 @@ namespace Telesign
                    sdkVersionOrigin,
                    sdkVersionDependency)
         {
-        }
-
-        /// <summary>
-        /// Retrieves the verification result for an AppVerify transaction by externalId. To ensure a secure verification
-        /// flow you must check the status using TeleSign's servers on your backend. Do not rely on the SDK alone to
-        /// indicate a successful verification.
-        ///
-        /// See https://developer.telesign.com/docs/app-verify-android-sdk-self#section-obtaining-verification-status or
-        /// https://developer.telesign.com/docs/app-verify-ios-sdk-self#section-obtaining-verification-status for detailed
-        /// API documentation.
-        /// </summary>
-        public TelesignResponse Status(string externalId, Dictionary<string, string> parameters = null)
-        {
-            return Get(string.Format(APPVERIFY_STATUS_RESOURCE, externalId), parameters);
-        }
-
-        /// <summary>
-        /// Retrieves the verification result for an AppVerify transaction by externalId. To ensure a secure verification
-        /// flow you must check the status using TeleSign's servers on your backend. Do not rely on the SDK alone to
-        /// indicate a successful verification.
-        ///
-        /// See https://developer.telesign.com/docs/app-verify-android-sdk-self#section-obtaining-verification-status or
-        /// https://developer.telesign.com/docs/app-verify-ios-sdk-self#section-obtaining-verification-status for detailed
-        /// API documentation.
-        /// </summary>
-        public Task<TelesignResponse> StatusAsync(string externalId, Dictionary<string, string> parameters = null)
-        {
-            return GetAsync(string.Format(APPVERIFY_STATUS_RESOURCE, externalId), parameters);
         }
     }
 }
