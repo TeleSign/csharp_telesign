@@ -1,4 +1,3 @@
-using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using MockHttpServer;
@@ -23,7 +22,7 @@ public class AppVerifyClientTest : IDisposable
     public void SetUp()
     {
         customerId = Environment.GetEnvironmentVariable("CUSTOMER_ID")?? "FFFFFFFF-EEEE-DDDD-1234-AB1234567890";
-        apiKey = Environment.GetEnvironmentVariable("API_KEY") ?? "Example/idksdjKJD+==";
+        apiKey = Environment.GetEnvironmentVariable("API_KEY") ?? "ABC12345yusumoN6BYsBVkh+yRJ5czgsnCehZaOYldPJdmFh6NeX8kunZ2zU1YWaUw/0wV6xfw==";
 
         requests = [];
         requestBodies = [];
@@ -75,45 +74,5 @@ public class AppVerifyClientTest : IDisposable
     public void TestAppVerifyClientConstructors()
     {
         _ = new AppVerifyClient(customerId, apiKey);
-    }
-
-    [Test]
-    public void TestAppVerifyClientStatus()
-    {
-        AppVerifyClient client = new(customerId, apiKey, string.Format("http://localhost:{0}", mockServer.Port), "csharp_telesign", null, null);
-
-        string externalId = new Guid().ToString();
-
-        mockServer.AddRequestHandler(new MockHttpHandler($"/v1/mobile/verification/status/{externalId}", "GET", handlerLambda));
-
-        client.Status(externalId);
-
-        Assert.That(requests.Last().HttpMethod, Is.EqualTo("GET"), "method is not as expected");
-        Assert.That(requests.Last().RawUrl, Is.EqualTo($"/v1/mobile/verification/status/{externalId}"), "path is not as expected");
-        Assert.That(requestHeaders.Last()["Content-Type"], Is.Empty);
-        Assert.That(requestHeaders.Last()["x-ts-auth-method"], Is.EqualTo("HMAC-SHA256"), "x-ts-auth-method header is not as expected");
-        Assert.That(Guid.TryParse(requestHeaders.Last()["x-ts-nonce"], out Guid dummyGuid), Is.True, "x-ts-nonce header is not a valid UUID");
-        Assert.That(DateTime.TryParse(requestHeaders.Last()["Date"], out DateTime dummyDateTime), Is.True , "Date header is not valid rfc2616 format");
-        Assert.That(requestHeaders.Last()["Authorization"], Is.Not.Null);
-    }
-
-    [Test]
-    public async Task TestAppVerifyClientStatusAsync()
-    {
-        AppVerifyClient client = new(customerId, apiKey, string.Format("http://localhost:{0}", mockServer.Port), "csharp_telesign", null, null);
-
-        string externalId = new Guid().ToString();
-
-        mockServer.AddRequestHandler(new MockHttpHandler($"/v1/mobile/verification/status/{externalId}", "GET", handlerLambda));
-
-        await client.StatusAsync(externalId);
-
-        Assert.That(requests.Last().HttpMethod, Is.EqualTo("GET"), "method is not as expected");
-        Assert.That(requests.Last().RawUrl, Is.EqualTo($"/v1/mobile/verification/status/{externalId}"), "path is not as expected");
-        Assert.That(requestHeaders.Last()["Content-Type"], Is.Empty);
-        Assert.That(requestHeaders.Last()["x-ts-auth-method"], Is.EqualTo("HMAC-SHA256"), "x-ts-auth-method header is not as expected");
-        Assert.That(Guid.TryParse(requestHeaders.Last()["x-ts-nonce"], out Guid dummyGuid), Is.True, "x-ts-nonce header is not a valid UUID");
-        Assert.That(DateTime.TryParse(requestHeaders.Last()["Date"], out DateTime dummyDateTime), Is.True , "Date header is not valid rfc2616 format");
-        Assert.That(requestHeaders.Last()["Authorization"], Is.Not.Null);
     }
 }

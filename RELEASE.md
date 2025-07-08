@@ -1,3 +1,6 @@
+3.0.0
+- Removed all functionality and methods for App Verify SDK (Android) from the C# SS SDK
+
 2.6.0
 - Added PATCH method to RestClient.cs file
 - Updated version in the Telesign.csproj
