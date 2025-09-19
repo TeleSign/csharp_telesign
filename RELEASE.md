@@ -1,3 +1,6 @@
+3.0.1
+- Update SDK install instructions on GitHub to default to latest version of Newtonsoft.Json
+
 3.0.0
 - Removed all functionality and methods for App Verify SDK (Android) from the C# SS SDK
 
