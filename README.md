@@ -50,7 +50,7 @@ Follow these steps to add this SDK as a dependency to your project.
 
 4. Install the [Newtonsoft.json](https://www.nuget.org/packages/Newtonsoft.Json/) dependency using the dotnet CLI.
 
-   `dotnet add package Newtonsoft.Json --version 13.0.3`
+   `dotnet add package Newtonsoft.Json --version 13.*`
 
 
 ## Authentication
