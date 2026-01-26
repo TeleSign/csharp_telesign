@@ -5,14 +5,21 @@ using System.Threading.Tasks;
 
 namespace Telesign
 {
+    /// <summary>
+    /// ScoreClient for TeleSign Intelligence Cloud.
+    /// Supports POST /intelligence/phone endpoint only (Cloud migration).
+    /// Sends phone number and parameters in request body as form-urlencoded.
+    /// See https://developer.telesign.com/enterprise/docs/intelligence-cloud-get-started for documentation.
+    /// </summary>
     public class ScoreClient : RestClient
     {
-        private const string SCORE_RESOURCE = "/v1/score/{0}";
-
+        private const string DETECT_HOST = "https://detect.telesign.com";
+        private const string INTELLIGENCE_RESOURCE = "/intelligence/phone";
         public ScoreClient(string customerId,
                                 string apiKey)
             : base(customerId,
-                   apiKey)
+                   apiKey,
+                   DETECT_HOST)
         { }
 
         public ScoreClient(string customerId,
@@ -50,42 +57,51 @@ namespace Telesign
                    sdkVersionOrigin,
                    sdkVersionDependency)
         { }
-
+        
         /// <summary>
-        /// Score is an API that delivers reputation scoring based on phone number intelligence, traffic patterns, machine
-        /// learning, and a global data consortium.
-        /// 
-        /// See https://developer.telesign.com/docs/score-api for detailed API documentation.     
+        /// Obtain a risk recommendation for this phone number, as well as other relevant information using Telesign Intellegence Cloud API.
+        /// Sends phone number and event in POST body encoded as application/x-www-form-urlencoded.
+        /// Optional parameters include account_id, device_id, email_address, external_id, and originating_ip.
+        /// API: POST https://detect.telesign.com/intelligence/phone
+        /// See https://developer.telesign.com/enterprise/reference/submitphonenumberforintelligencecloud for detailed API documentation.   
         /// </summary>
         public TelesignResponse Score(string phoneNumber, string accountLifecycleEvent, Dictionary<string, string> scoreParams = null)
         {
-            if (null == scoreParams)
+            if (string.IsNullOrEmpty(phoneNumber))
+                throw new ArgumentException("phoneNumber cannot be null or empty");
+            if (string.IsNullOrEmpty(accountLifecycleEvent))
+                throw new ArgumentException("accountLifecycleEvent cannot be null or empty");
+
+            if (scoreParams == null)
                 scoreParams = new Dictionary<string, string>();
-            scoreParams.Add("phone_number", phoneNumber);
-            scoreParams.Add("account_lifecycle_event", accountLifecycleEvent);
 
-            string resource = string.Format(SCORE_RESOURCE, phoneNumber);
+            scoreParams["phone_number"] = phoneNumber;
+            scoreParams["account_lifecycle_event"] = accountLifecycleEvent;
 
-            return Post(resource, scoreParams);
+            return Post(INTELLIGENCE_RESOURCE, scoreParams);
         }
 
-
         /// <summary>
-        /// Score is an API that delivers reputation scoring based on phone number intelligence, traffic patterns, machine
-        /// learning, and a global data consortium.
-        /// 
-        /// See https://developer.telesign.com/docs/score-api for detailed API documentation.     
+        /// Obtain a risk recommendation for this phone number, as well as other relevant information using Telesign Intellegence Cloud API asynchronously. 
+        /// Sends phone number and event in POST body encoded as application/x-www-form-urlencoded.
+        /// Optional parameters include account_id, device_id, email_address, external_id, and originating_ip.
+        /// API: POST https://detect.telesign.com/intelligence/phone
+        /// See https://developer.telesign.com/enterprise/reference/submitphonenumberforintelligencecloud for detailed API documentation. 
         /// </summary>
         public Task<TelesignResponse> ScoreAsync(string phoneNumber, string accountLifecycleEvent, Dictionary<string, string> scoreParams = null)
         {
-            if (null == scoreParams)
+            if (string.IsNullOrEmpty(phoneNumber))
+                throw new ArgumentException("phoneNumber cannot be null or empty");
+            if (string.IsNullOrEmpty(accountLifecycleEvent))
+                throw new ArgumentException("accountLifecycleEvent cannot be null or empty");
+
+            if (scoreParams == null)
                 scoreParams = new Dictionary<string, string>();
-            scoreParams.Add("phone_number", phoneNumber);
-            scoreParams.Add("account_lifecycle_event", accountLifecycleEvent);
 
-            string resource = string.Format(SCORE_RESOURCE, phoneNumber);
+            scoreParams["phone_number"] = phoneNumber;
+            scoreParams["account_lifecycle_event"] = accountLifecycleEvent;
 
-            return PostAsync(resource, scoreParams);
+            return PostAsync(INTELLIGENCE_RESOURCE, scoreParams);
         }
     }
 

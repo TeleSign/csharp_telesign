@@ -16,7 +16,7 @@
 		<Nullable>disable</Nullable>
 		<PackageIcon>nuget_icon.png</PackageIcon>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
-		<Version>3.0.1</Version>
+		<Version>4.0.0</Version>
 		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
 	</PropertyGroup>
 
