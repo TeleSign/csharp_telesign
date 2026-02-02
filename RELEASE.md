@@ -1,3 +1,6 @@
+4.0.0
+- Added support for Intelligence Cloud to use new endpoint
+
 3.0.1
 - Update SDK install instructions on GitHub to default to latest version of Newtonsoft.Json
 
