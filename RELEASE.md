@@ -1,3 +1,6 @@
+4.1.0
+- Added support for Email Intelligence.
+
 4.0.0
 - Added support for Intelligence Cloud to use new endpoint
 

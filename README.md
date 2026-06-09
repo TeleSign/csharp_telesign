@@ -52,6 +52,14 @@ Follow these steps to add this SDK as a dependency to your project.
 
    `dotnet add package Newtonsoft.Json --version 13.*`
 
+## Running Tests
+
+Run the following commands from the repository root:
+
+```bash
+dotnet restore
+dotnet test csharp_telesign.sln
+```
 
 ## Authentication
 

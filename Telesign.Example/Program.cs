@@ -26,6 +26,7 @@ while(!validOption);
 string customerId = Environment.GetEnvironmentVariable("CUSTOMER_ID")?? "FFFFFFFF-EEEE-DDDD-1234-AB1234567890";
 string apiKey = Environment.GetEnvironmentVariable("API_KEY") ?? "ABC12345yusumoN6BYsBVkh+yRJ5czgsnCehZaOYldPJdmFh6NeX8kunZ2zU1YWaUw/0wV6xfw==";
 string phoneNumber = Environment.GetEnvironmentVariable("PHONE_NUMBER") ?? "11234567890";
+string emailAddress = Environment.GetEnvironmentVariable("EMAIL_ADDRESS") ?? "user@example.com";
 
 switch (options)
 {
@@ -41,8 +42,9 @@ switch (options)
         phoneIdExample.CleanPhoneNumber();
     break;
     case 3:
-        ScoreExample scoreExample = new(apiKey, customerId, phoneNumber);
+        ScoreExample scoreExample = new(apiKey, customerId, phoneNumber, emailAddress);
         scoreExample.CheckPhoneNumberRiskLevel();
+        scoreExample.CheckEmailAddressRiskLevel();
     break;
     case 4:
         VoiceExample voiceExample = new(apiKey, customerId, phoneNumber);

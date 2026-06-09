@@ -15,6 +15,7 @@ namespace Telesign
     {
         private const string DETECT_HOST = "https://detect.telesign.com";
         private const string INTELLIGENCE_RESOURCE = "/intelligence/phone";
+        private const string EMAIL_INTELLIGENCE_RESOURCE = "/intelligence/email";
         public ScoreClient(string customerId,
                                 string apiKey)
             : base(customerId,
@@ -102,6 +103,38 @@ namespace Telesign
             scoreParams["account_lifecycle_event"] = accountLifecycleEvent;
 
             return PostAsync(INTELLIGENCE_RESOURCE, scoreParams);
+        }
+
+        public TelesignResponse EmailIntelligence(string emailAddress, string accountLifecycleEvent, Dictionary<string, string> emailIntelligenceParams = null)
+        {
+            if (string.IsNullOrEmpty(emailAddress))
+                throw new ArgumentException("emailAddress cannot be null or empty");
+            if (string.IsNullOrEmpty(accountLifecycleEvent))
+                throw new ArgumentException("accountLifecycleEvent cannot be null or empty");
+
+            if (emailIntelligenceParams == null)
+                emailIntelligenceParams = new Dictionary<string, string>();
+
+            emailIntelligenceParams["email_address"] = emailAddress;
+            emailIntelligenceParams["account_lifecycle_event"] = accountLifecycleEvent;
+
+            return Post(EMAIL_INTELLIGENCE_RESOURCE, emailIntelligenceParams);
+        }
+
+        public Task<TelesignResponse> EmailIntelligenceAsync(string emailAddress, string accountLifecycleEvent, Dictionary<string, string> emailIntelligenceParams = null)
+        {
+            if (string.IsNullOrEmpty(emailAddress))
+                throw new ArgumentException("emailAddress cannot be null or empty");
+            if (string.IsNullOrEmpty(accountLifecycleEvent))
+                throw new ArgumentException("accountLifecycleEvent cannot be null or empty");
+
+            if (emailIntelligenceParams == null)
+                emailIntelligenceParams = new Dictionary<string, string>();
+
+            emailIntelligenceParams["email_address"] = emailAddress;
+            emailIntelligenceParams["account_lifecycle_event"] = accountLifecycleEvent;
+
+            return PostAsync(EMAIL_INTELLIGENCE_RESOURCE, emailIntelligenceParams);
         }
     }
 
